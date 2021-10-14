@@ -6,7 +6,7 @@ export default function Home() {
       <Head>
         <title>Instagram</title>
         <meta name="description" content="Instagram App" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/instagram_icon.png" />
       </Head>
     </div>
   );
