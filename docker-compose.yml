@@ -1,0 +1,14 @@
+version: '3'
+services:
+  instagram-frontend:
+    build:
+      dockerfile: Dockerfile
+      context: ./
+    depends_on:
+      - backend
+    volumes:
+      - ./node_modules:/instagram-frontend/node_modules
+      - ./:/instagram-frontend
+    stdin_open: true
+    ports:
+      - '3000:3000'
