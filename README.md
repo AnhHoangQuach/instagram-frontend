@@ -6,7 +6,7 @@ First, run the development server:
 
 ```bash
 git clone https://github.com/AnhHoangQuach/instagram-frontend
-npm ci
+npm ci || npm i
 npm run dev
 
 #or
