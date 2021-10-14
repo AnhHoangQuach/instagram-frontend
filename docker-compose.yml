@@ -4,8 +4,6 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./
-    depends_on:
-      - backend
     volumes:
       - ./node_modules:/instagram-frontend/node_modules
       - ./:/instagram-frontend
