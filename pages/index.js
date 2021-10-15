@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Header from '../components/Header';
 
 export default function Home() {
   return (
@@ -6,8 +7,9 @@ export default function Home() {
       <Head>
         <title>Instagram</title>
         <meta name="description" content="Instagram App" />
-        <link rel="icon" href="/instagram_icon.png" />
+        <link rel="icon" href="/assets/icons/instagram_icon.png" />
       </Head>
+      <Header />
     </div>
   );
 }
