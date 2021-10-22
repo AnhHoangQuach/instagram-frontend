@@ -55,7 +55,11 @@ export default function Login() {
             </Button>
           </form>
           <Divider>OR</Divider>
-          <Button fullWidth startIcon={<FacebookIcon />} className="my-2">
+          <Button
+            fullWidth
+            startIcon={<FacebookIcon />}
+            className="my-2 text-white hover:text-blue-medium bg-blue-medium"
+          >
             Login with facebook
           </Button>
           <Link href="/" underline="none" className="text-xs">
@@ -64,7 +68,7 @@ export default function Login() {
         </div>
         <div className="flex justify-center items-center w-full p-4 rounded border border-gray-primary">
           <Typography variant="subtitle2">Don't have an account?</Typography>
-          <Link href="/" underline="none" className="font-bold text-sm ml-1 text-blue-medium">
+          <Link href="/signup" underline="none" className="font-bold text-sm ml-1 text-blue-medium">
             Sign up
           </Link>
         </div>
