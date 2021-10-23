@@ -10,7 +10,7 @@ import { useTheme } from 'next-themes';
 import NightsStayIcon from '@mui/icons-material/NightsStay';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import { useState, useEffect } from 'react';
-import { TextField, InputAdornment, Badge } from '@mui/material';
+import { TextField, InputAdornment, Badge, Avatar } from '@mui/material';
 
 export default function Header() {
   const { systemTheme, theme, setTheme } = useTheme();
@@ -34,7 +34,7 @@ export default function Header() {
   };
   return (
     <div className="shadow-sm bg-white dark:bg-gray-900 border sticky top-0 z-50 dark:border-gray-700">
-      <div className="flex justify-between items-center max-w-6xl mx-5 xl:mx-auto py-1">
+      <div className="flex justify-between items-center max-w-5xl mx-5 xl:mx-auto py-1">
         {theme === 'dark' ? (
           <InstagramIcon fontSize="large" />
         ) : (
@@ -67,7 +67,7 @@ export default function Header() {
 
           <FavoriteBorderOutlinedIcon className="nav-btn" />
           {renderThemeChanger()}
-          <img src="/assets/images/45851733.png" className="rounded-full h-10 cursor-pointer" />
+          <Avatar src="/assets/images/45851733.png" />
         </div>
       </div>
     </div>
