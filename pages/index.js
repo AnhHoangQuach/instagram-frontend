@@ -3,11 +3,11 @@ import Header from '../components/Header';
 import Stories from '../components/Stories';
 import Feed from '../components/Feed';
 import Suggestions from '../components/Suggestions';
-import { Grid } from '@mui/material';
+import { Grid, Box } from '@mui/material';
 
 export default function Home() {
   return (
-    <div>
+    <Box>
       <Head>
         <title>Instagram</title>
         <meta name="description" content="Instagram App" />
@@ -24,6 +24,6 @@ export default function Home() {
           <Suggestions />
         </Grid>
       </Grid>
-    </div>
+    </Box>
   );
 }

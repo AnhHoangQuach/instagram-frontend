@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import SearchIcon from '@mui/icons-material/Search';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
@@ -10,7 +9,7 @@ import { useTheme } from 'next-themes';
 import NightsStayIcon from '@mui/icons-material/NightsStay';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import { useState, useEffect } from 'react';
-import { TextField, InputAdornment, Badge, Avatar } from '@mui/material';
+import { TextField, InputAdornment, Badge, Avatar, Hidden } from '@mui/material';
 
 export default function Header() {
   const { systemTheme, theme, setTheme } = useTheme();
@@ -38,7 +37,14 @@ export default function Header() {
         {theme === 'dark' ? (
           <InstagramIcon fontSize="large" />
         ) : (
-          <img src="/assets/images/logo.png" />
+          <div>
+            <Hidden smDown>
+              <img src="/assets/images/logo.png" />
+            </Hidden>
+            <Hidden mdUp>
+              <InstagramIcon fontSize="large" />
+            </Hidden>
+          </div>
         )}
 
         <div className="hidden md:block">
@@ -57,10 +63,10 @@ export default function Header() {
           />
         </div>
 
-        <div className="flex items-center justify-end space-x-4">
+        <div className="flex items-center justify-end space-x-3 md:space-x-4">
           <HomeOutlinedIcon className="nav-btn" />
           <Badge badgeContent={4} color="error">
-            <SendOutlinedIcon color="action" className="rotate-45 nav-btn" />
+            <SendOutlinedIcon color="action" className="rotate-45 nav-btn dark:text-white" />
           </Badge>
           <ControlPointIcon className="nav-btn" />
           <ExploreOutlinedIcon className="nav-btn" />
