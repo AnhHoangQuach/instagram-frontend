@@ -2,7 +2,7 @@ import Head from 'next/head';
 import Header from '../components/Header';
 import Stories from '../components/Stories';
 import Feed from '../components/Feed';
-import MiniProfile from '../components/MiniProfile';
+import Suggestions from '../components/Suggestions';
 import { Grid } from '@mui/material';
 
 export default function Home() {
@@ -21,7 +21,7 @@ export default function Home() {
           <Feed />
         </Grid>
         <Grid item xs={12} sm={4} className="hidden md:block">
-          <MiniProfile />
+          <Suggestions />
         </Grid>
       </Grid>
     </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Link, TextField, Button, Divider, Typography } from '@mui/material';
+import Link from 'next/link';
+import { TextField, Button, Divider, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import FacebookIcon from '@mui/icons-material/Facebook';
 
@@ -62,14 +63,18 @@ export default function Login() {
           >
             Login with facebook
           </Button>
-          <Link href="/" underline="none" className="text-xs">
-            Forgot Password?
+          <Link href="/" underline="none">
+            <Typography className="text-xs text-blue-medium cursor-pointer">
+              Forgot Password?
+            </Typography>
           </Link>
         </div>
         <div className="flex justify-center items-center w-full p-4 rounded border border-gray-primary">
-          <Typography variant="subtitle2">Don't have an account?</Typography>
-          <Link href="/signup" underline="none" className="font-bold text-sm ml-1 text-blue-medium">
-            Sign up
+          <Typography variant="subtitle2 text-sm">Don't have an account?</Typography>
+          <Link href="/signup" underline="none">
+            <Typography className="text-sm ml-1 text-blue-medium cursor-pointer">
+              Sign up
+            </Typography>
           </Link>
         </div>
       </div>

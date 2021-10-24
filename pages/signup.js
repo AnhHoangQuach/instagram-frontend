@@ -62,9 +62,11 @@ export default function SignUp() {
         </Typography>
       </div>
       <div className="flex justify-center items-center w-full p-4 rounded border border-gray-primary">
-        <Typography className="subtitle2">Have an account?</Typography>
-        <Link href="/login" underline="none" className="font-bold text-sm ml-1 text-blue-medium">
-          Login
+        <Typography className="subtitle2 text-sm">Have an account?</Typography>
+        <Link href="/login" underline="none">
+          <Typography className="text-sm ml-1 font-bold text-blue-medium cursor-pointer">
+            Login
+          </Typography>
         </Link>
       </div>
     </div>

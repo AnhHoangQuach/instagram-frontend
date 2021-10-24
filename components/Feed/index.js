@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import FeedComment from './FeedComment';
 import FeedImage from './FeedImage';
+import FeedDialog from './FeedDialog';
 import { Avatar, Typography, Box, Button, Hidden, Divider } from '@mui/material';
 import faker from 'faker';
 import Carousel from 'react-multi-carousel';
@@ -18,6 +19,7 @@ export default function Feed() {
   const [showCaption, setCaption] = useState(false);
   const [comments, setComments] = useState([]);
   const [caption, setCaptionText] = useState('');
+  const [showOptionsDialog, setOptionsDialog] = useState(false);
 
   useEffect(() => {
     const images = [...Array(5)].map((_, i) => ({
@@ -35,9 +37,6 @@ export default function Feed() {
     setComments(comments);
     setCaptionText(captionFake);
   }, []);
-  const handleMore = () => {
-    console.log('hello');
-  };
 
   const responsive = {
     desktop: {
@@ -64,7 +63,7 @@ export default function Feed() {
             hoanganh
           </Typography>
         </div>
-        <MoreHorizIcon onClick={handleMore} />
+        <MoreHorizIcon className="cursor-pointer" onClick={() => setOptionsDialog(true)} />
       </div>
       <Carousel responsive={responsive} showDots={true} keyBoardControl={true}>
         {images.map((item) => (
@@ -131,6 +130,7 @@ export default function Feed() {
         <Divider />
         <FeedComment />
       </Hidden>
+      {showOptionsDialog && <FeedDialog onClose={() => setOptionsDialog(false)} />}
     </div>
   );
 }
