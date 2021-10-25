@@ -23,7 +23,9 @@ export default function PostCountSection() {
             >
               <Typography className="font-bold">12</Typography>
               <Hidden smUp>
-                <Typography color="textSecondary">{option}</Typography>
+                <Typography color="textSecondary" className="text-sm">
+                  {option}
+                </Typography>
               </Hidden>
             </Box>
           ))}
@@ -50,9 +52,9 @@ export default function PostCountSection() {
                 gridTemplateColumns: 'minmax(auto, max-content) minmax(auto, max-content)',
               }}
             >
-              <Typography className="font-bold">12</Typography>
+              <Typography className="font-bold text-sm">12</Typography>
               <Hidden xsDown>
-                <Typography>{option}</Typography>
+                <Typography className="text-sm">{option}</Typography>
               </Hidden>
             </Box>
           ))}

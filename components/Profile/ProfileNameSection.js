@@ -47,7 +47,11 @@ export default function ProfileNameSection({ isOwner, handleOptionsMenuClick }) 
           {isOwner ? (
             <>
               <Link href="/">
-                <Button variant="outlined" size="small">
+                <Button
+                  variant="outlined"
+                  className="border-gray-400 px-0 text-black capitalize"
+                  size="small"
+                >
                   Edit Profile
                 </Button>
               </Link>
@@ -77,7 +81,10 @@ export default function ProfileNameSection({ isOwner, handleOptionsMenuClick }) 
           </Box>
           {isOwner ? (
             <Link href="/">
-              <Button variant="outlined" style={{ width: '100%' }}>
+              <Button
+                variant="outlined"
+                className="border-gray-400 px-0 text-black text-sm capitalize w-full"
+              >
                 Edit Profile
               </Button>
             </Link>

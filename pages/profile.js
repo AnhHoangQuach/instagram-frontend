@@ -5,6 +5,7 @@ import ProfilePicture from '../components/Profile/ProfilePicture';
 import PostCountSection from '../components/Profile/PostCountSection';
 import ProfileNameSection from '../components/Profile/ProfileNameSection';
 import NameBioSection from '../components/Profile/NameBioSection';
+import ProfileTabs from '../components/Profile/ProfileTabs';
 import { Box, Hidden, Card, CardContent, Typography, Button } from '@mui/material';
 
 export default function Profile() {
@@ -65,6 +66,7 @@ export default function Profile() {
             <PostCountSection />
           </Card>
         </Hidden>
+        <ProfileTabs isOwner={isOwner} />
       </Box>
     </div>
   );
