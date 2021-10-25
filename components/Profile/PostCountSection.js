@@ -21,7 +21,7 @@ export default function PostCountSection() {
                 justifyItems: 'center',
               }}
             >
-              <Typography>12</Typography>
+              <Typography className="font-bold">12</Typography>
               <Hidden smUp>
                 <Typography color="textSecondary">{option}</Typography>
               </Hidden>
@@ -50,7 +50,7 @@ export default function PostCountSection() {
                 gridTemplateColumns: 'minmax(auto, max-content) minmax(auto, max-content)',
               }}
             >
-              <Typography>12</Typography>
+              <Typography className="font-bold">12</Typography>
               <Hidden xsDown>
                 <Typography>{option}</Typography>
               </Hidden>

@@ -40,6 +40,7 @@ export default function ProfileNameSection({ isOwner, handleOptionsMenuClick }) 
             gridAutoFlow: 'column',
             gridTemplateColumns: 'minmax(auto, max-content) minmax(auto, 120px) 30px',
             alignItems: 'center',
+            marginBottom: '1rem',
           }}
         >
           <Typography className="text-xl">Hoanganh</Typography>
@@ -58,29 +59,32 @@ export default function ProfileNameSection({ isOwner, handleOptionsMenuClick }) 
         </Box>
       </Hidden>
       <Hidden smUp>
-        <Box
-          sx={{
-            display: 'grid',
-            gridGap: 10,
-            gridAutoFlow: 'column',
-            gridTemplateColumns: 'minmax(auto, max-content) 30px',
-            alignItems: 'center',
-          }}
-        >
-          <Typography className="text-xl">Hoanganh</Typography>
-          {isOwner && (
-            <SettingsOutlinedIcon className="cursor-pointer" onClick={handleOptionsMenuClick} />
+        <section>
+          <Box
+            sx={{
+              display: 'grid',
+              gridGap: 10,
+              gridAutoFlow: 'column',
+              gridTemplateColumns: 'minmax(auto, max-content) 30px',
+              alignItems: 'center',
+              marginBottom: '0.5rem',
+            }}
+          >
+            <Typography className="text-xl">Hoanganh</Typography>
+            {isOwner && (
+              <SettingsOutlinedIcon className="cursor-pointer" onClick={handleOptionsMenuClick} />
+            )}
+          </Box>
+          {isOwner ? (
+            <Link href="/">
+              <Button variant="outlined" style={{ width: '100%' }}>
+                Edit Profile
+              </Button>
+            </Link>
+          ) : (
+            followButton
           )}
-        </Box>
-        {isOwner ? (
-          <Link href="/">
-            <Button variant="outlined" style={{ width: '100%' }}>
-              Edit Profile
-            </Button>
-          </Link>
-        ) : (
-          followButton
-        )}
+        </section>
       </Hidden>
       {showUnfollowDialog && <UnfollowDialog onClose={() => setUnfollowDialog(false)} />}
     </>

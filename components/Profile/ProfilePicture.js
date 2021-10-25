@@ -9,7 +9,6 @@ export default function ProfilePicture({ size, image = '/assets/images/45851733.
           display: 'grid',
           position: 'relative',
           placeItems: 'center',
-          padding: '32px 16px 16px',
         }}
       >
         <Avatar

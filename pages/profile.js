@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import Head from 'next/head';
 import Header from '../components/Header';
-import Link from 'next/link';
+import Seo from '../components/Seo';
 import ProfilePicture from '../components/Profile/ProfilePicture';
 import PostCountSection from '../components/Profile/PostCountSection';
 import ProfileNameSection from '../components/Profile/ProfileNameSection';
-import { Box, Hidden, Typography, Button } from '@mui/material';
+import NameBioSection from '../components/Profile/NameBioSection';
+import { Box, Hidden, Card, CardContent, Typography, Button } from '@mui/material';
 
 export default function Profile() {
   const [showOptionsMenu, setOptionsMenu] = useState(false);
@@ -20,15 +20,11 @@ export default function Profile() {
   };
   return (
     <div>
-      <Head>
-        <title>hoanganh (@hoanganh-Instagram)</title>
-        <meta name="description" content="Instagram App" />
-        <link rel="icon" href="/assets/images/instagram_icon.png" />
-      </Head>
+      <Seo title="hoanganh (@hoanganh362)" />
       <Header />
-      <Box className="max-w-5xl mx-5 xl:mx-auto">
-        <Hidden xsDown>
-          <Box
+      <Box className="max-w-5xl xl:mx-auto mt-8">
+        <Hidden smDown>
+          <Card
             className="bg-transparent"
             sx={{
               display: 'grid',
@@ -37,14 +33,37 @@ export default function Profile() {
             }}
           >
             <ProfilePicture isOwner={isOwner} size={150} />
-            <Box sx={{ display: 'grid', gridGrap: 20 }}>
+            <CardContent sx={{ display: 'grid', gridGrap: 20 }}>
               <ProfileNameSection
                 isOwner={isOwner}
                 handleOptionsMenuClick={handleOptionsMenuClick}
               />
               <PostCountSection />
-            </Box>
-          </Box>
+              <NameBioSection />
+            </CardContent>
+          </Card>
+        </Hidden>
+        <Hidden smUp>
+          <Card className="bg-transparent w-screen">
+            <CardContent>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridAutoFlow: 'column',
+                  gridTemplateColumns: '77px auto',
+                  gridGap: 40,
+                }}
+              >
+                <ProfilePicture isOwner={isOwner} size={77} />
+                <ProfileNameSection
+                  isOwner={isOwner}
+                  handleOptionsMenuClick={handleOptionsMenuClick}
+                />
+              </Box>
+              <NameBioSection />
+            </CardContent>
+            <PostCountSection />
+          </Card>
         </Hidden>
       </Box>
     </div>
