@@ -5,8 +5,8 @@ export default function NameBioSection() {
     <Box className="mt-4">
       <Typography className="font-bold text-sm">Quach Hoang Anh</Typography>
       <Typography className="text-sm">This is my bio</Typography>
-      <Link href="/" target="_blank">
-        <Typography color="secondary" className="font-bold text-sm">
+      <Link href="/" target="_blank" underline="none">
+        <Typography className="font-bold text-sm">
           https://www.facebook.com/profile.php?id=100007422227963
         </Typography>
       </Link>
