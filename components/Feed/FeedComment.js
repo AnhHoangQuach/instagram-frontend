@@ -21,7 +21,6 @@ export default function FeedComment() {
         size="small"
         onChange={(event) => setContent(event.target.value)}
         value={content}
-        rowsMax={2}
         rows={1}
         InputProps={{
           classes: { notchedOutline: classes.noBorder },

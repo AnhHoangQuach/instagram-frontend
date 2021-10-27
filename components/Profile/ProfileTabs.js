@@ -42,13 +42,11 @@ export default function ProfileTabs({ isOwner }) {
             <Tab
               icon={<GridOnOutlinedIcon style={{ margin: '0 5px' }} />}
               label="POSTS"
-              iconPosition="start"
               classes={{ root: classes.tabWrapper, labelIcon: classes.tabLabelIcon }}
             />
             {isOwner && (
               <Tab
                 icon={<BookmarkBorderOutlinedIcon style={{ margin: '0 5px' }} />}
-                iconPosition="start"
                 label="SAVED"
                 classes={{ root: classes.tabWrapper, labelIcon: classes.tabLabelIcon }}
               />
@@ -67,7 +65,7 @@ export default function ProfileTabs({ isOwner }) {
             {isOwner && <Tab icon={<BookmarkBorderOutlinedIcon />} />}
           </Tabs>
         </Hidden>
-        <Hidden smUp>{user.posts.length === 0 && <Divider />}</Hidden>
+        {/* <Hidden smUp>{user.posts.length === 0 && <Divider />}</Hidden> */}
       </section>
     </>
   );
