@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import SearchIcon from '@mui/icons-material/Search';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
@@ -9,8 +8,9 @@ import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlin
 import { useTheme } from 'next-themes';
 import NightsStayIcon from '@mui/icons-material/NightsStay';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { TextField, InputAdornment, Badge, Avatar } from '@mui/material';
+import { TextField, InputAdornment, Badge, Avatar, Hidden } from '@mui/material';
 
 export default function Header() {
   const { systemTheme, theme, setTheme } = useTheme();
@@ -36,9 +36,22 @@ export default function Header() {
     <div className="shadow-sm bg-white dark:bg-gray-900 border sticky top-0 z-50 dark:border-gray-700">
       <div className="flex justify-between items-center max-w-5xl mx-5 xl:mx-auto py-1">
         {theme === 'dark' ? (
-          <InstagramIcon fontSize="large" />
+          <Link href="/">
+            <InstagramIcon fontSize="large" className="cursor-pointer" />
+          </Link>
         ) : (
-          <img src="/assets/images/logo.png" />
+          <div>
+            <Hidden smDown>
+              <Link href="/">
+                <img src="/assets/images/logo.png" className="cursor-pointer" />
+              </Link>
+            </Hidden>
+            <Hidden mdUp>
+              <Link href="/">
+                <InstagramIcon fontSize="large" className="cursor-pointer" />
+              </Link>
+            </Hidden>
+          </div>
         )}
 
         <div className="hidden md:block">
@@ -57,10 +70,10 @@ export default function Header() {
           />
         </div>
 
-        <div className="flex items-center justify-end space-x-4">
+        <div className="flex items-center justify-end space-x-3 md:space-x-4">
           <HomeOutlinedIcon className="nav-btn" />
           <Badge badgeContent={4} color="error">
-            <SendOutlinedIcon color="action" className="rotate-45 nav-btn" />
+            <SendOutlinedIcon color="action" className="rotate-45 nav-btn dark:text-white" />
           </Badge>
           <ControlPointIcon className="nav-btn" />
           <ExploreOutlinedIcon className="nav-btn" />

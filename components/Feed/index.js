@@ -12,7 +12,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
 
 export default function Feed() {
   const [images, setImages] = useState([]);
@@ -77,7 +77,7 @@ export default function Feed() {
             <ChatBubbleOutlineOutlinedIcon />
             <ShareOutlinedIcon />
           </div>
-          <BookmarkBorderIcon />
+          <BookmarkBorderOutlinedIcon />
         </div>
         <Box mt={1}>
           <Typography variant="subtitle2" className="font-bold">

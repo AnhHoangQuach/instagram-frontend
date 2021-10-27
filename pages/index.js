@@ -1,19 +1,14 @@
-import Head from 'next/head';
+import Seo from '../components/Seo';
 import Header from '../components/Header';
 import Stories from '../components/Stories';
 import Feed from '../components/Feed';
 import Suggestions from '../components/Suggestions';
-import { Grid } from '@mui/material';
+import { Grid, Box } from '@mui/material';
 
 export default function Home() {
   return (
-    <div>
-      <Head>
-        <title>Instagram</title>
-        <meta name="description" content="Instagram App" />
-        <link rel="icon" href="/assets/images/instagram_icon.png" />
-      </Head>
-
+    <Box>
+      <Seo title="Home" description="Home Page" />
       <Header />
       <Grid container className="max-w-5xl mx-auto">
         <Grid item xs={12} sm={8}>
@@ -24,6 +19,6 @@ export default function Home() {
           <Suggestions />
         </Grid>
       </Grid>
-    </div>
+    </Box>
   );
 }
