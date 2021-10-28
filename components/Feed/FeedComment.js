@@ -26,7 +26,7 @@ export default function FeedComment() {
           classes: { notchedOutline: classes.noBorder },
         }}
       />
-      <Button color="primary" className="" disabled={!content.trim()}>
+      <Button color="primary" disabled={!content.trim()}>
         Post
       </Button>
     </div>
