@@ -112,7 +112,6 @@ export default function Header() {
             <MenuItem>
               <AccountCircleOutlinedIcon className="mr-2" /> <Link href="/profile">Profile</Link>
             </MenuItem>
-
             <MenuItem onClick={handleClose}>
               <BookmarkBorderOutlinedIcon className="mr-2" />
               Saved
