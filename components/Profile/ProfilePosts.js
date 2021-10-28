@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ProfilePosts({ user, isOwner }) {
+export default function ProfilePosts({ isOwner }) {
   const [posts, setPosts] = useState([]);
   const classes = useStyles();
   useEffect(() => {
@@ -41,7 +41,7 @@ export default function ProfilePosts({ user, isOwner }) {
           }}
         >
           <LinkedCameraOutlinedIcon fontSize="large" />
-          <Typography variant="h6" align="center" className="text-base sm:text-xl">
+          <Typography variant="h6" align="center" className="mt-4">
             {isOwner ? 'Upload a Posts' : 'Once you start making new posts, they will appear here'}
           </Typography>
         </Box>

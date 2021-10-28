@@ -32,15 +32,12 @@ const useStyles = makeStyles((theme) => ({
     placeItems: 'center',
     opacity: 0,
   },
-  gridPostContainer: {
-    position: 'relative',
-  },
 }));
 
 export default function GridPost({ post }) {
   const classes = useStyles();
   return (
-    <div className={classes.gridPostContainer}>
+    <Box sx={{ position: 'relative' }}>
       <div className={classes.gridPostOverlay}>
         <div className={classes.gridPostInfo}>
           <FavoriteBorderOutlinedIcon />
@@ -52,6 +49,6 @@ export default function GridPost({ post }) {
         </div>
       </div>
       <img src={post.image} className={classes.image} />
-    </div>
+    </Box>
   );
 }

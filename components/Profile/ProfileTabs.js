@@ -4,6 +4,7 @@ import GridOnOutlinedIcon from '@mui/icons-material/GridOnOutlined';
 import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
 import { makeStyles } from '@mui/styles';
 import ProfilePosts from './ProfilePosts';
+import SavedPosts from './SavedPosts';
 
 const useStyles = makeStyles((theme) => ({
   tabsIndicator: {
@@ -72,6 +73,7 @@ export default function ProfileTabs({ isOwner }) {
           </Tabs>
         </Hidden>
         {value === 0 && <ProfilePosts isOwner={isOwner} />}
+        {value === 1 && <SavedPosts />}
       </section>
     </>
   );

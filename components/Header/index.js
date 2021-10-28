@@ -109,18 +109,26 @@ export default function Header() {
               'aria-labelledby': 'basic-avatar',
             }}
           >
-            <MenuItem>
-              <AccountCircleOutlinedIcon className="mr-2" /> <Link href="/profile">Profile</Link>
-            </MenuItem>
-            <MenuItem onClick={handleClose}>
-              <BookmarkBorderOutlinedIcon className="mr-2" />
-              Saved
-            </MenuItem>
-            <MenuItem onClick={handleClose} divider>
-              <SettingsOutlinedIcon className="mr-2" />
-              Settings
-            </MenuItem>
-            <MenuItem onClick={handleClose}>Log Out</MenuItem>
+            <Link href="/profile" passHref>
+              <MenuItem onClick={handleClose}>
+                <AccountCircleOutlinedIcon className="mr-2" /> Profile
+              </MenuItem>
+            </Link>
+            <Link href="/" passHref>
+              <MenuItem onClick={handleClose}>
+                <BookmarkBorderOutlinedIcon className="mr-2" />
+                Saved
+              </MenuItem>
+            </Link>
+            <Link href="/" passHref>
+              <MenuItem onClick={handleClose} divider>
+                <SettingsOutlinedIcon className="mr-2" />
+                Settings
+              </MenuItem>
+            </Link>
+            <Link href="/" passHref>
+              <MenuItem onClick={handleClose}>Log Out</MenuItem>
+            </Link>
           </Menu>
         </div>
       </div>
