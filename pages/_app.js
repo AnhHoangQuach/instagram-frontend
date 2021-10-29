@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <ThemeProvider enableSystem={true} attribute="class">
       <MuiThemeProvider theme={theme}>
-        <Component {...pageProps} />;
+        <Component {...pageProps} />
       </MuiThemeProvider>
     </ThemeProvider>
   );

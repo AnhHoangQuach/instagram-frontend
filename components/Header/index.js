@@ -41,7 +41,7 @@ export default function Header() {
         <Brightness4Icon onClick={() => setTheme('light')} className="w-7 h-7" role="button" />
       );
     } else {
-      return <NightsStayIcon onClick={() => setTheme('dark')} className="w-7 h-7" role="button" />;
+      return <NightsStayIcon onClick={() => setTheme('dark')} className="w-7 h-7" role="button" />
     }
   };
   return (

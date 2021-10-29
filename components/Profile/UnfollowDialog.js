@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function UnfollowDialog({ onClose }) {
+export default function UnfollowDialog({ onClose }) {
   const classes = useStyles();
 
   return (

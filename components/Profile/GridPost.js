@@ -2,6 +2,8 @@ import { Box, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
+import FilterOutlinedIcon from '@mui/icons-material/FilterOutlined';
+import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
 
 const useStyles = makeStyles((theme) => ({
   gridPostOverlay: {
@@ -25,12 +27,22 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   gridPostInfo: {
-    color: '#ffffff',
+    color: '#fff',
     display: 'grid',
     gridAutoFlow: 'column',
     gridGap: 5,
     placeItems: 'center',
     opacity: 0,
+  },
+  typePost: {
+    color: '#fff',
+    position: 'absolute',
+    top: '5%',
+    fontSize: '1.5rem',
+    right: '5%',
+  },
+  sizeTypeIcon: {
+    fontSize: '1.5rem',
   },
 }));
 
@@ -39,6 +51,13 @@ export default function GridPost({ post }) {
   return (
     <Box sx={{ position: 'relative' }}>
       <div className={classes.gridPostOverlay}>
+        <div className={classes.typePost}>
+          {post.id % 2 ? (
+            <FilterOutlinedIcon className={classes.sizeTypeIcon} />
+          ) : (
+            <PlayCircleOutlineOutlinedIcon className={classes.sizeTypeIcon} />
+          )}
+        </div>
         <div className={classes.gridPostInfo}>
           <FavoriteBorderOutlinedIcon />
           <Typography>{post.id}</Typography>
