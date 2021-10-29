@@ -20,7 +20,7 @@ export default function Profile() {
     setOptionsMenu(false);
   };
   return (
-    <div>
+    <>
       <Seo title="hoanganh (@hoanganh362)" />
       <Header />
       <Box className="max-w-5xl xl:mx-auto mt-8">
@@ -68,6 +68,6 @@ export default function Profile() {
         </Hidden>
         <ProfileTabs isOwner={isOwner} />
       </Box>
-    </div>
+    </>
   );
 }
