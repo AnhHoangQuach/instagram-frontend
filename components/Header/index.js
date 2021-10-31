@@ -6,16 +6,17 @@ import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
-import { useTheme } from 'next-themes';
-import NightsStayIcon from '@mui/icons-material/NightsStay';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { TextField, InputAdornment, Badge, Avatar, Hidden, Menu, MenuItem } from '@mui/material';
 import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
-
+import NightsStayIcon from '@mui/icons-material/NightsStay';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { useTheme } from 'next-themes';
+import { TextField, InputAdornment, Badge, Avatar, Hidden, Menu, MenuItem } from '@mui/material';
+import { useRouter } from 'next/router';
 export default function Header() {
+  //set theme
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -41,9 +42,14 @@ export default function Header() {
         <Brightness4Icon onClick={() => setTheme('light')} className="w-7 h-7" role="button" />
       );
     } else {
-      return <NightsStayIcon onClick={() => setTheme('dark')} className="w-7 h-7" role="button" />
+      return <NightsStayIcon onClick={() => setTheme('dark')} className="w-7 h-7" role="button" />;
     }
   };
+
+  //set link active
+  const router = useRouter();
+  const isActive = (route) => router.pathname === route;
+
   return (
     <div className="shadow-sm bg-white dark:bg-gray-900 border sticky top-0 z-50 dark:border-gray-700">
       <div className="flex justify-between items-center max-w-5xl mx-5 xl:mx-auto py-1">
@@ -83,12 +89,19 @@ export default function Header() {
         </div>
 
         <div className="flex items-center justify-end space-x-3 md:space-x-4">
-          <HomeOutlinedIcon className="nav-btn" />
+          <Link href="/">
+            <HomeOutlinedIcon className="nav-btn" color={isActive('/') ? 'primary' : ''} />
+          </Link>
           <Badge badgeContent={4} color="error">
             <SendOutlinedIcon color="action" className="rotate-45 nav-btn dark:text-white" />
           </Badge>
           <ControlPointIcon className="nav-btn" />
-          <ExploreOutlinedIcon className="nav-btn" />
+          <Link href="/explore">
+            <ExploreOutlinedIcon
+              className="nav-btn"
+              color={isActive('/explore') ? 'primary' : ''}
+            />
+          </Link>
 
           <FavoriteBorderOutlinedIcon className="nav-btn" />
           {renderThemeChanger()}
