@@ -1,8 +1,10 @@
 import React from 'react';
-import { TextField, Button, Divider, Typography, Link } from '@mui/material';
+import { TextField, Button, Divider, Typography } from '@mui/material';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import Image from 'next/image';
 import Seo from '../components/Seo';
+import Link from 'next/link';
+import { authService } from '../services/auth';
 
 export default function SignUp() {
   return (
@@ -11,7 +13,7 @@ export default function SignUp() {
       <div className="container mx-auto max-w-screen-md items-center h-full pt-20 w-2/3 md:w-1/6">
         <div className="flex flex-col items-center border border-gray-primary mb-4 rounded py-8">
           <div className="my-4">
-            <Image src="/assets/images/logo.png" alt="" width="175" height="51" />
+            <Image src="/assets/images/logo-auth.png" alt="" width="175" height="62" />
           </div>
           <Typography variant="subtitle1" className="mx-4 text-gray-400" align="center">
             Sign up to see photos and videos from your friends.
@@ -19,6 +21,7 @@ export default function SignUp() {
           <Button
             startIcon={<FacebookIcon />}
             className="my-2 text-white hover:text-blue-medium bg-blue-medium"
+            href={authService.loginByFacebook}
           >
             Login with facebook
           </Button>
@@ -66,7 +69,7 @@ export default function SignUp() {
         </div>
         <div className="flex justify-center items-center w-full p-4 rounded border border-gray-primary">
           <Typography className="subtitle2 text-sm">Have an account?</Typography>
-          <Link href="/login" underline="none">
+          <Link href="/login">
             <Typography className="text-sm ml-1 font-bold text-blue-medium cursor-pointer">
               Login
             </Typography>
