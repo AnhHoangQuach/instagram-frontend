@@ -25,7 +25,7 @@ export default function Login() {
         <div className="flex flex-col px-16 md:w-2/5 md:px-0">
           <div className="flex flex-col items-center p-4 border border-gray-primary mb-4 rounded">
             <div className="my-4">
-              <Image src="/assets/images/logo.png" alt="" width="175" height="51" />
+              <Image src="/assets/images/logo-auth.png" alt="" width="175" height="62" />
             </div>
             <form onSubmit={handleLogin}>
               <TextField

@@ -5,6 +5,8 @@ import { createTheme, ThemeProvider as MuiThemeProvider } from '@mui/material/st
 import { useRouter } from 'next/router';
 import NProgress from 'nprogress';
 import '../styles/nprogress.css';
+import store from '../store';
+import { Provider } from 'react-redux';
 
 const theme = createTheme({
   breakpoints: {
@@ -40,11 +42,13 @@ function MyApp({ Component, pageProps }) {
     };
   }, [router]);
   return (
-    <ThemeProvider enableSystem={true} attribute="class">
-      <MuiThemeProvider theme={theme}>
-        <Component {...pageProps} />
-      </MuiThemeProvider>
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider enableSystem={true} attribute="class">
+        <MuiThemeProvider theme={theme}>
+          <Component {...pageProps} />
+        </MuiThemeProvider>
+      </ThemeProvider>
+    </Provider>
   );
 }
 
