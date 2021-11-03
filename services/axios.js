@@ -6,4 +6,24 @@ const clientRaw = axios.create({
   paramsSerializer: (params) => stringify(params, { arrayFormat: 'index' }),
 });
 
+clientRaw.interceptors.response.use(
+  (response) => {
+    if (response && response.data) {
+      return response.data;
+    }
+    return response;
+  },
+  (error) => {
+    // Handle errors
+    if (error.response) {
+      error = {
+        statusCode: error?.response?.status,
+        errors: error?.response?.data?.error,
+      };
+    }
+
+    throw error;
+  }
+);
+
 export { clientRaw };

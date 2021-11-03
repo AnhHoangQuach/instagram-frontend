@@ -22,8 +22,11 @@
     "query-string": "^7.0.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-hook-form": "^7.18.1",
     "react-lines-ellipsis": "^0.15.0",
-    "react-multi-carousel": "^2.6.5"
+    "react-multi-carousel": "^2.6.5",
+    "react-redux": "^7.2.6",
+    "redux": "^4.1.2"
   },
   "devDependencies": {
     "autoprefixer": "^10.3.7",
