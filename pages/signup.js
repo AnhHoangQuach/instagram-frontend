@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Seo from '../components/Seo';
 import Link from 'next/link';
 import { authService } from '../services/auth';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   validateEmail,
   validateFullName,
@@ -14,18 +15,27 @@ import {
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import { Controller, useForm } from 'react-hook-form';
+import { useRouter } from 'next/router';
+import { getMe } from '../store/userSlice';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 export default function SignUp() {
   const { control, handleSubmit } = useForm({ mode: 'onChange' });
   const [isLoading, setIsLoading] = useState(false);
   const [hidePassword, setHidePassword] = useState(true);
+  const dispatch = useDispatch();
+  const router = useRouter();
 
   const handleClickSignUp = () => {
     handleSubmit(({ email, fullname, username, password }) => {
       setIsLoading(true);
       authService
         .signup({ email, fullname, username, password })
-        .then((result) => console.log(result))
+        .then(async (result) => {
+          const actionResult = await dispatch(getMe());
+          const currentUser = unwrapResult(actionResult);
+          console.log('Logged in user: ', currentUser);
+        })
         .finally(() => {
           setIsLoading(false);
         });
