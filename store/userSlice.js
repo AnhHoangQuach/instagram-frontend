@@ -1,5 +1,4 @@
 import { authService } from '../services/auth';
-
 const { createSlice, createAsyncThunk } = require('@reduxjs/toolkit');
 
 export const getMe = createAsyncThunk('auth/me', async (params, thunkAPI) => {
@@ -11,13 +10,17 @@ const userSlice = createSlice({
   name: 'user',
   initialState: {
     isLoggedIn: false,
-    currentUser: {},
+    user: {},
   },
   reducers: {},
   extraReducers: {
     [getMe.fulfilled]: (state, action) => {
-      state.isLoggedIn = true;
-      state.currentUser = action.payload;
+      const { email } = action.payload.data;
+      if (!email) {
+        state.isLoggedIn = false;
+        return;
+      }
+      return { isLoggedIn: true, user: action.payload };
     },
   },
 });

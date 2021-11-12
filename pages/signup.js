@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TextField, Button, Divider, Typography, FormGroup, CircularProgress } from '@mui/material';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import Image from 'next/image';
@@ -16,8 +16,7 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import { Controller, useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
-import { getMe } from '../store/userSlice';
-import { unwrapResult } from '@reduxjs/toolkit';
+import { setMessage } from '../store/messageSlice';
 
 export default function SignUp() {
   const { control, handleSubmit } = useForm({ mode: 'onChange' });
@@ -27,18 +26,21 @@ export default function SignUp() {
   const router = useRouter();
 
   const handleClickSignUp = () => {
-    handleSubmit(({ email, fullname, username, password }) => {
+    handleSubmit(async ({ email, fullname, username, password }) => {
       setIsLoading(true);
-      authService
-        .signup({ email, fullname, username, password })
-        .then(async (result) => {
-          const actionResult = await dispatch(getMe());
-          const currentUser = unwrapResult(actionResult);
-          console.log('Logged in user: ', currentUser);
-        })
-        .finally(() => {
+      try {
+        const responseSignup = await authService.signup({ email, fullname, username, password });
+        if (responseSignup.status === 'success') {
+          localStorage.setItem('token', responseSignup.data.token);
+          dispatch(setMessage({ type: 'success', message: 'Register success' }));
           setIsLoading(false);
-        });
+          router.replace('/');
+        }
+      } catch (error) {
+        const message = error.response?.data.message;
+        dispatch(setMessage({ type: 'error', message: message }));
+        setIsLoading(false);
+      }
     })();
   };
 

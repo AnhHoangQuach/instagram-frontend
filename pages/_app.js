@@ -7,6 +7,7 @@ import NProgress from 'nprogress';
 import '../styles/nprogress.css';
 import store from '../store';
 import { Provider } from 'react-redux';
+import Message from '../components/Message';
 
 const theme = createTheme({
   breakpoints: {
@@ -46,6 +47,7 @@ function MyApp({ Component, pageProps }) {
       <ThemeProvider enableSystem={true} attribute="class">
         <MuiThemeProvider theme={theme}>
           <Component {...pageProps} />
+          <Message />
         </MuiThemeProvider>
       </ThemeProvider>
     </Provider>
