@@ -4,9 +4,22 @@ import Stories from '../components/Stories';
 import Feed from '../components/Feed';
 import Suggestions from '../components/Suggestions';
 import { Grid, Box } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { getMe } from '../store/userSlice';
+import GlobalLoading from '../components/GlobalLoading';
 
 export default function Home() {
-  return (
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    dispatch(getMe());
+    setLoading(false);
+  }, []);
+  return loading ? (
+    <GlobalLoading />
+  ) : (
     <Box>
       <Seo title="Home" description="Home Page" />
       <Header />

@@ -54,7 +54,7 @@ export default function Header() {
     <div className="shadow-sm bg-white dark:bg-gray-900 border sticky top-0 z-50 dark:border-gray-700">
       <div className="flex justify-between items-center max-w-5xl mx-5 xl:mx-auto py-1">
         {theme === 'dark' ? (
-          <Link href="/">
+          <Link href="/" passHref>
             <InstagramIcon fontSize="large" className="cursor-pointer" />
           </Link>
         ) : (

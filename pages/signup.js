@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TextField, Button, Divider, Typography, FormGroup, CircularProgress } from '@mui/material';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import Image from 'next/image';
 import Seo from '../components/Seo';
 import Link from 'next/link';
 import { authService } from '../services/auth';
+import { useDispatch } from 'react-redux';
 import {
   validateEmail,
   validateFullName,
@@ -14,23 +15,38 @@ import {
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import { Controller, useForm } from 'react-hook-form';
+import { useRouter } from 'next/router';
+import { setMessage } from '../store/messageSlice';
 
 export default function SignUp() {
   const { control, handleSubmit } = useForm({ mode: 'onChange' });
   const [isLoading, setIsLoading] = useState(false);
   const [hidePassword, setHidePassword] = useState(true);
+  const dispatch = useDispatch();
+  const router = useRouter();
 
   const handleClickSignUp = () => {
-    handleSubmit(({ email, fullname, username, password }) => {
+    handleSubmit(async ({ email, fullname, username, password }) => {
       setIsLoading(true);
-      authService
-        .signup({ email, fullname, username, password })
-        .then((result) => console.log(result))
-        .finally(() => {
+      try {
+        const responseSignup = await authService.signup({ email, fullname, username, password });
+        if (responseSignup.status === 'success') {
+          localStorage.setItem('token', responseSignup.data.token);
+          dispatch(setMessage({ type: 'success', message: 'Register success' }));
           setIsLoading(false);
-        });
+          router.replace('/');
+        }
+      } catch (error) {
+        const message = error.response?.data.message;
+        dispatch(setMessage({ type: 'error', message: message }));
+        setIsLoading(false);
+      }
     })();
   };
+
+  useEffect(() => {
+    // log out when user return route to sign up
+  });
 
   const handleShowPassword = () => {
     setHidePassword(!hidePassword);

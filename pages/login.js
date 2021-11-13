@@ -1,16 +1,27 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Seo from '../components/Seo';
 import Image from 'next/image';
 import Link from 'next/link';
 import { TextField, Button, Divider, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import FacebookIcon from '@mui/icons-material/Facebook';
-
+import { useDispatch } from 'react-redux';
+import { setMessage } from '../store/messageSlice';
 export default function Login() {
   const router = useRouter();
 
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
+  useEffect(() => {
+    // redirect to home if already logged in
+    const token = localStorage.getItem('token');
+    if (token) {
+      dispatch(setMessage({ type: 'warning', message: 'You are already logged in' }));
+      router.push('/');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleLogin = () => {};
 
@@ -29,7 +40,7 @@ export default function Login() {
             </div>
             <form onSubmit={handleLogin}>
               <TextField
-                className="mb-4"
+                className="mb-4 "
                 label="Email"
                 onChange={({ target }) => setEmailAddress(target.value)}
                 value={emailAddress}
