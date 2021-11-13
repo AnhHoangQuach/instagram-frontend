@@ -16,5 +16,6 @@ module.exports = {
       scale: ['hover'],
     },
   },
+  important: true,
   plugins: [],
 };

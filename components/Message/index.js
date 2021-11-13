@@ -3,7 +3,7 @@ import Alert from '@mui/material/Alert';
 import { useDispatch, useSelector } from 'react-redux';
 import { closeMessage } from '../../store/messageSlice';
 
-function Message() {
+export default function Message() {
   const dispatch = useDispatch();
   const { open, duration, message, type, variant } = useSelector((state) => state.message);
 
@@ -24,5 +24,3 @@ function Message() {
     </Snackbar>
   );
 }
-
-export default Message;
