@@ -6,7 +6,7 @@ import Suggestions from '../components/Suggestions';
 import { Grid, Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { getMe } from '../store/userSlice';
+import { getMe, addToken } from '../store/userSlice';
 import GlobalLoading from '../components/GlobalLoading';
 
 export default function Home() {
@@ -15,6 +15,7 @@ export default function Home() {
 
   useEffect(() => {
     dispatch(getMe());
+    dispatch(addToken());
     setLoading(false);
   }, []);
   return loading ? (
