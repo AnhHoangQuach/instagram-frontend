@@ -5,21 +5,21 @@ import Link from 'next/link';
 import { TextField, Button, Divider, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import FacebookIcon from '@mui/icons-material/Facebook';
-import { useSelector } from 'react-redux';
-
+import { useDispatch } from 'react-redux';
+import { setMessage } from '../store/messageSlice';
 export default function Login() {
   const router = useRouter();
 
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
-  const { isLoggedIn } = useSelector((state) => state.user);
-
+  const dispatch = useDispatch();
   useEffect(() => {
     // redirect to home if already logged in
-    if (isLoggedIn) {
+    const token = localStorage.getItem('token');
+    if (token) {
+      dispatch(setMessage({ type: 'warning', message: 'You are already logged in' }));
       router.push('/');
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

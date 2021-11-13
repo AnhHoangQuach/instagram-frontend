@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Seo from '../components/Seo';
 import Link from 'next/link';
 import { authService } from '../services/auth';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
   validateEmail,
   validateFullName,
@@ -43,6 +43,10 @@ export default function SignUp() {
       }
     })();
   };
+
+  useEffect(() => {
+    // log out when user return route to sign up
+  });
 
   const handleShowPassword = () => {
     setHidePassword(!hidePassword);

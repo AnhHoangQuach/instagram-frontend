@@ -18,7 +18,7 @@ const useStyle = makeStyles(() => ({
     marginBottom: '1.2rem',
   },
   text: {
-    fontSize: '2.2rem',
+    fontSize: '1.5rem',
     color: 'secondary',
   },
 }));
@@ -29,7 +29,7 @@ function GlobalLoading({ title }) {
 
   return (
     <div className={classes.root}>
-      <CircularProgress className={classes.icon} size="4.2rem" />
+      <CircularProgress className={classes.icon} size="2rem" />
       <h2 className={classes.text}>{title}</h2>
     </div>
   );
@@ -40,7 +40,7 @@ GlobalLoading.propTypes = {
 };
 
 GlobalLoading.defaultProps = {
-  title: 'Loading ...',
+  title: 'Data is loading ...',
 };
 
 export default GlobalLoading;

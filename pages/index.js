@@ -7,7 +7,7 @@ import { Grid, Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getMe } from '../store/userSlice';
-import GlobalLoading from '../components/globalLoading';
+import GlobalLoading from '../components/GlobalLoading';
 
 export default function Home() {
   const dispatch = useDispatch();
