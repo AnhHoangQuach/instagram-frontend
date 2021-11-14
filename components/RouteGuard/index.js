@@ -12,11 +12,13 @@ export default function RouteGuard({ children }) {
   useEffect(() => {
     // on initial load - run auth check
     authCheck(router.asPath);
-
     // on route change start - hide page content by setting authorized to false
     const hideContent = (url) => {
       setAuthorized(false);
       console.log(`Loading: ${url}`);
+      if (url === '/login' && localStorage.getItem('token')) {
+        dispatch(setMessage({ type: 'success', message: 'Log out success' }));
+      }
       NProgress.start();
     };
     router.events.on('routeChangeStart', hideContent);

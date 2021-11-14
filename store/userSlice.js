@@ -16,9 +16,20 @@ const userSlice = createSlice({
   name: 'user',
   initialState: {
     isLoggedIn: false,
-    user: {},
+    currentUser: null,
+    token: null,
   },
-  reducers: {},
+  reducers: {
+    addToken: (state, action) => {
+      state.token = localStorage.getItem('token');
+    },
+    logout: (state, action) => {
+      state.currentUser = null;
+      state.isLoggedIn = false;
+      state.token = null;
+      localStorage.removeItem('token');
+    },
+  },
   extraReducers: {
     [getMe.fulfilled]: (state, action) => {
       const { email } = action.payload.user;
@@ -26,11 +37,11 @@ const userSlice = createSlice({
         state.isLoggedIn = false;
         return;
       }
-      return { isLoggedIn: true, user: action.payload.user };
+      return { isLoggedIn: true, currentUser: action.payload.user, token: state.token };
     },
   },
 });
 
 const { reducer, actions } = userSlice;
-export const {} = actions;
+export const { logout, addToken } = actions;
 export default reducer;

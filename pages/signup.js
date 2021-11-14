@@ -1,30 +1,34 @@
 import { useState, useEffect } from 'react';
 import { TextField, Button, Divider, Typography, FormGroup, CircularProgress } from '@mui/material';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import Image from 'next/image';
-import Seo from '../components/Seo';
 import Link from 'next/link';
-import { authService } from '../services/auth';
+import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
+import { setMessage } from '../store/messageSlice';
+import { logout } from '../store/userSlice';
+import Seo from '../components/Seo';
 import {
   validateEmail,
   validateFullName,
   validateUsername,
   validatePassword,
 } from '../utils/validation';
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import { authService } from '../services/auth';
 import { Controller, useForm } from 'react-hook-form';
-import { useRouter } from 'next/router';
-import { setMessage } from '../store/messageSlice';
 
 export default function SignUp() {
-  const { control, handleSubmit } = useForm({ mode: 'onChange' });
-  const [isLoading, setIsLoading] = useState(false);
-  const [hidePassword, setHidePassword] = useState(true);
   const dispatch = useDispatch();
   const router = useRouter();
 
+  //state
+  const [isLoading, setIsLoading] = useState(false);
+  const [hidePassword, setHidePassword] = useState(true);
+
+  //formData
+  const { control, handleSubmit } = useForm({ mode: 'onChange' });
   const handleClickSignUp = () => {
     handleSubmit(async ({ email, fullname, username, password }) => {
       setIsLoading(true);
@@ -46,7 +50,12 @@ export default function SignUp() {
 
   useEffect(() => {
     // log out when user return route to sign up
-  });
+    const token = localStorage.getItem('token');
+    if (token) {
+      dispatch(logout());
+      dispatch(setMessage({ type: 'success', message: 'You are logged out' }));
+    }
+  }, []);
 
   const handleShowPassword = () => {
     setHidePassword(!hidePassword);
@@ -65,7 +74,7 @@ export default function SignUp() {
           </Typography>
           <Button
             startIcon={<FacebookIcon />}
-            className="my-2 text-white text-xs md:text-sm hover:text-blue-medium bg-blue-medium"
+            className="my-2 text-white text-xs md:text-sm hover:text-blue-medium hover:bg-white bg-blue-medium"
             href={authService.loginByFacebook}
           >
             Signup with facebook

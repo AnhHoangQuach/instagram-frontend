@@ -15,8 +15,13 @@ import Link from 'next/link';
 import { useTheme } from 'next-themes';
 import { TextField, InputAdornment, Badge, Avatar, Hidden, Menu, MenuItem } from '@mui/material';
 import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../store/userSlice';
 export default function Header() {
-  //set theme
+  //set link active
+  const router = useRouter();
+  const isActive = (route) => router.pathname === route;
+  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -24,6 +29,12 @@ export default function Header() {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogOut = () => {
+    setAnchorEl(null);
+    dispatch(logout());
+    router.push('/login');
   };
 
   const { systemTheme, theme, setTheme } = useTheme();
@@ -45,10 +56,6 @@ export default function Header() {
       return <NightsStayIcon onClick={() => setTheme('dark')} className="w-7 h-7" role="button" />;
     }
   };
-
-  //set link active
-  const router = useRouter();
-  const isActive = (route) => router.pathname === route;
 
   return (
     <div className="shadow-sm bg-white dark:bg-gray-900 border sticky top-0 z-50 dark:border-gray-700">
@@ -140,7 +147,7 @@ export default function Header() {
               </MenuItem>
             </Link>
             <Link href="/" passHref>
-              <MenuItem onClick={handleClose}>Log Out</MenuItem>
+              <MenuItem onClick={handleLogOut}>Log Out</MenuItem>
             </Link>
           </Menu>
         </div>
