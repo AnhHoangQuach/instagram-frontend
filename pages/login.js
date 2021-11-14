@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react';
-import { TextField, Button, Divider, Typography } from '@mui/material';
+import { TextField, Button, Divider, Typography, FormGroup, CircularProgress } from '@mui/material';
 import FacebookIcon from '@mui/icons-material/Facebook';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { setMessage } from '../store/messageSlice';
 import Seo from '../components/Seo';
+import { validateEmail, validatePassword } from '../utils/validation';
+import { authService } from '../services/auth';
 import { useDispatch } from 'react-redux';
 import { Controller, useForm } from 'react-hook-form';
 export default function Login() {
@@ -14,10 +18,33 @@ export default function Login() {
 
   //formData
   const { control, handleSubmit } = useForm({ mode: 'onChange' });
+  const handleClickLogin = () => {
+    handleSubmit(async ({ email, password }) => {
+      setIsLoading(true);
+      try {
+        const responseLogin = await authService.login({ email, password });
+        if (responseLogin.status === 'success') {
+          localStorage.setItem('token', responseLogin.data.token);
+          dispatch(setMessage({ type: 'success', message: 'Login success' }));
+          setIsLoading(false);
+          router.replace('/');
+        }
+      } catch (error) {
+        const message = error.response?.data.message;
+        dispatch(setMessage({ type: 'error', message: message }));
+        setIsLoading(false);
+      }
+    })();
+  };
 
   //state
-  const [emailAddress, setEmailAddress] = useState('');
-  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [hidePassword, setHidePassword] = useState(true);
+
+  const handleShowPassword = () => {
+    setHidePassword(!hidePassword);
+  };
+
   useEffect(() => {
     // redirect to home if already logged in
     const token = localStorage.getItem('token');
@@ -28,8 +55,6 @@ export default function Login() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // button
-  const isInvalid = password === '' || emailAddress === '';
   return (
     <>
       <Seo title="Login" description="Login" />
@@ -42,42 +67,81 @@ export default function Login() {
             <div className="my-4">
               <Image src="/assets/images/logo-auth.png" alt="" width="175" height="62" />
             </div>
-            <form>
-              <TextField
+            <FormGroup className="w-full">
+              <Controller
                 className="mb-4 "
-                label="Email"
-                onChange={({ target }) => setEmailAddress(target.value)}
-                value={emailAddress}
-                variant="outlined"
-                size="small"
-                fullWidth
-                required
+                name="email"
+                defaultValue=""
+                control={control}
+                rules={{
+                  validate: {
+                    validator: (value) => validateEmail(value),
+                  },
+                }}
+                render={({ field, fieldState: { invalid, error } }) => (
+                  <TextField
+                    {...field}
+                    className="mb-4"
+                    label="Email"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    required
+                    error={invalid}
+                    helperText={error?.message}
+                  />
+                )}
               />
-              <TextField
-                className="mb-6"
-                label="Password"
-                onChange={({ target }) => setPassword(target.value)}
-                value={password}
-                variant="outlined"
-                size="small"
-                fullWidth
-                required
+              <Controller
+                name="password"
+                defaultValue=""
+                control={control}
+                rules={{
+                  validate: (value) => validatePassword(value),
+                }}
+                render={({ field, fieldState: { invalid, error } }) => (
+                  <TextField
+                    {...field}
+                    className="mb-6"
+                    label="Password"
+                    variant="outlined"
+                    size="small"
+                    type={hidePassword ? 'password' : 'text'}
+                    InputProps={{
+                      endAdornment: hidePassword ? (
+                        <VisibilityOffOutlinedIcon
+                          onClick={handleShowPassword}
+                          className="cursor-pointer"
+                        />
+                      ) : (
+                        <VisibilityOutlinedIcon
+                          onClick={handleShowPassword}
+                          className="cursor-pointer"
+                        />
+                      ),
+                    }}
+                    required
+                    error={invalid}
+                    helperText={error?.message}
+                  />
+                )}
               />
               <Button
                 variant="contained"
-                disabled={isInvalid}
+                disabled={isLoading}
+                startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : null}
                 size="large"
                 fullWidth
                 className="mb-4"
+                onClick={handleClickLogin}
               >
                 Login
               </Button>
-            </form>
+            </FormGroup>
             <Divider>OR</Divider>
             <Button
-              fullWidth
               startIcon={<FacebookIcon />}
-              className="my-2 text-white hover:text-blue-medium bg-blue-medium"
+              className="my-2 text-white text-xs md:text-sm hover:text-blue-medium hover:bg-white bg-blue-medium"
             >
               Login with facebook
             </Button>

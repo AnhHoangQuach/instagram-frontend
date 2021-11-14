@@ -50,8 +50,11 @@ export default function SignUp() {
 
   useEffect(() => {
     // log out when user return route to sign up
-    dispatch(logout());
-    dispatch(setMessage({ type: 'success', message: 'You are logged out' }));
+    const token = localStorage.getItem('token');
+    if (token) {
+      dispatch(logout());
+      dispatch(setMessage({ type: 'success', message: 'You are logged out' }));
+    }
   }, []);
 
   const handleShowPassword = () => {
@@ -71,7 +74,7 @@ export default function SignUp() {
           </Typography>
           <Button
             startIcon={<FacebookIcon />}
-            className="my-2 text-white text-xs md:text-sm hover:text-blue-medium bg-blue-medium"
+            className="my-2 text-white text-xs md:text-sm hover:text-blue-medium hover:bg-white bg-blue-medium"
             href={authService.loginByFacebook}
           >
             Signup with facebook

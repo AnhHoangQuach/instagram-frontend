@@ -16,7 +16,7 @@ export default function RouteGuard({ children }) {
     const hideContent = (url) => {
       setAuthorized(false);
       console.log(`Loading: ${url}`);
-      if (url === '/login') {
+      if (url === '/login' && localStorage.getItem('token')) {
         dispatch(setMessage({ type: 'success', message: 'Log out success' }));
       }
       NProgress.start();
