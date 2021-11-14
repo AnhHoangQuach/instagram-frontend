@@ -1,18 +1,23 @@
 import { useState, useEffect } from 'react';
-import Seo from '../components/Seo';
+import { TextField, Button, Divider, Typography } from '@mui/material';
+import FacebookIcon from '@mui/icons-material/Facebook';
 import Image from 'next/image';
 import Link from 'next/link';
-import { TextField, Button, Divider, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import { useDispatch } from 'react-redux';
 import { setMessage } from '../store/messageSlice';
+import Seo from '../components/Seo';
+import { useDispatch } from 'react-redux';
+import { Controller, useForm } from 'react-hook-form';
 export default function Login() {
   const router = useRouter();
+  const dispatch = useDispatch();
 
+  //formData
+  const { control, handleSubmit } = useForm({ mode: 'onChange' });
+
+  //state
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
-  const dispatch = useDispatch();
   useEffect(() => {
     // redirect to home if already logged in
     const token = localStorage.getItem('token');
@@ -23,8 +28,7 @@ export default function Login() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleLogin = () => {};
-
+  // button
   const isInvalid = password === '' || emailAddress === '';
   return (
     <>
@@ -38,7 +42,7 @@ export default function Login() {
             <div className="my-4">
               <Image src="/assets/images/logo-auth.png" alt="" width="175" height="62" />
             </div>
-            <form onSubmit={handleLogin}>
+            <form>
               <TextField
                 className="mb-4 "
                 label="Email"
