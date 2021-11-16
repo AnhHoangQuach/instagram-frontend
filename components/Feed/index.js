@@ -56,7 +56,7 @@ export default function Feed() {
     <div className="rounded-sm my-7 border">
       <div className="flex items-center justify-between p-5">
         <div className="flex items-center">
-          <Link href="/">
+          <Link href="/" passHref>
             <Avatar src="/assets/images/45851733.png" />
           </Link>
           <Typography variant="subtitle2" className="font-light mx-4">
@@ -84,7 +84,7 @@ export default function Feed() {
             10 likes
           </Typography>
           <div className={showCaption ? 'block' : 'flex items-center'}>
-            <Link href="/">
+            <Link href="/" passHref>
               <Typography variant="subtitle2" component="span" className="mr-1 font-bold">
                 hoanganh
               </Typography>
@@ -105,7 +105,7 @@ export default function Feed() {
             )}
           </div>
         </Box>
-        <Link href="/">
+        <Link href="/" passHref>
           <Typography variant="body2" component="div" className="text-gray-400">
             View all {comments.length} comments
           </Typography>
