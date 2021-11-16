@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import Header from '../components/Header';
-import Seo from '../components/Seo';
-import ProfilePicture from '../components/Profile/ProfilePicture';
-import PostCountSection from '../components/Profile/PostCountSection';
-import ProfileNameSection from '../components/Profile/ProfileNameSection';
-import NameBioSection from '../components/Profile/NameBioSection';
-import ProfileTabs from '../components/Profile/ProfileTabs';
+import Header from '../../components/Header';
+import Seo from '../../components/Seo';
+import ProfilePicture from '../../components/Profile/ProfilePicture';
+import PostCountSection from '../../components/Profile/PostCountSection';
+import ProfileNameSection from '../../components/Profile/ProfileNameSection';
+import NameBioSection from '../../components/Profile/NameBioSection';
+import ProfileTabs from '../../components/Profile/ProfileTabs';
 import { Box, Hidden, Card, CardContent, Typography, Button } from '@mui/material';
 
 export default function Profile() {

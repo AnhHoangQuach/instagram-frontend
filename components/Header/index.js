@@ -140,7 +140,7 @@ export default function Header() {
                 Saved
               </MenuItem>
             </Link>
-            <Link href="/" passHref>
+            <Link href="/profile/edit" passHref>
               <MenuItem onClick={handleClose} divider>
                 <SettingsOutlinedIcon className="mr-2" />
                 Settings
