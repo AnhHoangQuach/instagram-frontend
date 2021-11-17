@@ -85,7 +85,7 @@ export default function EditProfile() {
           </Box>
         </Box>
         <Typography variant="h6">anhhoang362k</Typography>
-        <Typography className="font-bold">Full Name</Typography>
+        <Typography className="font-semibold">Full Name</Typography>
         <Controller
           className="mb-4"
           name="fullname"
@@ -109,7 +109,7 @@ export default function EditProfile() {
             />
           )}
         />
-        <Typography className="font-bold">Username</Typography>
+        <Typography className="font-semibold">Username</Typography>
         <Controller
           className="mb-4"
           name="username"
@@ -133,7 +133,7 @@ export default function EditProfile() {
             />
           )}
         />
-        <Typography className="font-bold">Website</Typography>
+        <Typography className="font-semibold">Website</Typography>
         <Controller
           className="mb-4"
           name="website"
@@ -157,7 +157,7 @@ export default function EditProfile() {
             />
           )}
         />
-        <Typography className="font-bold">Bio</Typography>
+        <Typography className="font-semibold">Bio</Typography>
         <Controller
           className="mb-4 "
           name="bio"
@@ -181,7 +181,7 @@ export default function EditProfile() {
             />
           )}
         />
-        <Typography className="font-bold">Email</Typography>
+        <Typography className="font-semibold">Email</Typography>
         <Controller
           className="mb-4 "
           name="email"

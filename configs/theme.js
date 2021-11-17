@@ -11,6 +11,9 @@ const theme = createTheme({
       xl: 1200,
     },
   },
+  typography: {
+    fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;',
+  },
 });
 
 export default theme;

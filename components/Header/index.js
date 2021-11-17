@@ -17,6 +17,7 @@ import { TextField, InputAdornment, Badge, Avatar, Hidden, Menu, MenuItem } from
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../store/userSlice';
+import NewPost from '../../components/NewPost';
 export default function Header() {
   //set link active
   const router = useRouter();
@@ -67,12 +68,12 @@ export default function Header() {
         ) : (
           <div>
             <Hidden smDown>
-              <Link href="/">
+              <Link href="/" passHref>
                 <img src="/assets/images/logo.png" className="cursor-pointer" />
               </Link>
             </Hidden>
             <Hidden mdUp>
-              <Link href="/">
+              <Link href="/" passHref>
                 <InstagramIcon fontSize="large" className="cursor-pointer" />
               </Link>
             </Hidden>
@@ -96,14 +97,14 @@ export default function Header() {
         </div>
 
         <div className="flex items-center justify-end space-x-3 md:space-x-4">
-          <Link href="/">
+          <Link href="/" passHref>
             <HomeOutlinedIcon className="nav-btn" color={isActive('/') ? 'primary' : ''} />
           </Link>
           <Badge badgeContent={4} color="error">
             <SendOutlinedIcon color="action" className="rotate-45 nav-btn dark:text-white" />
           </Badge>
-          <ControlPointIcon className="nav-btn" />
-          <Link href="/explore">
+          <NewPost />
+          <Link href="/explore" passHref>
             <ExploreOutlinedIcon
               className="nav-btn"
               color={isActive('/explore') ? 'primary' : ''}
