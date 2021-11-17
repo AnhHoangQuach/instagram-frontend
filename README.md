@@ -19,4 +19,4 @@ docker run -dp 3000:3000 hoanganh36/instagram-frontend
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## Convention import
-- react -> mui-components -> mui-icons -> next-library -> slice -> your component
+- react -> mui-components -> mui-icons -> next-library -> slice -> your component -> third-party library
