@@ -1,8 +1,8 @@
-import Header from '../../components/Header';
-import Seo from '../../components/Seo';
-import { Grid } from '@mui/material';
+import { Grid, Hidden } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Link from 'next/link';
+import Header from '../../components/Header';
+import Seo from '../../components/Seo';
 import ChangePassword from '../../components/Settings/ChangePassword';
 import EditProfile from '../../components/Settings/EditProfile';
 
@@ -26,19 +26,21 @@ export default function Layout({ url, children }) {
       <Header />
 
       <Grid container className="max-w-5xl mx-auto mt-8 border ">
-        <Grid item sm={3}>
-          <Link href="/profile/edit" passHref>
-            <div className={`${classes.sidebarLink} ${isEditProfile ? classes.active : ''}`}>
-              Edit Profile
-            </div>
-          </Link>
-          <Link href="/profile/password" passHref>
-            <div className={`${classes.sidebarLink} ${!isEditProfile ? classes.active : ''}`}>
-              Change Password
-            </div>
-          </Link>
-        </Grid>
-        <Grid item xs={12} sm={9}>
+        <Hidden smDown>
+          <Grid item sm={3}>
+            <Link href="/profile/edit" passHref>
+              <div className={`${classes.sidebarLink} ${isEditProfile ? classes.active : ''}`}>
+                Edit Profile
+              </div>
+            </Link>
+            <Link href="/profile/password" passHref>
+              <div className={`${classes.sidebarLink} ${!isEditProfile ? classes.active : ''}`}>
+                Change Password
+              </div>
+            </Link>
+          </Grid>
+        </Hidden>
+        <Grid item sm={9}>
           {isEditProfile ? <EditProfile /> : <ChangePassword />}
         </Grid>
       </Grid>
