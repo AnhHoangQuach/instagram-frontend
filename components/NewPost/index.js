@@ -1,75 +1,155 @@
-import { Modal, Box, Typography, Divider } from '@mui/material';
+import { useState, useCallback, useEffect } from 'react';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Box,
+  IconButton,
+  Button,
+  TextareaAutosize,
+} from '@mui/material';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useState, useCallback } from 'react';
+import CloseIcon from '@mui/icons-material/Close';
 import VideoCameraBackOutlinedIcon from '@mui/icons-material/VideoCameraBackOutlined';
+import FeedImage from '../Feed/FeedImage';
+import Carousel from 'react-multi-carousel';
 import { useDropzone } from 'react-dropzone';
-export default function NewPost({}) {
-  const [files, setFiles] = useState([]);
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
-  const largeScreen = useMediaQuery((theme) => theme.breakpoints.up('md'));
+const BootstrapDialogTitle = (props) => {
+  const { children, onClose, ...other } = props;
 
-  const onDrop = useCallback((acceptedFiles) => {
-    console.log(acceptedFiles);
-  }, []);
-
-  const { getRootProps, getInputProps, isDragAccept, isDragReject } = useDropzone({
-    onDrop,
-    accept: ['image/*', 'video/*'],
-  });
   return (
-    <>
-      <ControlPointIcon onClick={handleOpen} />
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        title="Create Post"
-      >
-        <Box
+    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+      {children}
+      {onClose ? (
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
           sx={{
             position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            boxShadow: 24,
-            backgroundColor: '#fff',
-            borderRadius: '1rem',
-            width: !largeScreen ? '90%' : '40%',
-            textAlign: 'center',
-            border: 'none',
-            minHeight: '60%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
           }}
         >
-          <Typography id="modal-modal-title" variant="h6" className="py-1 font-semibold">
-            Create new post
-          </Typography>
-          <Divider />
-          <Box className="p-4 w-full">
-            <div className="focus:outline-none w-full" {...getRootProps()}>
-              <input {...getInputProps()} />
-              <div className="flex flex-col items-center justify-center h-full">
-                {isDragReject ? (
-                  <p>Sorry, file type not supported</p>
-                ) : (
-                  <>
-                    <VideoCameraBackOutlinedIcon fontSize="large" />
-                    <p>Drag photos and videos here</p>
-                  </>
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </DialogTitle>
+  );
+};
+
+export default function NewPost({}) {
+  const [files, setFiles] = useState([]);
+  const [caption, setCaption] = useState('');
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => {
+    setOpen(false);
+    setFiles([]);
+  };
+
+  const handleChangeCaption = (e) => {
+    setCaption(e.target.value);
+  };
+
+  const onDrop = useCallback((acceptedFiles) => {
+    setFiles(
+      acceptedFiles.map((file) =>
+        Object.assign(file, {
+          preview: URL.createObjectURL(file),
+        })
+      )
+    );
+  }, []);
+
+  useEffect(
+    () => () => {
+      // Make sure to revoke the data uris to avoid memory leaks
+      files.forEach((file) => URL.revokeObjectURL(file.preview));
+    },
+    [files]
+  );
+
+  const { getRootProps, getInputProps, isDragReject } = useDropzone({
+    onDrop,
+    accept: ['image/*', 'video/mp4'],
+  });
+
+  const responsive = {
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 1,
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 1,
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1,
+    },
+  };
+  return (
+    <>
+      <ControlPointIcon onClick={handleOpen} className="cursor-pointer" />
+      <Dialog
+        fullWidth={true}
+        maxWidth="sm"
+        onClose={handleClose}
+        aria-labelledby="customized-dialog-title"
+        open={open}
+      >
+        <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
+          Create new post
+        </BootstrapDialogTitle>
+        <DialogContent dividers>
+          {files.length > 0 ? (
+            <>
+              <Carousel responsive={responsive} showDots={true} keyBoardControl={true} itemClass>
+                {files.map((item) =>
+                  item.type.startsWith('image') ? (
+                    <FeedImage key={item.name} img={item.preview} isCreatePost={true} />
+                  ) : (
+                    <video
+                      src={item.preview}
+                      key={item.name}
+                      className="object-contain h-full mx-auto"
+                      controls
+                    />
+                  )
                 )}
+              </Carousel>
+            </>
+          ) : (
+            <Box className="p-4 w-full">
+              <div className="focus:outline-none w-full" {...getRootProps()}>
+                <input {...getInputProps()} />
+                <div className="flex flex-col items-center justify-center h-full">
+                  <VideoCameraBackOutlinedIcon fontSize="large" />
+                  {isDragReject ? (
+                    <p className="text-red-500">Sorry, file type not supported</p>
+                  ) : (
+                    <p>Drag photos and videos here</p>
+                  )}
+                </div>
               </div>
-            </div>
-          </Box>
-        </Box>
-      </Modal>
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions className="flex justify-between">
+          <TextareaAutosize
+            placeholder="Add Caption"
+            className="w-full outline-none"
+            maxRows={2}
+            onChange={handleChangeCaption}
+          />
+          <Button autoFocus onClick={handleClose}>
+            Share
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
