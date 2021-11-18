@@ -6,7 +6,7 @@ export default function MiniProfile() {
       <Avatar src="https://picsum.photos/200/300" alt="" />
 
       <Box className="flex-1 mx-4">
-        <h2 className="font-bold">Hoang Anh</h2>
+        <h2 className="font-semibold">Hoang Anh</h2>
         <h3 className="text-sm text-gray-400">Welcomte to Instagram</h3>
       </Box>
 

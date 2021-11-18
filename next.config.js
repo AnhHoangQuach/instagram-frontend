@@ -1,4 +1,4 @@
 module.exports = {
   reactStrictMode: true,
-  domains: ['picsum.photos'],
+  domains: ['picsum.photos', 'res.cloudinary.com'],
 };

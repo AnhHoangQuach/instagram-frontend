@@ -80,12 +80,12 @@ export default function Feed() {
           <BookmarkBorderOutlinedIcon />
         </div>
         <Box mt={1}>
-          <Typography variant="subtitle2" className="font-bold">
+          <Typography variant="subtitle2" className="font-semibold">
             10 likes
           </Typography>
           <div className={showCaption ? 'block' : 'flex items-center'}>
             <Link href="/" passHref>
-              <Typography variant="subtitle2" component="span" className="mr-1 font-bold">
+              <Typography variant="subtitle2" component="span" className="mr-1 font-semibold">
                 hoanganh
               </Typography>
             </Link>
@@ -113,7 +113,7 @@ export default function Feed() {
         {comments.map((item) => (
           <div key={item.id}>
             {/* <Link href=""> */}
-            <Typography variant="subtitle2" component="span" className="font-bold">
+            <Typography variant="subtitle2" component="span" className="font-semibold">
               hoanganh
             </Typography>{' '}
             <Typography variant="body2" component="span">
