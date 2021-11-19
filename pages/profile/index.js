@@ -9,16 +9,8 @@ import ProfileTabs from '../../components/Profile/ProfileTabs';
 import { Box, Hidden, Card, CardContent, Typography, Button } from '@mui/material';
 
 export default function Profile() {
-  const [showOptionsMenu, setOptionsMenu] = useState(false);
   const isOwner = true;
 
-  const handleOptionsMenuClick = () => {
-    setOptionsMenu(true);
-  };
-
-  const handleCloseMenu = () => {
-    setOptionsMenu(false);
-  };
   return (
     <>
       <Seo title="hoanganh (@hoanganh362)" />
@@ -35,10 +27,7 @@ export default function Profile() {
           >
             <ProfilePicture isOwner={isOwner} size={150} />
             <CardContent sx={{ display: 'grid', gridGrap: 20 }}>
-              <ProfileNameSection
-                isOwner={isOwner}
-                handleOptionsMenuClick={handleOptionsMenuClick}
-              />
+              <ProfileNameSection isOwner={isOwner} />
               <PostCountSection />
               <NameBioSection />
             </CardContent>
@@ -56,10 +45,7 @@ export default function Profile() {
                 }}
               >
                 <ProfilePicture isOwner={isOwner} size={77} />
-                <ProfileNameSection
-                  isOwner={isOwner}
-                  handleOptionsMenuClick={handleOptionsMenuClick}
-                />
+                <ProfileNameSection isOwner={isOwner} />
               </Box>
               <NameBioSection />
             </CardContent>

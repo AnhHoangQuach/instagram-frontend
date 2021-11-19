@@ -1,31 +1,32 @@
-import { Hidden, Box, Button, Typography } from '@mui/material';
+import { Hidden, Box, Button, Typography, Divider, Avatar } from '@mui/material';
 import { useState } from 'react';
 import Link from 'next/link';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
-import UnfollowDialog from '../Profile/UnfollowDialog';
+import DialogCommon from '../DialogCommon';
 
-export default function ProfileNameSection({ isOwner, handleOptionsMenuClick }) {
+export default function ProfileNameSection({ isOwner }) {
   const [showUnfollowDialog, setUnfollowDialog] = useState(false);
+  const [showSettingsDialog, setSettingsDialog] = useState(false);
 
   let followButton;
-  const isFollowing = true;
+  const isFollowing = false;
   const isFollower = false;
 
   if (isFollowing) {
     followButton = (
-      <Button onClick={() => setUnfollowDialog(true)} variant="outlined">
+      <Button size="small" onClick={() => setUnfollowDialog(true)} variant="outlined">
         Following
       </Button>
     );
   } else if (isFollower) {
     followButton = (
-      <Button variant="contained" color="primary">
+      <Button size="small" variant="contained" color="primary">
         Follow Back
       </Button>
     );
   } else {
     followButton = (
-      <Button variant="contained" color="primary">
+      <Button size="small" variant="contained" color="primary">
         Follow
       </Button>
     );
@@ -46,7 +47,7 @@ export default function ProfileNameSection({ isOwner, handleOptionsMenuClick }) 
           <Typography className="text-xl">Hoanganh</Typography>
           {isOwner ? (
             <>
-              <Link href="/">
+              <Link href="/profile/edit" passHref>
                 <Button
                   variant="outlined"
                   className="border-gray-400 px-0 text-black capitalize"
@@ -55,10 +56,13 @@ export default function ProfileNameSection({ isOwner, handleOptionsMenuClick }) 
                   Edit Profile
                 </Button>
               </Link>
-              <SettingsOutlinedIcon className="cursor-pointer" onClick={handleOptionsMenuClick} />
+              <SettingsOutlinedIcon
+                className="cursor-pointer"
+                onClick={() => setSettingsDialog(true)}
+              />
             </>
           ) : (
-            { followButton }
+            <>{followButton}</>
           )}
         </Box>
       </Hidden>
@@ -76,11 +80,14 @@ export default function ProfileNameSection({ isOwner, handleOptionsMenuClick }) 
           >
             <Typography className="text-xl">Hoanganh</Typography>
             {isOwner && (
-              <SettingsOutlinedIcon className="cursor-pointer" onClick={handleOptionsMenuClick} />
+              <SettingsOutlinedIcon
+                className="cursor-pointer"
+                onClick={() => setSettingsDialog(true)}
+              />
             )}
           </Box>
           {isOwner ? (
-            <Link href="/">
+            <Link href="/profile/edit" passHref>
               <Button
                 variant="outlined"
                 className="border-gray-400 px-0 text-black text-sm capitalize w-full"
@@ -93,7 +100,31 @@ export default function ProfileNameSection({ isOwner, handleOptionsMenuClick }) 
           )}
         </section>
       </Hidden>
-      {showUnfollowDialog && <UnfollowDialog onClose={() => setUnfollowDialog(false)} />}
+      {showUnfollowDialog && (
+        <DialogCommon onClose={() => setUnfollowDialog(false)}>
+          <Box
+            sx={{
+              display: 'grid',
+              justifyContent: 'center',
+              padding: '32px 16px 16px',
+            }}
+          >
+            <Avatar src="/assets/images/45851733.png" alt="" sx={{ width: 90, height: 90 }} />
+          </Box>
+          <Typography align="center" variant="body2" className="mb-2">
+            Unfollow @hoanganh?
+          </Typography>
+          <Divider />
+          <Button className="normal-case text-red-700">Unfollow</Button>
+        </DialogCommon>
+      )}
+      {showSettingsDialog && (
+        <DialogCommon onClose={() => setSettingsDialog(false)}>
+          <Button className="normal-case py-3">Change Password</Button>
+          <Divider />
+          <Button className="normal-case py-3">Logout</Button>
+        </DialogCommon>
+      )}
     </>
   );
 }
