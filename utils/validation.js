@@ -60,3 +60,8 @@ export const validateWebsite = (website) => {
   }
   return true;
 };
+
+export const convertHashTag = (text) => {
+  var repl = text.replace(/#(\w+)/g, '<a href="#">#$1</a>');
+  return repl;
+};

@@ -15,7 +15,7 @@ import Link from 'next/link';
 import { useTheme } from 'next-themes';
 import { TextField, InputAdornment, Badge, Avatar, Hidden, Menu, MenuItem } from '@mui/material';
 import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/userSlice';
 import NewPost from '../../components/NewPost';
 export default function Header() {
@@ -58,6 +58,8 @@ export default function Header() {
     }
   };
 
+  //set info user
+  const { currentUser } = useSelector((state) => state.user);
   return (
     <div className="shadow-sm bg-white dark:bg-gray-900 border sticky top-0 z-50 dark:border-gray-700">
       <div className="flex justify-between items-center max-w-5xl mx-5 xl:mx-auto py-1">
@@ -114,12 +116,13 @@ export default function Header() {
           <FavoriteBorderOutlinedIcon className="nav-btn" />
           {renderThemeChanger()}
           <Avatar
-            src="/assets/images/45851733.png"
+            src={currentUser.avatar}
             id="basic-avatar"
             aria-controls="basic-menu"
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
             onClick={handleClick}
+            className="cursor-pointer"
           />
           <Menu
             id="basic-menu"
@@ -147,9 +150,7 @@ export default function Header() {
                 Settings
               </MenuItem>
             </Link>
-            <Link href="/" passHref>
-              <MenuItem onClick={handleLogOut}>Log Out</MenuItem>
-            </Link>
+            <MenuItem onClick={handleLogOut}>Log Out</MenuItem>
           </Menu>
         </div>
       </div>

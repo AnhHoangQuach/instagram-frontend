@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import FeedComment from './FeedComment';
 import FeedImage from './FeedImage';
-import FeedDialog from './FeedDialog';
+import DialogCommon from '../DialogCommon';
 import { Avatar, Typography, Box, Button, Hidden, Divider } from '@mui/material';
 import faker from 'faker';
 import Carousel from 'react-multi-carousel';
@@ -130,7 +130,21 @@ export default function Feed() {
         <Divider />
         <FeedComment />
       </Hidden>
-      {showOptionsDialog && <FeedDialog onClose={() => setOptionsDialog(false)} />}
+      {showOptionsDialog && (
+        <DialogCommon onClose={() => setOptionsDialog(false)}>
+          <Button className="normal-case text-red-700 font-semibold">Unfollow</Button>
+          <Divider />
+          <Button className="normal-case">
+            <Link href="/login" underline="none">
+              Go to post
+            </Link>
+          </Button>
+          <Divider />
+          <Button className="normal-case">Share</Button>
+          <Divider />
+          <Button className="normal-case">Copy Link</Button>
+        </DialogCommon>
+      )}
     </div>
   );
 }

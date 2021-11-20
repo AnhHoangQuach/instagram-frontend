@@ -13,6 +13,7 @@ import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import CloseIcon from '@mui/icons-material/Close';
 import VideoCameraBackOutlinedIcon from '@mui/icons-material/VideoCameraBackOutlined';
 import FeedImage from '../Feed/FeedImage';
+import { convertHashTag } from '../../utils/validation';
 import Carousel from 'react-multi-carousel';
 import { useDropzone } from 'react-dropzone';
 
@@ -52,6 +53,12 @@ export default function NewPost({}) {
 
   const handleChangeCaption = (e) => {
     setCaption(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    console.log(files, caption);
+    try {
+    } catch (err) {}
   };
 
   const onDrop = useCallback((acceptedFiles) => {
@@ -145,7 +152,7 @@ export default function NewPost({}) {
             maxRows={2}
             onChange={handleChangeCaption}
           />
-          <Button autoFocus onClick={handleClose}>
+          <Button autoFocus onClick={handleSubmit}>
             Share
           </Button>
         </DialogActions>

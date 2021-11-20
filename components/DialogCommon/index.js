@@ -21,7 +21,7 @@ export default function DialogCommon({ onClose, children }) {
     >
       {children}
       <Divider />
-      <Button className="normal-case py-3" onClick={onClose}>
+      <Button className="normal-case" onClick={onClose}>
         Cancel
       </Button>
     </Dialog>

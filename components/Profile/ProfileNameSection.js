@@ -1,12 +1,22 @@
 import { Hidden, Box, Button, Typography, Divider, Avatar } from '@mui/material';
 import { useState } from 'react';
+import router from 'next/router';
 import Link from 'next/link';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../store/userSlice';
 import DialogCommon from '../DialogCommon';
 
 export default function ProfileNameSection({ isOwner }) {
+  const dispatch = useDispatch();
+
   const [showUnfollowDialog, setUnfollowDialog] = useState(false);
   const [showSettingsDialog, setSettingsDialog] = useState(false);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    router.push('/login');
+  };
 
   let followButton;
   const isFollowing = false;
@@ -120,9 +130,13 @@ export default function ProfileNameSection({ isOwner }) {
       )}
       {showSettingsDialog && (
         <DialogCommon onClose={() => setSettingsDialog(false)}>
-          <Button className="normal-case py-3">Change Password</Button>
+          <Link href="/profile/password" passHref>
+            <Button className="normal-case ">Change Password</Button>
+          </Link>
           <Divider />
-          <Button className="normal-case py-3">Logout</Button>
+          <Button className="normal-case" onClick={handleLogout}>
+            Logout
+          </Button>
         </DialogCommon>
       )}
     </>
