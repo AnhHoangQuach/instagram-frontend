@@ -116,7 +116,7 @@ export default function Header() {
           <FavoriteBorderOutlinedIcon className="nav-btn" />
           {renderThemeChanger()}
           <Avatar
-            src={currentUser.avatar}
+            src={currentUser?.avatar}
             id="basic-avatar"
             aria-controls="basic-menu"
             aria-haspopup="true"
