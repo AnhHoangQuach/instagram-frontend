@@ -14,9 +14,9 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    dispatch(getMe());
-    dispatch(addToken());
-    setLoading(false);
+    Promise.all([dispatch(getMe()), dispatch(addToken())]).then(() => {
+      setLoading(false);
+    });
   }, []);
   return loading ? (
     <GlobalLoading />
