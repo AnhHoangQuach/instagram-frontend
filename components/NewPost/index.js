@@ -1,8 +1,9 @@
 import { useState, useCallback, useEffect } from 'react';
-import { Box, Button, IconButton } from '@mui/material';
+import { Box, Button, IconButton, CircularProgress } from '@mui/material';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import VideoCameraBackOutlinedIcon from '@mui/icons-material/VideoCameraBackOutlined';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
+import { useRouter } from 'next/router';
 import FeedImage from '../Feed/FeedImage';
 import ModalCommon from '../ModalCommon';
 import defaultStyle from './defaultStyle';
@@ -25,6 +26,7 @@ export default function NewPost({}) {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState('files');
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const dispatch = useDispatch();
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -41,10 +43,13 @@ export default function NewPost({}) {
     formData.set('caption', caption);
     try {
       setLoading(true);
-      const post = await postService.createPost(formData);
-      console.log(post);
+      const postRes = await postService.createPost(formData);
+      if (postRes.status === 'success') {
+        dispatch(setMessage({ type: 'success', message: 'Post created successfully' }));
+        router.push('/');
+      }
+      setLoading(false);
     } catch (error) {
-      console.log(error.response?.data.message);
       setLoading(false);
       dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
     }
@@ -76,7 +81,8 @@ export default function NewPost({}) {
                 <IconButton aria-label="close" onClick={() => setStep('filters')}>
                   <ArrowBackOutlinedIcon />
                 </IconButton>
-                <Button autoFocus onClick={handleCreatePost}>
+                <Button autoFocus disabled={loading} onClick={handleCreatePost}>
+                  {loading && <CircularProgress size="1rem" className="m-1" />}
                   Share
                 </Button>
               </div>
