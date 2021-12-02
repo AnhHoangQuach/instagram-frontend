@@ -40,6 +40,13 @@ export default function NewPost({}) {
     for (const file of files) {
       formData.append('pictures', file);
     }
+
+    const hashtags = [...getHashTag(caption)];
+
+    for (const tag of hashtags) {
+      formData.append('hashtags', tag);
+    }
+
     formData.set('caption', caption);
     try {
       setLoading(true);
