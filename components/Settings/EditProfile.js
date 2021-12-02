@@ -20,6 +20,7 @@ import {
   validateBio,
   validateWebsite,
 } from '../../utils/validation';
+import { useSelector } from 'react-redux';
 import { Controller, useForm } from 'react-hook-form';
 
 const Input = styled('input')({
@@ -48,6 +49,7 @@ export default function EditProfile() {
   };
 
   const [isLoading, setIsLoading] = useState(false);
+  const { currentUser } = useSelector((state) => state.user);
   return (
     <Grid
       container
@@ -59,7 +61,7 @@ export default function EditProfile() {
       <div className="grid grid-cols-2 p-4 md:w-4/5 items-center justify-evenly">
         <Box position="relative" display="inline-flex">
           <Avatar
-            src="/assets/images/45851733.png"
+            src={currentUser?.avatar}
             style={{
               width: 100,
               height: 100,
@@ -84,12 +86,12 @@ export default function EditProfile() {
             </Tooltip>
           </Box>
         </Box>
-        <Typography variant="h6">anhhoang362k</Typography>
+        <Typography variant="h6">{currentUser?.username}</Typography>
         <Typography className="font-semibold">Full Name</Typography>
         <Controller
           className="mb-4"
           name="fullname"
-          defaultValue="hoanganh"
+          defaultValue={currentUser?.fullname}
           control={control}
           rules={{
             validate: {
@@ -113,7 +115,7 @@ export default function EditProfile() {
         <Controller
           className="mb-4"
           name="username"
-          defaultValue="hoanganh"
+          defaultValue={currentUser?.username}
           control={control}
           rules={{
             validate: {
@@ -137,7 +139,7 @@ export default function EditProfile() {
         <Controller
           className="mb-4"
           name="website"
-          defaultValue="hoanganh"
+          defaultValue={currentUser?.website}
           control={control}
           rules={{
             validate: {
@@ -161,7 +163,7 @@ export default function EditProfile() {
         <Controller
           className="mb-4 "
           name="bio"
-          defaultValue="hoanganh"
+          defaultValue={currentUser?.bio}
           control={control}
           rules={{
             validate: {
@@ -185,7 +187,7 @@ export default function EditProfile() {
         <Controller
           className="mb-4 "
           name="email"
-          defaultValue="ronaldo"
+          defaultValue={currentUser?.email}
           control={control}
           rules={{
             validate: {

@@ -13,6 +13,7 @@ import Carousel from 'react-multi-carousel';
 import { useDropzone } from 'react-dropzone';
 import { Mention, MentionsInput } from 'react-mentions';
 import { setMessage } from '../../store/messageSlice';
+import { getHashTag } from '../../utils/helpers';
 
 //fake data
 const users = [

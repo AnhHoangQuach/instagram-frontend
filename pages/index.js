@@ -25,7 +25,7 @@ export default function Home() {
       <Seo title="Home" description="Home Page" />
       <Header />
       <Grid container className="max-w-5xl mx-auto">
-        <Grid item xs={12} sm={8}>
+        <Grid item xs={12} sm={8} className="w-full">
           <Stories />
           <Feed />
         </Grid>
