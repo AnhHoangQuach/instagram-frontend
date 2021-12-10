@@ -1,6 +1,5 @@
 import { Grid, Hidden, Box, Typography, Tabs, Tab } from '@mui/material';
 import { useState } from 'react';
-import Link from 'next/link';
 import Header from '../../components/Header';
 import Seo from '../../components/Seo';
 import ChangePassword from '../../components/Settings/ChangePassword';
