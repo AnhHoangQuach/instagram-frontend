@@ -9,21 +9,13 @@ import {
   Button,
   Box,
 } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { validatePassword } from '../../utils/validation';
 import { Controller, useForm } from 'react-hook-form';
 
-const useStyles = makeStyles((theme) => ({
-  setBorder: {
-    borderLeft: '1px solid #dbdbdb',
-  },
-}));
-
 export default function ChangePassword() {
-  const classes = useStyles();
   const largeScreen = useMediaQuery((theme) => theme.breakpoints.up('md'));
   //state
   const [isLoading, setIsLoading] = useState(false);
@@ -55,7 +47,7 @@ export default function ChangePassword() {
   return (
     <Grid
       container
-      className={`max-w-5xl ${classes.setBorder}`}
+      className="max-w-5xl"
       justifyContent="center"
       alignItems="center"
       direction={largeScreen ? 'column' : 'row'}
@@ -73,7 +65,7 @@ export default function ChangePassword() {
         />
         <Typography variant="h6">anhhoang362k</Typography>
       </Box>
-      <FormGroup className="md:w-2/5 mt-4">
+      <FormGroup className="w-4/5 md:w-2/5 mt-4">
         <Controller
           name="old_password"
           defaultValue=""

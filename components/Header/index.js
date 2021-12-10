@@ -133,7 +133,7 @@ export default function Header() {
               'aria-labelledby': 'basic-avatar',
             }}
           >
-            <Link href="/profile" passHref>
+            <Link href={`/profile/${currentUser?._id}`} passHref>
               <MenuItem onClick={handleClose}>
                 <AccountCircleOutlinedIcon className="mr-2" /> Profile
               </MenuItem>

@@ -102,8 +102,8 @@ export default function Feed() {
       <div className="rounded-sm my-7 border" key={post._id}>
         <div className="flex items-center justify-between p-5">
           <div className="flex items-center">
-            <Link href="/" passHref>
-              <Avatar src={post.user.avatar} />
+            <Link href={`/profile/${post.user._id}`} passHref>
+              <Avatar src={post.user.avatar} className="cursor-pointer" />
             </Link>
             <Typography variant="subtitle2" className="font-light mx-4">
               {post.user.username}

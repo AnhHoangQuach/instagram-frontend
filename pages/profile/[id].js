@@ -6,11 +6,11 @@ import PostCountSection from '../../components/Profile/PostCountSection';
 import ProfileNameSection from '../../components/Profile/ProfileNameSection';
 import NameBioSection from '../../components/Profile/NameBioSection';
 import ProfileTabs from '../../components/Profile/ProfileTabs';
-import { Box, Hidden, Card, CardContent, Typography, Button } from '@mui/material';
+import { Box, Hidden, Card, CardContent } from '@mui/material';
+import { useRouter } from 'next/router';
 
 export default function Profile() {
   const isOwner = true;
-
   return (
     <>
       <Seo title="hoanganh (@hoanganh362)" />

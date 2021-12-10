@@ -130,9 +130,6 @@ export default function ProfileNameSection({ isOwner }) {
       )}
       {showSettingsDialog && (
         <DialogCommon onClose={() => setSettingsDialog(false)}>
-          <Link href="/profile/password" passHref>
-            <Button className="normal-case ">Change Password</Button>
-          </Link>
           <Divider />
           <Button className="normal-case" onClick={handleLogout}>
             Logout
