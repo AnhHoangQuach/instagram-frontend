@@ -3,7 +3,7 @@ import { useState } from 'react';
 import router from 'next/router';
 import Link from 'next/link';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/userSlice';
 import DialogCommon from '../DialogCommon';
 

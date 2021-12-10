@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import NProgress from 'nprogress';
 import { setMessage } from '../../store/messageSlice';
 import { useDispatch } from 'react-redux';
+import { getMe, addToken } from '../../store/userSlice';
 
 export default function RouteGuard({ children }) {
   const router = useRouter();
@@ -49,7 +50,9 @@ export default function RouteGuard({ children }) {
         pathname: '/login',
       });
     } else {
-      setAuthorized(true);
+      Promise.all([dispatch(getMe()), dispatch(addToken())]).then(() => {
+        setAuthorized(true);
+      });
     }
     NProgress.done();
   }
