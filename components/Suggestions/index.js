@@ -7,6 +7,7 @@ export default function Suggestions() {
   useEffect(() => {
     const suggestions = [...Array(5)].map((_, i) => ({
       ...faker.helpers.contextualCard(),
+      avatar: faker.image.image(),
       id: i,
     }));
     setSuggestions(suggestions);

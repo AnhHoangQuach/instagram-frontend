@@ -1,3 +1,4 @@
 export const getHashTag = (value) => {
-  return value.match(/(^|\s)(#[a-z\d-]+)/g);
+  const result = value.match(/(#[a-z\d-]+)/g);
+  return result ? result.map((item) => item.replace('#', '')) : value;
 };

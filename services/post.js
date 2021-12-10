@@ -2,9 +2,12 @@ import { clientRaw } from './axios';
 
 const createPost = (body) => clientRaw.post(`/post/create`, body);
 
-const getPostByID = ({ postId }) => clientRaw.post(`/post/${postId}`);
+const getPostByID = ({ postId }) => clientRaw.get(`/post/${postId}`);
+
+const getPosts = (params) => clientRaw.get(`/post`, { params });
 
 export const postService = {
   createPost,
   getPostByID,
+  getPosts,
 };

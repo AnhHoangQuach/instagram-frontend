@@ -7,8 +7,9 @@ import 'react-multi-carousel/lib/styles.css';
 export default function Stories() {
   const [suggestions, setSuggestions] = useState([]);
   useEffect(() => {
-    const suggestions = [...Array(20)].map((_, i) => ({
+    const suggestions = [...Array(10)].map((_, i) => ({
       ...faker.helpers.contextualCard(),
+      avatar: faker.image.image(),
       id: i,
     }));
     setSuggestions(suggestions);
@@ -33,7 +34,7 @@ export default function Stories() {
   };
 
   return (
-    <div className="p-6 mt-8 border-gray-200 border rounded-sm">
+    <div className="p-4 mt-8 border-gray-200 border rounded-sm">
       <Carousel responsive={responsive}>
         {suggestions.map((profile) => (
           <Story key={profile.id} img={profile.avatar} username={profile.username} />
