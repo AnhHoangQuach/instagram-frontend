@@ -33,7 +33,7 @@ export default function Profile() {
               gridTemplateColumns: 'minmax(auto, 290px) minmax(auto, 645px)',
             }}
           >
-            <ProfilePicture isOwner={isOwner} size={150} />
+            <ProfilePicture isOwner={isOwner} size={150} image={currentUser.avatar} />
             <CardContent sx={{ display: 'grid', gridGrap: 20 }}>
               <ProfileNameSection isOwner={isOwner} />
               <PostCountSection />
