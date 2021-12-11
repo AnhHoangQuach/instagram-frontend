@@ -9,12 +9,6 @@
   }
 }
 
-@layer components {
-  .nav-btn {
-    @apply md:inline-flex cursor-pointer hover:scale-125 transition-all duration-150 ease-out;
-  }
-}
-
 .mentions {
   margin: 0.5rem 0;
 }
