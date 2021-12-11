@@ -8,12 +8,20 @@ import NameBioSection from '../../components/Profile/NameBioSection';
 import ProfileTabs from '../../components/Profile/ProfileTabs';
 import { Box, Hidden, Card, CardContent } from '@mui/material';
 import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
 
 export default function Profile() {
-  const isOwner = true;
+  const isOwner = false;
+  const { currentUser } = useSelector((state) => state.user);
+  const router = useRouter();
+  const { id } = router.query;
+  if (currentUser?._id === id) {
+    isOwner = true;
+  }
+
   return (
     <>
-      <Seo title="hoanganh (@hoanganh362)" />
+      <Seo title={`${currentUser.fullname} (@${currentUser.username})`} />
       <Header />
       <Box className="max-w-5xl xl:mx-auto mt-8">
         <Hidden smDown>
@@ -25,7 +33,7 @@ export default function Profile() {
               gridTemplateColumns: 'minmax(auto, 290px) minmax(auto, 645px)',
             }}
           >
-            <ProfilePicture isOwner={isOwner} size={150} />
+            <ProfilePicture isOwner={isOwner} size={150} image={currentUser.avatar} />
             <CardContent sx={{ display: 'grid', gridGrap: 20 }}>
               <ProfileNameSection isOwner={isOwner} />
               <PostCountSection />

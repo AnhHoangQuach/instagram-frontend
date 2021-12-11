@@ -1,8 +1,5 @@
 import SearchIcon from '@mui/icons-material/Search';
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
-import ControlPointIcon from '@mui/icons-material/ControlPoint';
-import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
@@ -18,6 +15,7 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/userSlice';
 import NewPost from '../../components/NewPost';
+import { HomeIcon, HomeActiveIcon, ExploreIcon, ExploreActiveIcon } from '../../utils/icons';
 export default function Header() {
   //set link active
   const router = useRouter();
@@ -100,17 +98,22 @@ export default function Header() {
 
         <div className="flex items-center justify-end space-x-3 md:space-x-4">
           <Link href="/" passHref>
-            <HomeOutlinedIcon className="nav-btn" color={isActive('/') ? 'primary' : ''} />
+            {isActive('/') ? (
+              <HomeActiveIcon className="cursor-pointer" />
+            ) : (
+              <HomeIcon className="cursor-pointer" />
+            )}
           </Link>
           <Badge badgeContent={4} color="error">
             <SendOutlinedIcon color="action" className="rotate-45 nav-btn dark:text-white" />
           </Badge>
           <NewPost />
           <Link href="/explore" passHref>
-            <ExploreOutlinedIcon
-              className="nav-btn"
-              color={isActive('/explore') ? 'primary' : ''}
-            />
+            {isActive('/explore') ? (
+              <ExploreActiveIcon className="cursor-pointer" />
+            ) : (
+              <ExploreIcon className="cursor-pointer" />
+            )}
           </Link>
 
           <FavoriteBorderOutlinedIcon className="nav-btn" />

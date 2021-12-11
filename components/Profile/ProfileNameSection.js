@@ -3,11 +3,12 @@ import { useState } from 'react';
 import router from 'next/router';
 import Link from 'next/link';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/userSlice';
 import DialogCommon from '../DialogCommon';
 
 export default function ProfileNameSection({ isOwner }) {
+  const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const [showUnfollowDialog, setUnfollowDialog] = useState(false);
@@ -54,7 +55,7 @@ export default function ProfileNameSection({ isOwner }) {
             marginBottom: '1rem',
           }}
         >
-          <Typography className="text-xl">Hoanganh</Typography>
+          <Typography className="text-xl">{currentUser?.username}</Typography>
           {isOwner ? (
             <>
               <Link href="/profile/edit" passHref>
@@ -88,7 +89,7 @@ export default function ProfileNameSection({ isOwner }) {
               marginBottom: '0.5rem',
             }}
           >
-            <Typography className="text-xl">Hoanganh</Typography>
+            <Typography className="text-xl">{currentUser?.username}</Typography>
             {isOwner && (
               <SettingsOutlinedIcon
                 className="cursor-pointer"

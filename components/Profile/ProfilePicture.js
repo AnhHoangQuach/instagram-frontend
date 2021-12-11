@@ -1,4 +1,3 @@
-import PersonIcon from '@mui/icons-material/Person';
 import { Box, Avatar } from '@mui/material';
 
 export default function ProfilePicture({ size, image = '/assets/images/45851733.png', isOwner }) {
@@ -11,11 +10,7 @@ export default function ProfilePicture({ size, image = '/assets/images/45851733.
           placeItems: 'center',
         }}
       >
-        <Avatar
-          src={image || 'https://ui-avatars.com/api/?rounded=true'}
-          alt=""
-          sx={{ width: size, height: size }}
-        />
+        <Avatar src={image} alt="" sx={{ width: size, height: size }} />
       </Box>
     </section>
   );
