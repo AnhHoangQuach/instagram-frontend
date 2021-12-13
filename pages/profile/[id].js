@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Header from '../../components/Header';
 import Seo from '../../components/Seo';
 import ProfilePicture from '../../components/Profile/ProfilePicture';

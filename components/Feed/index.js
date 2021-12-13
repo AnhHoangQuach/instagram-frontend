@@ -23,10 +23,9 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import HTMLEllipsis from 'react-lines-ellipsis/lib/html';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
-import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
+import { MessageIcon } from '../../utils/icons';
+import { LikeButton, SaveButton } from '../Feed/FeedAction';
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
-import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
 import { setMessage } from '../../store/messageSlice';
 
 const FeedSkeleton = () => {
@@ -128,11 +127,11 @@ export default function Feed() {
         <Box m={1}>
           <div className="flex justify-between">
             <div className="flex space-x-4">
-              <FavoriteBorderOutlinedIcon />
-              <ChatBubbleOutlineOutlinedIcon />
+              <LikeButton />
+              <MessageIcon />
               <ShareOutlinedIcon />
             </div>
-            <BookmarkBorderOutlinedIcon />
+            <SaveButton postId={post._id} />
           </div>
           <Box mt={1}>
             <Typography variant="subtitle2" className="font-semibold">
