@@ -14,7 +14,7 @@
     "@mui/icons-material": "^5.0.4",
     "@mui/material": "^5.0.4",
     "@mui/styles": "^5.0.1",
-    "@reduxjs/toolkit": "^1.6.2",
+    "@reduxjs/toolkit": "^1.7.0",
     "axios": "^0.24.0",
     "faker": "^5.5.3",
     "moment": "^2.29.1",
