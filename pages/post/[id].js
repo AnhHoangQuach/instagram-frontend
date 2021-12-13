@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   Grid,
   Box,
@@ -23,6 +23,10 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Seo from '../../components/Seo';
 import DialogCommon from '../../components/DialogCommon';
 import Header from '../../components/Header';
+import Carousel from 'react-multi-carousel';
+import { useRouter } from 'next/router';
+import {postService} from '../../services/post'
+import 'react-multi-carousel/lib/styles.css';
 import { useSelector } from 'react-redux';
 
 export const useStyles = makeStyles((theme) => ({
@@ -167,8 +171,28 @@ export const useStyles = makeStyles((theme) => ({
 export default function PostDetail() {
   const classes = useStyles();
   const theme = useTheme();
+
+  const responsive = {
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 1,
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 1,
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1,
+    },
+  };
+
+  const [post, setPost] = useState({});
+  const router = useRouter()
+  const { id } = router.query
   //comment
   const [content, setContent] = useState('');
+  const [loading, setLoading] = useState(false)
   const commentRef = useRef(null);
   const isMatchPhone = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -181,13 +205,29 @@ export default function PostDetail() {
     'xin chao moi nguoi xin chao moi nguoi xin chao moi nguoixin chao moi nguoixin chao moi nguoixin chao moi nguoi'
   );
   const [likes, setLikes] = useState(0);
-  const [comments, setComments] = useState([
-    {
-      username: 'test',
-      content: 'hellohellohell ohellohellohelloh ellohellohellohello hellohellohellohellohello',
-    },
-    { username: 'tes1t', content: 'hello1' },
-  ]);
+  const [comments, setComments] = useState([]);
+
+  useEffect(async () => {
+    try {
+      setLoading(true);
+      const res = await postService.getPostByID({ postId: id });
+      if (res.status === 'success') {
+        setPost(res.data.post);
+      }
+      console.log(res)
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+    }
+
+    const comments = [...Array(1)].map((_, i) => ({
+      comment: faker.lorem.sentences(),
+      id: i,
+    }));
+
+    setComments(comments);
+  }, []);
   return (
     <>
       <Seo title="Post Details" description="Post Details" />
@@ -201,9 +241,20 @@ export default function PostDetail() {
               <MoreHorizIcon className="cursor-pointer" onClick={() => setOptionsDialog(true)} />
             </div>
             {/* Post Image */}
-            <div className={classes.postImage}>
-              <img src={currentUser?.avatar} alt="Post media" className={classes.image} />
-            </div>
+            <Carousel responsive={responsive} showDots={true} keyBoardControl={true}>
+              {post.images.map((item) =>
+                item.format === 'jpg' || item.format === 'png' || item.format === 'gif' ? (
+                  <FeedImage key={item.url} img={item.url} />
+                ) : (
+                  <video
+                    src={item.url}
+                    key={item.url}
+                    className="object-contain h-full mx-auto"
+                    controls
+                  />
+                )
+              )}
+            </Carousel>
             {/* Post Buttons */}
             <div className={classes.postButtonsWrapper}>
               <div className={classes.postButtons}>
