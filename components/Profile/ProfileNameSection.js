@@ -5,6 +5,8 @@ import Link from 'next/link';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../store/userSlice';
+import { setMessage } from '../../store/messageSlice';
+import { userService } from '../../services/user';
 import DialogCommon from '../DialogCommon';
 
 export default function ProfileNameSection({ isOwner, profile }) {
@@ -16,6 +18,19 @@ export default function ProfileNameSection({ isOwner, profile }) {
   const handleLogout = () => {
     dispatch(logout());
     router.push('/login');
+  };
+
+  const handleFollowUser = async () => {
+    try {
+      const res = await userService.followUser({ userId: profile._id });
+      if (res.status === 'success') {
+        dispatch(
+          setMessage({ type: 'success', message: `Follow user ${profile.username} success` })
+        );
+      }
+    } catch (error) {
+      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+    }
   };
 
   let followButton;
@@ -36,7 +51,7 @@ export default function ProfileNameSection({ isOwner, profile }) {
     );
   } else {
     followButton = (
-      <Button size="small" variant="contained" color="primary">
+      <Button size="small" variant="contained" color="primary" onClick={handleFollowUser}>
         Follow
       </Button>
     );
