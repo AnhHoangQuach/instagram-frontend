@@ -10,19 +10,14 @@ import {
   Avatar,
 } from '@mui/material';
 import { makeStyles, useTheme } from '@mui/styles';
-import {
-  LikeIcon,
-  UnlikeIcon,
-  CommentIcon,
-  ShareIcon,
-  RemoveIcon,
-  SaveIcon,
-} from '../../utils/icons';
+import { CommentIcon } from '../../utils/icons';
 import UserCard from '../../components/PostDetails/UserCard';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import Seo from '../../components/Seo';
 import DialogCommon from '../../components/DialogCommon';
 import Header from '../../components/Header';
+import { LikeButton, SaveButton } from '../../components/Feed/FeedAction';
 import { useSelector } from 'react-redux';
 
 export const useStyles = makeStyles((theme) => ({
@@ -53,28 +48,6 @@ export const useStyles = makeStyles((theme) => ({
       cursor: 'pointer',
     },
   },
-  like: {
-    animation: '$like-button-animation 0.45s',
-    animationTimingFunction: 'ease-in-out',
-    transform: 'scale(1)',
-  },
-  liked: {
-    animation: '$liked-button-animation 0.45s',
-    animationTimingFunction: 'ease-in-out',
-    transform: 'scale(1)',
-  },
-  '@keyframes like-button-animation': {
-    '0%': { transform: 'scale(1)' },
-    '25%': { transform: 'scale(1.2)' },
-    '50%': { transform: 'scale(0.95)' },
-    '100%': { transform: 'scale(1)' },
-  },
-  '@keyframes liked-button-animation': {
-    '0%': { transform: 'scale(1)' },
-    '25%': { transform: 'scale(1.2)' },
-    '50%': { transform: 'scale(0.95)' },
-    '100%': { transform: 'scale(1)' },
-  },
   root: {
     fontSize: '14px !important',
   },
@@ -89,9 +62,6 @@ export const useStyles = makeStyles((theme) => ({
   commentButton: {
     width: '48px !important',
     padding: 'unset !important',
-  },
-  saveIcon: {
-    justifySelf: 'right',
   },
   postContainer: {
     background: '#fff',
@@ -214,7 +184,7 @@ export default function PostDetail() {
                   }}
                   className="cursor-pointer"
                 />
-                <ShareIcon />
+                <ShareOutlinedIcon />
                 <SaveButton />
               </div>
               <Typography className={classes.likes} variant="subtitle2">
@@ -290,39 +260,4 @@ export default function PostDetail() {
       </Grid>
     </>
   );
-}
-
-function LikeButton() {
-  const classes = useStyles();
-  const [liked, setLiked] = useState(false);
-  const Icon = liked ? UnlikeIcon : LikeIcon;
-  const className = liked ? classes.liked : classes.like;
-  const onClick = liked ? handleUnlike : handleLike;
-
-  function handleLike() {
-    setLiked(true);
-  }
-
-  function handleUnlike() {
-    setLiked(false);
-  }
-
-  return <Icon className={className} onClick={onClick} />;
-}
-
-function SaveButton() {
-  const classes = useStyles();
-  const [saved, setSaved] = useState(false);
-  const Icon = saved ? RemoveIcon : SaveIcon;
-  const onClick = saved ? handleRemove : handleSave;
-
-  function handleSave() {
-    setSaved(true);
-  }
-
-  function handleRemove() {
-    setSaved(false);
-  }
-
-  return <Icon className={classes.saveIcon} onClick={onClick} />;
 }

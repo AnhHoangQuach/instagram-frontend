@@ -64,7 +64,7 @@ export default function GridPost({ post }) {
         </div>
         <div className={classes.gridPostInfo}>
           <ChatBubbleOutlineOutlinedIcon />
-          <Typography>{post.posts.length}</Typography>
+          <Typography>5</Typography>
         </div>
       </div>
       <img src={post.image} className={classes.image} />

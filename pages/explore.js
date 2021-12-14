@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ImageList, ImageListItem, Box, Grid, Typography } from '@mui/material';
+import { ImageList, ImageListItem, Box } from '@mui/material';
 import Seo from '../components/Seo';
 import Header from '../components/Header';
 import faker from 'faker';

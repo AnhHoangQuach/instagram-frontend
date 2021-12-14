@@ -3,12 +3,13 @@ import { useState } from 'react';
 import router from 'next/router';
 import Link from 'next/link';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { logout } from '../../store/userSlice';
+import { setMessage } from '../../store/messageSlice';
+import { userService } from '../../services/user';
 import DialogCommon from '../DialogCommon';
 
-export default function ProfileNameSection({ isOwner }) {
-  const { currentUser } = useSelector((state) => state.user);
+export default function ProfileNameSection({ isOwner, profile }) {
   const dispatch = useDispatch();
 
   const [showUnfollowDialog, setUnfollowDialog] = useState(false);
@@ -17,6 +18,19 @@ export default function ProfileNameSection({ isOwner }) {
   const handleLogout = () => {
     dispatch(logout());
     router.push('/login');
+  };
+
+  const handleFollowUser = async () => {
+    try {
+      const res = await userService.followUser({ userId: profile._id });
+      if (res.status === 'success') {
+        dispatch(
+          setMessage({ type: 'success', message: `Follow user ${profile.username} success` })
+        );
+      }
+    } catch (error) {
+      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+    }
   };
 
   let followButton;
@@ -37,7 +51,7 @@ export default function ProfileNameSection({ isOwner }) {
     );
   } else {
     followButton = (
-      <Button size="small" variant="contained" color="primary">
+      <Button size="small" variant="contained" color="primary" onClick={handleFollowUser}>
         Follow
       </Button>
     );
@@ -55,7 +69,7 @@ export default function ProfileNameSection({ isOwner }) {
             marginBottom: '1rem',
           }}
         >
-          <Typography className="text-xl">{currentUser?.username}</Typography>
+          <Typography className="text-xl">{profile.username}</Typography>
           {isOwner ? (
             <>
               <Link href="/profile/edit" passHref>
@@ -89,7 +103,7 @@ export default function ProfileNameSection({ isOwner }) {
               marginBottom: '0.5rem',
             }}
           >
-            <Typography className="text-xl">{currentUser?.username}</Typography>
+            <Typography className="text-xl">{profile.username}</Typography>
             {isOwner && (
               <SettingsOutlinedIcon
                 className="cursor-pointer"
@@ -123,7 +137,7 @@ export default function ProfileNameSection({ isOwner }) {
             <Avatar src="/assets/images/45851733.png" alt="" sx={{ width: 90, height: 90 }} />
           </Box>
           <Typography align="center" variant="body2" className="mb-2">
-            Unfollow @hoanganh?
+            Unfollow @{profile.username}?
           </Typography>
           <Divider />
           <Button className="normal-case text-red-700">Unfollow</Button>

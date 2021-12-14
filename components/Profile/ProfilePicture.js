@@ -1,6 +1,6 @@
 import { Box, Avatar } from '@mui/material';
 
-export default function ProfilePicture({ size, image = '/assets/images/45851733.png', isOwner }) {
+export default function ProfilePicture({ size, image = '/assets/images/45851733.png' }) {
   return (
     <section className="grid justify-items-center">
       <Box
