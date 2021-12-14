@@ -52,9 +52,9 @@ export function LikeButton() {
   return <Icon className={className} onClick={onClick} />;
 }
 
-export function SaveButton({ postId }) {
+export function SaveButton({ postId, isBookmarked }) {
   const classes = useStyles();
-  const [saved, setSaved] = useState(false);
+  const [saved, setSaved] = useState(isBookmarked);
   const Icon = saved ? RemoveIcon : SaveIcon;
   const dispatch = useDispatch();
   async function handleSave() {

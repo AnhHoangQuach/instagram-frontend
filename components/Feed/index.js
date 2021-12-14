@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import faker from 'faker';
 import { postService } from '../../services/post';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
@@ -58,7 +58,7 @@ export default function Feed() {
   const [showOptionsDialog, setOptionsDialog] = useState(false);
 
   const dispatch = useDispatch();
-
+  const { currentUser } = useSelector((state) => state.user);
   useEffect(async () => {
     try {
       setLoading(true);
@@ -131,7 +131,10 @@ export default function Feed() {
               <MessageIcon />
               <ShareOutlinedIcon />
             </div>
-            <SaveButton postId={post._id} />
+            <SaveButton
+              postId={post._id}
+              isBookmarked={currentUser.savedPosts.includes(post._id)}
+            />
           </div>
           <Box mt={1}>
             <Typography variant="subtitle2" className="font-semibold">

@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import Header from '../../components/Header';
 import Seo from '../../components/Seo';
 import ProfilePicture from '../../components/Profile/ProfilePicture';
@@ -8,19 +9,37 @@ import ProfileTabs from '../../components/Profile/ProfileTabs';
 import { Box, Hidden, Card, CardContent } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
+import { userService } from '../../services/user';
+import { useDispatch } from 'react-redux';
+import { setMessage } from '../../store/messageSlice';
 
 export default function Profile() {
-  const isOwner = false;
   const { currentUser } = useSelector((state) => state.user);
   const router = useRouter();
+  const dispatch = useDispatch();
   const { id } = router.query;
-  if (currentUser?._id === id) {
-    isOwner = true;
-  }
+
+  const [profile, setProfile] = useState(currentUser);
+  const [isOwner, setIsOwner] = useState(false);
+
+  useEffect(async () => {
+    if (profile._id === id) {
+      setIsOwner(true);
+    } else {
+      try {
+        const res = await userService.getUser({ userId: id });
+        if (res.status === 'success') {
+          setProfile(res.data.user);
+        }
+      } catch (error) {
+        dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+      }
+    }
+  }, []);
 
   return (
     <>
-      <Seo title={`${currentUser.fullname} (@${currentUser.username})`} />
+      <Seo title={`${profile.fullname} (@${profile.username})`} />
       <Header />
       <Box className="max-w-5xl xl:mx-auto mt-8">
         <Hidden smDown>
@@ -32,11 +51,11 @@ export default function Profile() {
               gridTemplateColumns: 'minmax(auto, 290px) minmax(auto, 645px)',
             }}
           >
-            <ProfilePicture isOwner={isOwner} size={150} image={currentUser.avatar} />
+            <ProfilePicture isOwner={isOwner} size={150} image={profile.avatar} />
             <CardContent sx={{ display: 'grid', gridGrap: 20 }}>
-              <ProfileNameSection isOwner={isOwner} />
+              <ProfileNameSection isOwner={isOwner} profile={profile} />
               <PostCountSection />
-              <NameBioSection />
+              <NameBioSection profile={profile} />
             </CardContent>
           </Card>
         </Hidden>
@@ -51,15 +70,15 @@ export default function Profile() {
                   gridGap: 40,
                 }}
               >
-                <ProfilePicture isOwner={isOwner} size={77} />
-                <ProfileNameSection isOwner={isOwner} />
+                <ProfilePicture isOwner={isOwner} size={77} profile={profile} />
+                <ProfileNameSection isOwner={isOwner} profile={profile} />
               </Box>
               <NameBioSection />
             </CardContent>
             <PostCountSection />
           </Card>
         </Hidden>
-        <ProfileTabs isOwner={isOwner} />
+        <ProfileTabs isOwner={isOwner} profile={profile} />
       </Box>
     </>
   );

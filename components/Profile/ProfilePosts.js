@@ -50,7 +50,7 @@ export default function ProfilePosts({ isOwner }) {
   }
 
   return (
-    <Box sx={{ display: 'grid', gridTemplateColumns: 'minmax(auto, 935px)' }}>
+    <Box sx={{ display: 'grid' }}>
       <Box className={classes.postContainer}>
         {posts.map((post) => (
           <GridPost key={post.id} post={post} />
