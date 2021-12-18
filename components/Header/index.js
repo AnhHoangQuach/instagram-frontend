@@ -13,6 +13,7 @@ import { TextField, InputAdornment, Badge, Avatar, Hidden, Menu, MenuItem } from
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/userSlice';
+import { setMessage } from '../../store/messageSlice';
 import NewPost from '../../components/NewPost';
 import {
   HomeIcon,
@@ -38,6 +39,7 @@ export default function Header() {
   const handleLogOut = () => {
     setAnchorEl(null);
     dispatch(logout());
+    dispatch(setMessage({ type: 'success', message: 'Logout success' }));
     router.push('/login');
   };
 

@@ -27,21 +27,20 @@ const useStyles = makeStyles({
 
 export default function UserCard({ user, avatarSize = 44 }) {
   const classes = useStyles({ avatarSize });
-  const { username, fullname, avatar, id } = user;
 
   return (
     <div className={classes.wrapper}>
-      <Link href={`/profile/${id}`} passHref>
-        <Avatar src={avatar} alt="User avatar" className={classes.avatar} />
+      <Link href={`/profile/${user?.id}`} passHref>
+        <Avatar src={user?.avatar} alt="User avatar" className={classes.avatar} />
       </Link>
       <div className={classes.nameWrapper}>
-        <Link href={`/profile/${id}`} passHref>
+        <Link href={`/profile/${user?.id}`} passHref>
           <Typography variant="subtitle2" className={classes.typography}>
-            {username}
+            {user?.username}
           </Typography>
         </Link>
         <Typography color="textSecondary" variant="body2" className={classes.typography}>
-          {fullname}
+          {user?.fullname}
         </Typography>
       </div>
     </div>
