@@ -6,6 +6,7 @@ import PostCountSection from '../../components/Profile/PostCountSection';
 import ProfileNameSection from '../../components/Profile/ProfileNameSection';
 import NameBioSection from '../../components/Profile/NameBioSection';
 import ProfileTabs from '../../components/Profile/ProfileTabs';
+import GlobalLoading from '../../components/GlobalLoading';
 import { Box, Hidden, Card, CardContent } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
@@ -19,25 +20,32 @@ export default function Profile() {
   const dispatch = useDispatch();
   const { id } = router.query;
 
-  const [profile, setProfile] = useState(currentUser);
+  const [isLoading, setLoading] = useState(false);
+
+  const [profile, setProfile] = useState({});
   const [isOwner, setIsOwner] = useState(false);
 
   useEffect(async () => {
     if (profile._id === id) {
       setIsOwner(true);
     } else {
+      setLoading(true);
       try {
         const res = await userService.getUser({ userId: id });
         if (res.status === 'success') {
           setProfile(res.data.user);
         }
+        setLoading(false);
       } catch (error) {
+        setLoading(false);
         dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
       }
     }
   }, []);
 
-  return (
+  return isLoading ? (
+    <GlobalLoading />
+  ) : (
     <>
       <Seo title={`${profile.fullname} (@${profile.username})`} />
       <Header />

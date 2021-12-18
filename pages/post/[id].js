@@ -173,10 +173,6 @@ export default function PostDetail() {
   const isMatchPhone = useMediaQuery(theme.breakpoints.down('sm'));
 
   //post
-  const [caption, setCaption] = useState(
-    'xin chao moi nguoi xin chao moi nguoi xin chao moi nguoixin chao moi nguoixin chao moi nguoixin chao moi nguoi'
-  );
-  const [likes, setLikes] = useState(0);
   const [comments, setComments] = useState([]);
 
   useEffect(async () => {
