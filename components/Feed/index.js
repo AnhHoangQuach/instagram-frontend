@@ -133,7 +133,7 @@ export default function Feed() {
             </div>
             <SaveButton
               postId={post._id}
-              isBookmarked={currentUser.savedPosts.includes(post._id)}
+              isBookmarked={currentUser?.savedPosts.includes(post._id)}
             />
           </div>
           <Box mt={1}>
