@@ -161,6 +161,7 @@ export default function SignUp() {
                   variant="outlined"
                   size="small"
                   type={hidePassword ? 'password' : 'text'}
+                  onKeyPress={(e) => e.key === 'Enter' && handleClickSignUp()}
                   InputProps={{
                     endAdornment: hidePassword ? (
                       <VisibilityOffOutlinedIcon

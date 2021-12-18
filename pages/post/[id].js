@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   Grid,
   Box,
@@ -17,8 +17,15 @@ import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import Seo from '../../components/Seo';
 import DialogCommon from '../../components/DialogCommon';
 import Header from '../../components/Header';
+import { postService } from '../../services/post';
 import { LikeButton, SaveButton } from '../../components/Feed/FeedAction';
-import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
+import FeedImage from '../../components/Feed/FeedImage';
+import Carousel from 'react-multi-carousel';
+import { setMessage } from '../../store/messageSlice';
+import 'react-multi-carousel/lib/styles.css';
+import moment from 'moment';
+import { useSelector, useDispatch } from 'react-redux';
 
 export const useStyles = makeStyles((theme) => ({
   image: {
@@ -43,13 +50,10 @@ export const useStyles = makeStyles((theme) => ({
   likes: {
     fontWeight: '600 !important',
     order: 3,
-    padding: '0 16px !important',
-    '&:hover': {
-      cursor: 'pointer',
-    },
+    padding: '0 1rem !important',
   },
   root: {
-    fontSize: '14px !important',
+    fontSize: '0.75rem !important',
   },
   noBorder: {
     border: 'none',
@@ -60,7 +64,7 @@ export const useStyles = makeStyles((theme) => ({
     gridTemplateColumns: 'auto minmax(auto, 56px)',
   },
   commentButton: {
-    width: '48px !important',
+    width: '3rem !important',
     padding: 'unset !important',
   },
   postContainer: {
@@ -137,127 +141,188 @@ export const useStyles = makeStyles((theme) => ({
 export default function PostDetail() {
   const classes = useStyles();
   const theme = useTheme();
-  //comment
-  const [content, setContent] = useState('');
-  const commentRef = useRef(null);
-  const isMatchPhone = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const responsive = {
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 1,
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 1,
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1,
+    },
+  };
+
+  const dispatch = useDispatch();
+
+  const router = useRouter();
+  const { id } = router.query;
   //state
   const { currentUser } = useSelector((state) => state.user);
   const [showOptionsDialog, setOptionsDialog] = useState(false);
+
+  const [postDetail, setPostDetail] = useState();
+  //comment
+  const [content, setContent] = useState('');
+  const [isLoading, setLoading] = useState(false);
+  const commentRef = useRef(null);
+  const isMatchPhone = useMediaQuery(theme.breakpoints.down('sm'));
 
   //post
   const [caption, setCaption] = useState(
     'xin chao moi nguoi xin chao moi nguoi xin chao moi nguoixin chao moi nguoixin chao moi nguoixin chao moi nguoi'
   );
   const [likes, setLikes] = useState(0);
-  const [comments, setComments] = useState([
-    {
-      username: 'test',
-      content: 'hellohellohell ohellohellohelloh ellohellohellohello hellohellohellohellohello',
-    },
-    { username: 'tes1t', content: 'hello1' },
-  ]);
+  const [comments, setComments] = useState([]);
+
+  useEffect(async () => {
+    try {
+      setLoading(true);
+      const postRes = await postService.getPostByID({ postId: id });
+      if (postRes.status === 'success') {
+        setPostDetail(postRes.data.post);
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+    }
+  }, []);
+
   return (
-    <>
-      <Seo title="Post Details" description="Post Details" />
-      <Header />
-      <Grid container className="max-w-5xl mx-auto mt-8">
-        <Box className={classes.postContainer}>
-          <Box className={classes.article}>
-            {/* Post Header */}
-            <div className={classes.postHeader}>
-              <UserCard user={currentUser} avatarSize={32} />
-              <MoreHorizIcon className="cursor-pointer" onClick={() => setOptionsDialog(true)} />
-            </div>
-            {/* Post Image */}
-            <div className={classes.postImage}>
-              <img src={currentUser?.avatar} alt="Post media" className={classes.image} />
-            </div>
-            {/* Post Buttons */}
-            <div className={classes.postButtonsWrapper}>
-              <div className={classes.postButtons}>
-                <LikeButton />
-                <CommentIcon
-                  onClick={() => {
-                    commentRef.current.focus();
-                  }}
-                  className="cursor-pointer"
-                />
-                <ShareOutlinedIcon />
-                <SaveButton />
+    !isLoading && (
+      <>
+        <Seo title="Post Details" description="Post Details" />
+        <Header />
+        <Grid container className="max-w-5xl mx-auto mt-8">
+          <Box className={classes.postContainer}>
+            <Box className={classes.article}>
+              {/* Post Header */}
+              <div className={classes.postHeader}>
+                <UserCard user={postDetail?.user} avatarSize={32} />
+                <MoreHorizIcon className="cursor-pointer" onClick={() => setOptionsDialog(true)} />
               </div>
-              <Typography className={classes.likes} variant="subtitle2">
-                <span>{likes === 1 ? '1 like' : `${likes} likes`}</span>
-              </Typography>
-              <div className={classes.postCaptionContainer}>
-                <div className="flex my-4">
-                  <Avatar src="/assets/images/45851733.png" alt="" />
-                  <Typography
-                    className="pl-4"
-                    variant="body2"
-                    component="span"
-                    dangerouslySetInnerHTML={{ __html: `${currentUser?.username} ${caption}` }}
-                  />
-                </div>
-                {comments.map((comment) => (
-                  <Box className="flex my-4" key={comment.username}>
-                    <Avatar src="/assets/images/45851733.png" alt="" />
-                    <div className="pl-4">
-                      <div>
-                        <Typography variant="body2" component="span">
-                          {comment.username} {comment.content}
-                        </Typography>{' '}
-                      </div>
-                      <div style={{ fontSize: 12 }}>1w</div>
-                    </div>
-                  </Box>
-                ))}
-              </div>
-              <Typography color="textSecondary" className={classes.datePosted}>
-                5 DAYS AGO
-              </Typography>
-              <div className={classes.comment}>
-                <Divider />
-                <div className={classes.commentContainer}>
-                  <TextField
-                    size={isMatchPhone ? 'small' : 'medium'}
-                    inputRef={commentRef}
-                    fullWidth
-                    value={content}
-                    placeholder="Add a comment..."
-                    multiline
-                    rows={1}
-                    onChange={(event) => setContent(event.target.value)}
-                    InputProps={{
-                      classes: {
-                        root: classes.root,
-                        notchedOutline: classes.noBorder,
-                      },
+              {/* Post Image */}
+              <Carousel
+                responsive={responsive}
+                showDots={true}
+                keyBoardControl={true}
+                className={classes.postImage}
+              >
+                {postDetail?.images.map((item) =>
+                  item.format === 'jpg' || item.format === 'png' || item.format === 'gif' ? (
+                    <FeedImage key={item.url} img={item.url} />
+                  ) : (
+                    <video
+                      src={item.url}
+                      key={item.url}
+                      className="object-contain h-full mx-auto"
+                      controls
+                    />
+                  )
+                )}
+              </Carousel>
+              {/* Post Buttons */}
+              <div className={classes.postButtonsWrapper}>
+                <div className={classes.postButtons}>
+                  <LikeButton />
+                  <CommentIcon
+                    onClick={() => {
+                      commentRef.current.focus();
                     }}
+                    className="cursor-pointer"
                   />
-                  <Button
-                    color="primary"
-                    className={classes.commentButton}
-                    disabled={!content.trim()}
-                  >
-                    Post
-                  </Button>
+                  <ShareOutlinedIcon />
+                  <SaveButton
+                    postId={postDetail?._id}
+                    isBookmarked={currentUser?.savedPosts.includes(postDetail?._id)}
+                  />
+                </div>
+                <Typography className={classes.likes} variant="subtitle2">
+                  <span>
+                    {postDetail?.likes.length === 1
+                      ? '1 like'
+                      : `${postDetail?.likes.length} likes`}
+                  </span>
+                </Typography>
+                <div className={classes.postCaptionContainer}>
+                  <div className="flex my-4">
+                    <Avatar src={postDetail?.user.avatar} alt="" />
+                    <div className="pl-4">
+                      <Typography
+                        variant="body2"
+                        className="font-semibold"
+                        component="span"
+                        dangerouslySetInnerHTML={{
+                          __html: `${postDetail?.user.username} ${postDetail?.caption}`,
+                        }}
+                      />
+                      <div style={{ fontSize: 12 }}>{moment(postDetail?.createdAt).fromNow()}</div>
+                    </div>
+                  </div>
+                  {comments.map((comment) => (
+                    <Box className="flex my-4" key={comment.username}>
+                      <Avatar src="/assets/images/45851733.png" alt="" />
+                      <div className="pl-4">
+                        <div>
+                          <Typography variant="body2" component="span">
+                            {comment.username} {comment.content}
+                          </Typography>{' '}
+                        </div>
+                        <div style={{ fontSize: 12 }}>{moment(comment.createdAt).fromNow()}</div>
+                      </div>
+                    </Box>
+                  ))}
+                </div>
+                <Typography color="textSecondary" className={classes.datePosted}>
+                  5 DAYS AGO
+                </Typography>
+                <div className={classes.comment}>
+                  <Divider />
+                  <div className={classes.commentContainer}>
+                    <TextField
+                      size={isMatchPhone ? 'small' : 'medium'}
+                      inputRef={commentRef}
+                      fullWidth
+                      value={content}
+                      placeholder="Add a comment..."
+                      multiline
+                      rows={1}
+                      onChange={(event) => setContent(event.target.value)}
+                      InputProps={{
+                        classes: {
+                          root: classes.root,
+                          notchedOutline: classes.noBorder,
+                        },
+                      }}
+                    />
+                    <Button
+                      color="primary"
+                      className={classes.commentButton}
+                      disabled={!content.trim()}
+                    >
+                      Post
+                    </Button>
+                  </div>
                 </div>
               </div>
-            </div>
+            </Box>
+            {showOptionsDialog && (
+              <DialogCommon onClose={() => setOptionsDialog(false)}>
+                <Button className="normal-case text-red-700 font-semibold">Unfollow</Button>
+                <Divider />
+                <Button className="normal-case">Share To</Button>
+                <Divider />
+                <Button className="normal-case">Copy Link</Button>
+              </DialogCommon>
+            )}
           </Box>
-          {showOptionsDialog && (
-            <DialogCommon onClose={() => setOptionsDialog(false)}>
-              <Button className="normal-case text-red-700 font-semibold">Unfollow</Button>
-              <Divider />
-              <Button className="normal-case">Share To</Button>
-              <Divider />
-              <Button className="normal-case">Copy Link</Button>
-            </DialogCommon>
-          )}
-        </Box>
-      </Grid>
-    </>
+        </Grid>
+      </>
+    )
   );
 }
