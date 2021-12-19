@@ -22,24 +22,23 @@ export default function Profile() {
 
   const [isLoading, setLoading] = useState(false);
 
-  const [profile, setProfile] = useState({});
+  const [profile, setProfile] = useState(currentUser);
   const [isOwner, setIsOwner] = useState(false);
 
   useEffect(async () => {
     if (profile._id === id) {
       setIsOwner(true);
-    } else {
+    }
+    try {
       setLoading(true);
-      try {
-        const res = await userService.getUser({ userId: id });
-        if (res.status === 'success') {
-          setProfile(res.data.user);
-        }
-        setLoading(false);
-      } catch (error) {
-        setLoading(false);
-        dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+      const res = await userService.getUser({ userId: id });
+      if (res.status === 'success') {
+        setProfile(res.data.user);
       }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
     }
   }, []);
 

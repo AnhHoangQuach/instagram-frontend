@@ -1,24 +1,28 @@
-import { Typography, Box, ImageList, ImageListItem } from '@mui/material';
+import { Typography, Box } from '@mui/material';
 import SaveAltOutlinedIcon from '@mui/icons-material/SaveAltOutlined';
 import GridPost from './GridPost';
+import { makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles((theme) => ({
+  postContainer: {
+    [theme.breakpoints.down('sm')]: {
+      gridGap: 2,
+    },
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gridGap: 20,
+  },
+}));
 
 export default function SavedPosts({ savedPosts }) {
+  const classes = useStyles();
   return savedPosts.length > 0 ? (
-    <Box className="max-w-5xl xl:mx-auto mt-8">
-      <ImageList
-        sx={{
-          width: '100%',
-          height: '100%',
-        }}
-        variant="quilted"
-        cols={3}
-      >
-        {savedPosts.map((item, index) => (
-          <ImageListItem key={index} cols={item.image?.cols || 1} rows={item.image?.rows || 1}>
-            <GridPost post={item} />
-          </ImageListItem>
+    <Box sx={{ display: 'grid' }}>
+      <Box className={classes.postContainer}>
+        {savedPosts.map((post) => (
+          <GridPost key={post.id} post={post} />
         ))}
-      </ImageList>
+      </Box>
     </Box>
   ) : (
     <Box sx={{ display: 'grid', justifyContent: 'center' }} pt={4}>

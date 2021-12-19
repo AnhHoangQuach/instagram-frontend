@@ -1,5 +1,3 @@
-import faker from 'faker';
-import { useEffect, useState } from 'react';
 import { Typography, Box } from '@mui/material';
 import GridPost from './GridPost';
 import { makeStyles } from '@mui/styles';
@@ -16,17 +14,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ProfilePosts({ isOwner }) {
-  const [posts, setPosts] = useState([]);
+export default function ProfilePosts({ isOwner, posts }) {
   const classes = useStyles();
-  useEffect(() => {
-    const posts = [...Array(5)].map((_, i) => ({
-      ...faker.helpers.createCard(),
-      image: faker.image.food(),
-      id: i,
-    }));
-    setPosts(posts);
-  }, []);
 
   if (posts.length === 0) {
     return (

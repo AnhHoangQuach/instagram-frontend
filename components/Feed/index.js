@@ -57,6 +57,7 @@ export default function Feed() {
   const [showCaption, setCaption] = useState(false);
   const [comments, setComments] = useState([]);
   const [showOptionsDialog, setOptionsDialog] = useState(false);
+  const [postIdNow, setPostIdNow] = useState(null);
 
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
@@ -109,7 +110,13 @@ export default function Feed() {
               {post.user.username}
             </Typography>
           </div>
-          <MoreHorizIcon className="cursor-pointer" onClick={() => setOptionsDialog(true)} />
+          <MoreHorizIcon
+            className="cursor-pointer"
+            onClick={() => {
+              setPostIdNow(post._id);
+              setOptionsDialog(true);
+            }}
+          />
         </div>
         <Carousel responsive={responsive} showDots={true} keyBoardControl={true}>
           {post.images.map((item) =>
@@ -198,7 +205,7 @@ export default function Feed() {
             <Button className="normal-case text-red-700 font-semibold">Unfollow</Button>
             <Divider />
             <Button className="normal-case">
-              <Link href={`/post/${post._id}`} underline="none">
+              <Link href={`/post/${postIdNow}`} underline="none">
                 Go to post
               </Link>
             </Button>

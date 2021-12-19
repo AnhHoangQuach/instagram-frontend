@@ -8,6 +8,7 @@ import {
   Button,
   TextField,
   Avatar,
+  CircularProgress,
 } from '@mui/material';
 import { makeStyles, useTheme } from '@mui/styles';
 import { CommentIcon } from '../../utils/icons';
@@ -18,13 +19,17 @@ import Seo from '../../components/Seo';
 import DialogCommon from '../../components/DialogCommon';
 import Header from '../../components/Header';
 import { postService } from '../../services/post';
+import { commentService } from '../../services/comment';
 import { LikeButton, SaveButton } from '../../components/Feed/FeedAction';
+import GlobalLoading from '../../components/GlobalLoading';
 import { useRouter } from 'next/router';
 import FeedImage from '../../components/Feed/FeedImage';
 import Carousel from 'react-multi-carousel';
 import { setMessage } from '../../store/messageSlice';
 import 'react-multi-carousel/lib/styles.css';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import moment from 'moment';
+import { Controller, useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
 
 export const useStyles = makeStyles((theme) => ({
@@ -136,6 +141,11 @@ export const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     overflow: 'hidden',
   },
+  deleteComment: {
+    fontSize: '0.75rem',
+    margin: '0 0.5rem',
+    cursor: 'pointer',
+  },
 }));
 
 export default function PostDetail() {
@@ -167,13 +177,44 @@ export default function PostDetail() {
 
   const [postDetail, setPostDetail] = useState();
   //comment
-  const [content, setContent] = useState('');
   const [isLoading, setLoading] = useState(false);
+  const [commentLoading, setCommentLoading] = useState(false);
   const commentRef = useRef(null);
   const isMatchPhone = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const { control, handleSubmit, reset } = useForm({ mode: 'onChange' });
+  const handleCreateComment = (e) => {
+    handleSubmit(async ({ content }) => {
+      e.preventDefault();
+      try {
+        setCommentLoading(true);
+        const commentRes = await commentService.createComment({ postId: id, content });
+        if (commentRes.status === 'success') {
+          dispatch(setMessage({ type: 'success', message: commentRes.message }));
+          try {
+            const postRes = await postService.getPostByID({ postId: id });
+            if (postRes.status === 'success') {
+              setPostDetail(postRes.data.post);
+              setPostComments(postRes.data.comment);
+            }
+          } catch (error) {
+            dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+          }
+        }
+        setCommentLoading(false);
+      } catch (error) {
+        setCommentLoading(false);
+        dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+      }
+      reset({ content: '' });
+      commentRef.current.focus();
+    })(e);
+  };
+
+  const handleDeleteComment = () => {};
+
   //post
-  const [comments, setComments] = useState([]);
+  const [postComments, setPostComments] = useState([]);
 
   useEffect(async () => {
     try {
@@ -181,144 +222,153 @@ export default function PostDetail() {
       const postRes = await postService.getPostByID({ postId: id });
       if (postRes.status === 'success') {
         setPostDetail(postRes.data.post);
+        setPostComments(postRes.data.comment);
       }
       setLoading(false);
     } catch (error) {
       setLoading(false);
       dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
     }
-  }, []);
+  }, [id]);
 
-  return (
-    !isLoading && (
-      <>
-        <Seo title="Post Details" description="Post Details" />
-        <Header />
-        <Grid container className="max-w-5xl mx-auto mt-8">
-          <Box className={classes.postContainer}>
-            <Box className={classes.article}>
-              {/* Post Header */}
-              <div className={classes.postHeader}>
-                <UserCard user={postDetail?.user} avatarSize={32} />
-                <MoreHorizIcon className="cursor-pointer" onClick={() => setOptionsDialog(true)} />
+  return isLoading ? (
+    <GlobalLoading />
+  ) : (
+    <>
+      <Seo title="Post Details" description="Post Details" />
+      <Header />
+      <Grid container className="max-w-5xl mx-auto mt-8">
+        <Box className={classes.postContainer}>
+          <Box className={classes.article}>
+            {/* Post Header */}
+            <div className={classes.postHeader}>
+              <UserCard user={postDetail?.user} avatarSize={32} />
+              <MoreHorizIcon className="cursor-pointer" onClick={() => setOptionsDialog(true)} />
+            </div>
+            {/* Post Image */}
+            <Carousel
+              responsive={responsive}
+              showDots={true}
+              keyBoardControl={true}
+              className={classes.postImage}
+            >
+              {postDetail?.images.map((item) =>
+                item.format === 'jpg' || item.format === 'png' || item.format === 'gif' ? (
+                  <FeedImage key={item.url} img={item.url} />
+                ) : (
+                  <video
+                    src={item.url}
+                    key={item.url}
+                    className="object-contain h-full mx-auto"
+                    controls
+                  />
+                )
+              )}
+            </Carousel>
+            {/* Post Buttons */}
+            <div className={classes.postButtonsWrapper}>
+              <div className={classes.postButtons}>
+                <LikeButton />
+                <CommentIcon
+                  onClick={() => {
+                    commentRef.current.focus();
+                  }}
+                  className="cursor-pointer"
+                />
+                <ShareOutlinedIcon />
+                <SaveButton
+                  postId={postDetail?._id}
+                  isBookmarked={currentUser?.savedPosts.includes(postDetail?._id)}
+                />
               </div>
-              {/* Post Image */}
-              <Carousel
-                responsive={responsive}
-                showDots={true}
-                keyBoardControl={true}
-                className={classes.postImage}
-              >
-                {postDetail?.images.map((item) =>
-                  item.format === 'jpg' || item.format === 'png' || item.format === 'gif' ? (
-                    <FeedImage key={item.url} img={item.url} />
-                  ) : (
-                    <video
-                      src={item.url}
-                      key={item.url}
-                      className="object-contain h-full mx-auto"
-                      controls
-                    />
-                  )
-                )}
-              </Carousel>
-              {/* Post Buttons */}
-              <div className={classes.postButtonsWrapper}>
-                <div className={classes.postButtons}>
-                  <LikeButton />
-                  <CommentIcon
-                    onClick={() => {
-                      commentRef.current.focus();
-                    }}
-                    className="cursor-pointer"
-                  />
-                  <ShareOutlinedIcon />
-                  <SaveButton
-                    postId={postDetail?._id}
-                    isBookmarked={currentUser?.savedPosts.includes(postDetail?._id)}
-                  />
-                </div>
-                <Typography className={classes.likes} variant="subtitle2">
-                  <span>
-                    {postDetail?.likes.length === 1
-                      ? '1 like'
-                      : `${postDetail?.likes.length} likes`}
-                  </span>
-                </Typography>
-                <div className={classes.postCaptionContainer}>
-                  <div className="flex my-4">
-                    <Avatar src={postDetail?.user.avatar} alt="" />
-                    <div className="pl-4">
-                      <Typography
-                        variant="body2"
-                        className="font-semibold"
-                        component="span"
-                        dangerouslySetInnerHTML={{
-                          __html: `${postDetail?.user.username} ${postDetail?.caption}`,
-                        }}
-                      />
-                      <div style={{ fontSize: 12 }}>{moment(postDetail?.createdAt).fromNow()}</div>
-                    </div>
-                  </div>
-                  {comments.map((comment) => (
-                    <Box className="flex my-4" key={comment.username}>
-                      <Avatar src="/assets/images/45851733.png" alt="" />
-                      <div className="pl-4">
-                        <div>
-                          <Typography variant="body2" component="span">
-                            {comment.username} {comment.content}
-                          </Typography>{' '}
-                        </div>
-                        <div style={{ fontSize: 12 }}>{moment(comment.createdAt).fromNow()}</div>
-                      </div>
-                    </Box>
-                  ))}
-                </div>
-                <Typography color="textSecondary" className={classes.datePosted}>
-                  5 DAYS AGO
-                </Typography>
-                <div className={classes.comment}>
-                  <Divider />
-                  <div className={classes.commentContainer}>
-                    <TextField
-                      size={isMatchPhone ? 'small' : 'medium'}
-                      inputRef={commentRef}
-                      fullWidth
-                      value={content}
-                      placeholder="Add a comment..."
-                      multiline
-                      rows={1}
-                      onChange={(event) => setContent(event.target.value)}
-                      InputProps={{
-                        classes: {
-                          root: classes.root,
-                          notchedOutline: classes.noBorder,
-                        },
+              <Typography className={classes.likes} variant="subtitle2">
+                <span>
+                  {postDetail?.likes.length === 1 ? '1 like' : `${postDetail?.likes.length} likes`}
+                </span>
+              </Typography>
+              <div className={classes.postCaptionContainer}>
+                <div className="flex my-4">
+                  <Avatar src={postDetail?.user.avatar} alt="" />
+                  <div className="pl-4">
+                    <Typography
+                      variant="body2"
+                      className="font-semibold"
+                      component="span"
+                      dangerouslySetInnerHTML={{
+                        __html: `${postDetail?.user.username} ${postDetail?.caption}`,
                       }}
                     />
-                    <Button
-                      color="primary"
-                      className={classes.commentButton}
-                      disabled={!content.trim()}
-                    >
-                      Post
-                    </Button>
+                    <div style={{ fontSize: 12 }}>{moment(postDetail?.createdAt).fromNow()}</div>
                   </div>
                 </div>
+                {postComments?.comments?.map((comment) => (
+                  <Box className="flex my-4" key={comment._id}>
+                    <Avatar src="/assets/images/45851733.png" alt="" />
+                    <div className="pl-4">
+                      <div>
+                        <Typography variant="body2" component="span">
+                          {comment.user.username} {comment.content}
+                        </Typography>{' '}
+                      </div>
+                      <div style={{ fontSize: 12, color: '#8e8e8e' }}>
+                        {moment(comment.createdAt).fromNow()}
+                        {comment.user._id === currentUser?._id && (
+                          <span className={classes.deleteComment}>Delete</span>
+                        )}
+                      </div>
+                    </div>
+                  </Box>
+                ))}
               </div>
-            </Box>
-            {showOptionsDialog && (
-              <DialogCommon onClose={() => setOptionsDialog(false)}>
-                <Button className="normal-case text-red-700 font-semibold">Unfollow</Button>
+              <Typography color="textSecondary" className={classes.datePosted}>
+                {moment(postDetail?.createdAt).fromNow()}
+              </Typography>
+              <div className={classes.comment}>
                 <Divider />
-                <Button className="normal-case">Share To</Button>
-                <Divider />
-                <Button className="normal-case">Copy Link</Button>
-              </DialogCommon>
-            )}
+                <div className={classes.commentContainer}>
+                  <Controller
+                    name="content"
+                    defaultValue=""
+                    control={control}
+                    render={({ field, fieldState: { invalid, error } }) => (
+                      <TextField
+                        {...field}
+                        size={isMatchPhone ? 'small' : 'medium'}
+                        name="content"
+                        inputRef={commentRef}
+                        placeholder="Add a comment..."
+                        multiline
+                        rows={1}
+                        required
+                        error={invalid}
+                        helperText={error?.message}
+                      />
+                    )}
+                  />
+                  <Button
+                    color="primary"
+                    className={classes.commentButton}
+                    onClick={handleCreateComment}
+                    disabled={commentLoading}
+                  >
+                    {commentLoading && <CircularProgress size="1rem" className="m-1" />}
+                    Post
+                  </Button>
+                </div>
+              </div>
+            </div>
           </Box>
-        </Grid>
-      </>
-    )
+          {showOptionsDialog && (
+            <DialogCommon onClose={() => setOptionsDialog(false)}>
+              <Button className="normal-case text-red-700 font-semibold">Unfollow</Button>
+              <Divider />
+              <Button className="normal-case">Share To</Button>
+              <Divider />
+              <Button className="normal-case">Copy Link</Button>
+            </DialogCommon>
+          )}
+        </Box>
+      </Grid>
+    </>
   );
 }

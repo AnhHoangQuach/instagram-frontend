@@ -1,10 +1,14 @@
-import { useState } from 'react';
-import { Tab, Hidden, Tabs, Divider, Typography, Box } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Tab, Hidden, Tabs, Divider } from '@mui/material';
 import GridOnOutlinedIcon from '@mui/icons-material/GridOnOutlined';
 import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
 import { makeStyles } from '@mui/styles';
 import ProfilePosts from './ProfilePosts';
 import SavedPosts from './SavedPosts';
+import GlobalLoading from '../GlobalLoading';
+import { postService } from '../../services/post';
+import { useDispatch } from 'react-redux';
+import { setMessage } from '../../store/messageSlice';
 
 const useStyles = makeStyles((theme) => ({
   tabsIndicator: {
@@ -28,8 +32,32 @@ const useStyles = makeStyles((theme) => ({
 export default function ProfileTabs({ isOwner, profile }) {
   const classes = useStyles();
   const [value, setValue] = useState(0);
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
-  return (
+  useEffect(async () => {
+    try {
+      setLoading(true);
+      const postRes = await postService.getPosts({
+        page: 1,
+        limit: 5,
+        orderBy: 'desc',
+        user: profile._id,
+      });
+      if (postRes.status === 'success') {
+        setPosts(postRes.data.posts);
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+    }
+  }, []);
+
+  return loading ? (
+    <GlobalLoading />
+  ) : (
     <>
       <section className="mt-6">
         <Hidden smDown>
@@ -72,7 +100,7 @@ export default function ProfileTabs({ isOwner, profile }) {
             {isOwner && <Tab icon={<BookmarkBorderOutlinedIcon />} />}
           </Tabs>
         </Hidden>
-        {value === 0 && <ProfilePosts isOwner={isOwner} />}
+        {value === 0 && <ProfilePosts isOwner={isOwner} posts={posts} />}
         {value === 1 && <SavedPosts savedPosts={profile.savedPosts} />}
       </section>
     </>
