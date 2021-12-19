@@ -18,6 +18,7 @@ import Seo from '../../components/Seo';
 import DialogCommon from '../../components/DialogCommon';
 import Header from '../../components/Header';
 import { postService } from '../../services/post';
+import { commentService } from '../../services/comment';
 import { LikeButton, SaveButton } from '../../components/Feed/FeedAction';
 import { useRouter } from 'next/router';
 import FeedImage from '../../components/Feed/FeedImage';
@@ -25,6 +26,7 @@ import Carousel from 'react-multi-carousel';
 import { setMessage } from '../../store/messageSlice';
 import 'react-multi-carousel/lib/styles.css';
 import moment from 'moment';
+import { Controller, useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
 
 export const useStyles = makeStyles((theme) => ({
@@ -172,6 +174,25 @@ export default function PostDetail() {
   const commentRef = useRef(null);
   const isMatchPhone = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const { control, handleSubmit } = useForm({ mode: 'onChange' });
+  const handleCreateComment = () => {
+    handleSubmit(async ({ content }) => {
+      setLoading(true);
+      try {
+        const commentRes = await commentService.createComment({ postId: id }, content);
+        if (commentRes.status === 'success') {
+          dispatch(setMessage('Comment created successfully'));
+        }
+        setLoading(false);
+        setContent('');
+        commentRef.current.focus();
+      } catch (error) {
+        setLoading(false);
+        dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+      }
+    })();
+  };
+
   //post
   const [comments, setComments] = useState([]);
 
@@ -280,26 +301,37 @@ export default function PostDetail() {
                 <div className={classes.comment}>
                   <Divider />
                   <div className={classes.commentContainer}>
-                    <TextField
-                      size={isMatchPhone ? 'small' : 'medium'}
-                      inputRef={commentRef}
-                      fullWidth
-                      value={content}
-                      placeholder="Add a comment..."
-                      multiline
-                      rows={1}
-                      onChange={(event) => setContent(event.target.value)}
-                      InputProps={{
-                        classes: {
-                          root: classes.root,
-                          notchedOutline: classes.noBorder,
-                        },
-                      }}
+                    <Controller
+                      name="content"
+                      defaultValue=""
+                      control={control}
+                      render={({ field, fieldState: { invalid, error } }) => (
+                        <TextField
+                          {...field}
+                          size={isMatchPhone ? 'small' : 'medium'}
+                          name="content"
+                          inputRef={commentRef}
+                          fullWidth
+                          placeholder="Add a comment..."
+                          multiline
+                          rows={1}
+                          InputProps={{
+                            classes: {
+                              root: classes.root,
+                              notchedOutline: classes.noBorder,
+                            },
+                          }}
+                          required
+                          error={invalid}
+                          helperText={error?.message}
+                        />
+                      )}
                     />
                     <Button
                       color="primary"
                       className={classes.commentButton}
                       disabled={!content.trim()}
+                      onClick={handleCreateComment}
                     >
                       Post
                     </Button>

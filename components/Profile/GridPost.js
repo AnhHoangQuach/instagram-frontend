@@ -1,9 +1,10 @@
 import { Box, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
-import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
+import { LikeIcon, CommentIcon } from '../../utils/icons';
 import FilterOutlinedIcon from '@mui/icons-material/FilterOutlined';
 import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
+import FeedImage from '../Feed/FeedImage';
+import Link from 'next/link';
 
 const useStyles = makeStyles((theme) => ({
   gridPostOverlay: {
@@ -17,9 +18,10 @@ const useStyles = makeStyles((theme) => ({
     gridAutoFlow: 'column',
     width: '100%',
     height: '100%',
+    zIndex: 2,
     justifyContent: 'space-evenly',
     '&:hover': {
-      background: 'rgba(0,0,0,0.6)',
+      background: 'rgba(0,0,0,0.4)',
       cursor: 'pointer',
       '& > div': {
         opacity: 1,
@@ -49,25 +51,48 @@ const useStyles = makeStyles((theme) => ({
 export default function GridPost({ post }) {
   const classes = useStyles();
   return (
-    <Box sx={{ position: 'relative' }}>
-      <div className={classes.gridPostOverlay}>
-        <div className={classes.typePost}>
-          {post.id % 2 ? (
-            <FilterOutlinedIcon className={classes.sizeTypeIcon} />
-          ) : (
-            <PlayCircleOutlineOutlinedIcon className={classes.sizeTypeIcon} />
-          )}
-        </div>
-        <div className={classes.gridPostInfo}>
-          <FavoriteBorderOutlinedIcon />
-          <Typography>{post.id}</Typography>
-        </div>
-        <div className={classes.gridPostInfo}>
-          <ChatBubbleOutlineOutlinedIcon />
-          <Typography>5</Typography>
-        </div>
-      </div>
-      <img src={post.image} className={classes.image} />
-    </Box>
+    post && (
+      <Link href={`/post/${post._id}`} passHref>
+        <Box sx={{ position: 'relative' }}>
+          <div className={classes.gridPostOverlay}>
+            <div className={classes.typePost}>
+              {post.images[0].format === 'jpg' ||
+              post.images[0].format === 'png' ||
+              post.images[0].format === 'gif' ? (
+                <FilterOutlinedIcon className={classes.sizeTypeIcon} />
+              ) : (
+                <PlayCircleOutlineOutlinedIcon className={classes.sizeTypeIcon} />
+              )}
+            </div>
+            <div className={classes.gridPostInfo}>
+              <LikeIcon fill="#fff" />
+              <Typography variant="subtitle2" className="font-semibold">
+                {post?.likes.length}
+              </Typography>
+            </div>
+            <div className={classes.gridPostInfo}>
+              <CommentIcon fill="#fff" />
+              <Typography variant="subtitle2" className="font-semibold">
+                5
+              </Typography>
+            </div>
+          </div>
+          <div>
+            {post.images[0].format === 'jpg' ||
+            post.images[0].format === 'png' ||
+            post.images[0].format === 'gif' ? (
+              <FeedImage key={post.images[0].url} img={post.images[0].url} />
+            ) : (
+              <video
+                src={post.images[0].url}
+                key={post.images[0].url}
+                className="object-contain h-full mx-auto"
+                controls
+              />
+            )}
+          </div>
+        </Box>
+      </Link>
+    )
   );
 }
