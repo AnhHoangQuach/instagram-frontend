@@ -27,6 +27,7 @@ import FeedImage from '../../components/Feed/FeedImage';
 import Carousel from 'react-multi-carousel';
 import { setMessage } from '../../store/messageSlice';
 import 'react-multi-carousel/lib/styles.css';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import moment from 'moment';
 import { Controller, useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
@@ -140,6 +141,11 @@ export const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     overflow: 'hidden',
   },
+  deleteComment: {
+    fontSize: '0.75rem',
+    margin: '0 0.5rem',
+    cursor: 'pointer',
+  },
 }));
 
 export default function PostDetail() {
@@ -204,6 +210,8 @@ export default function PostDetail() {
       commentRef.current.focus();
     })(e);
   };
+
+  const handleDeleteComment = () => {};
 
   //post
   const [postComments, setPostComments] = useState([]);
@@ -302,13 +310,18 @@ export default function PostDetail() {
                           {comment.user.username} {comment.content}
                         </Typography>{' '}
                       </div>
-                      <div style={{ fontSize: 12 }}>{moment(comment.createdAt).fromNow()}</div>
+                      <div style={{ fontSize: 12, color: '#8e8e8e' }}>
+                        {moment(comment.createdAt).fromNow()}
+                        {comment.user._id === currentUser?._id && (
+                          <span className={classes.deleteComment}>Delete</span>
+                        )}
+                      </div>
                     </div>
                   </Box>
                 ))}
               </div>
               <Typography color="textSecondary" className={classes.datePosted}>
-                5 DAYS AGO
+                {moment(postDetail?.createdAt).fromNow()}
               </Typography>
               <div className={classes.comment}>
                 <Divider />
