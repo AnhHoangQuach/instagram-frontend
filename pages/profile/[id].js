@@ -11,6 +11,7 @@ import { Box, Hidden, Card, CardContent } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import { userService } from '../../services/user';
+import { postService } from '../../services/post';
 import { useDispatch } from 'react-redux';
 import { setMessage } from '../../store/messageSlice';
 
@@ -26,25 +27,51 @@ export default function Profile() {
   const [isOwner, setIsOwner] = useState(false);
   const [following, setFollowing] = useState([]);
   const [followers, setFollowers] = useState([]);
+  const [posts, setPosts] = useState([]);
+
+  const getPostOfUser = async () => {
+    try {
+      setLoading(true);
+      const postRes = await postService.getPosts({
+        page: 1,
+        limit: 5,
+        orderBy: 'desc',
+        user: id,
+      });
+      if (postRes.status === 'success') {
+        setPosts(postRes.data.posts);
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+    }
+  };
 
   const handleGetFollowingUser = async () => {
     try {
+      setLoading(true);
       const res = await userService.getFollowing({ userId: currentUser._id });
       if (res.status === 'success') {
         setFollowing(res.data.following);
       }
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
     }
   };
 
   const handleGetFollowersUser = async () => {
     try {
+      setLoading(true);
       const res = await userService.getFollowers({ userId: currentUser._id });
       if (res.status === 'success') {
         setFollowers(res.data.followers);
       }
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
     }
   };
@@ -66,6 +93,7 @@ export default function Profile() {
     }
     handleGetFollowingUser();
     handleGetFollowersUser();
+    getPostOfUser();
   }, [id]);
 
   var isFollowing = following.find((ele) => ele.user._id === id);
@@ -107,7 +135,11 @@ export default function Profile() {
                 isFollower={isFollower}
                 onLoading={callback}
               />
-              <PostCountSection />
+              <PostCountSection
+                postsCount={posts.length}
+                followersCount={followers.length}
+                followingCount={following.length}
+              />
               <NameBioSection profile={profile} />
             </CardContent>
           </Card>
@@ -134,10 +166,14 @@ export default function Profile() {
               </Box>
               <NameBioSection />
             </CardContent>
-            <PostCountSection />
+            <PostCountSection
+              postsCount={posts.length}
+              followersCount={followers.length}
+              followingCount={following.length}
+            />
           </Card>
         </Hidden>
-        <ProfileTabs isOwner={isOwner} profile={profile} />
+        <ProfileTabs isOwner={isOwner} profile={profile} posts={posts} />
       </Box>
     </>
   );

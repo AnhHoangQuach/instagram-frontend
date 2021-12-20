@@ -1,7 +1,6 @@
 import { Hidden, Divider, Typography, Box } from '@mui/material';
 
-export default function PostCountSection() {
-  const options = ['posts', 'followers', 'following'];
+export default function PostCountSection({ postsCount, followingCount, followersCount }) {
   return (
     <>
       <Hidden smUp>
@@ -13,22 +12,45 @@ export default function PostCountSection() {
             padding: '10px 0',
           }}
         >
-          {options.map((option) => (
-            <Box
-              key={option}
-              sx={{
-                display: 'grid',
-                justifyItems: 'center',
-              }}
-            >
-              <Typography className="font-semibold">12</Typography>
-              <Hidden smUp>
-                <Typography color="textSecondary" className="text-sm">
-                  {option}
-                </Typography>
-              </Hidden>
-            </Box>
-          ))}
+          <Box
+            sx={{
+              display: 'grid',
+              justifyItems: 'center',
+            }}
+          >
+            <Typography className="font-semibold">{postsCount}</Typography>
+            <Hidden smUp>
+              <Typography color="textSecondary" className="text-sm">
+                posts
+              </Typography>
+            </Hidden>
+          </Box>
+          <Box
+            sx={{
+              display: 'grid',
+              justifyItems: 'center',
+            }}
+          >
+            <Typography className="font-semibold">{followersCount}</Typography>
+            <Hidden smUp>
+              <Typography color="textSecondary" className="text-sm">
+                followers
+              </Typography>
+            </Hidden>
+          </Box>
+          <Box
+            sx={{
+              display: 'grid',
+              justifyItems: 'center',
+            }}
+          >
+            <Typography className="font-semibold">{followingCount}</Typography>
+            <Hidden smUp>
+              <Typography color="textSecondary" className="text-sm">
+                following
+              </Typography>
+            </Hidden>
+          </Box>
         </Box>
         <Divider />
       </Hidden>
@@ -42,22 +64,45 @@ export default function PostCountSection() {
               'minmax(auto, max-content) minmax(auto, max-content) minmax(auto, max-content)',
           }}
         >
-          {options.map((option) => (
-            <Box
-              key={option}
-              sx={{
-                display: 'grid',
-                gridGap: 5,
-                gridAutoFlow: 'column',
-                gridTemplateColumns: 'minmax(auto, max-content) minmax(auto, max-content)',
-              }}
-            >
-              <Typography className="font-semibold text-sm">12</Typography>
-              <Hidden xsDown>
-                <Typography className="text-sm">{option}</Typography>
-              </Hidden>
-            </Box>
-          ))}
+          <Box
+            sx={{
+              display: 'grid',
+              gridGap: 5,
+              gridAutoFlow: 'column',
+              gridTemplateColumns: 'minmax(auto, max-content) minmax(auto, max-content)',
+            }}
+          >
+            <Typography className="font-semibold text-sm">{postsCount}</Typography>
+            <Hidden xsDown>
+              <Typography className="text-sm">posts</Typography>
+            </Hidden>
+          </Box>
+          <Box
+            sx={{
+              display: 'grid',
+              gridGap: 5,
+              gridAutoFlow: 'column',
+              gridTemplateColumns: 'minmax(auto, max-content) minmax(auto, max-content)',
+            }}
+          >
+            <Typography className="font-semibold text-sm">{followersCount}</Typography>
+            <Hidden xsDown>
+              <Typography className="text-sm">followers</Typography>
+            </Hidden>
+          </Box>
+          <Box
+            sx={{
+              display: 'grid',
+              gridGap: 5,
+              gridAutoFlow: 'column',
+              gridTemplateColumns: 'minmax(auto, max-content) minmax(auto, max-content)',
+            }}
+          >
+            <Typography className="font-semibold text-sm">{followingCount}</Typography>
+            <Hidden xsDown>
+              <Typography className="text-sm">following</Typography>
+            </Hidden>
+          </Box>
         </Box>
       </Hidden>
     </>
