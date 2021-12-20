@@ -55,7 +55,7 @@ export default function NewPost({}) {
       setLoading(true);
       const postRes = await postService.createPost(formData);
       if (postRes.status === 'success') {
-        dispatch(setMessage({ type: 'success', message: postRes.message }));
+        dispatch(setMessage({ type: 'success', message: 'Created Post successfully' }));
         router.push('/');
       }
       setLoading(false);

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Header from '../../components/Header';
 import Seo from '../../components/Seo';
 import ProfilePicture from '../../components/Profile/ProfilePicture';
@@ -24,6 +24,30 @@ export default function Profile() {
 
   const [profile, setProfile] = useState(currentUser);
   const [isOwner, setIsOwner] = useState(false);
+  const [following, setFollowing] = useState([]);
+  const [followers, setFollowers] = useState([]);
+
+  const handleGetFollowingUser = async () => {
+    try {
+      const res = await userService.getFollowing({ userId: currentUser._id });
+      if (res.status === 'success') {
+        setFollowing(res.data.following);
+      }
+    } catch (error) {
+      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+    }
+  };
+
+  const handleGetFollowersUser = async () => {
+    try {
+      const res = await userService.getFollowers({ userId: currentUser._id });
+      if (res.status === 'success') {
+        setFollowers(res.data.followers);
+      }
+    } catch (error) {
+      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+    }
+  };
 
   useEffect(async () => {
     if (profile._id === id) {
@@ -40,6 +64,22 @@ export default function Profile() {
       setLoading(false);
       dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
     }
+    handleGetFollowingUser();
+    handleGetFollowersUser();
+  }, [id]);
+
+  var isFollowing = following.find((ele) => ele.user._id === id);
+  var isFollower = followers.find((ele) => ele.user._id === id);
+
+  const callback = useCallback((loading) => {
+    setLoading(loading);
+    setTimeout(() => {
+      handleGetFollowingUser();
+      handleGetFollowersUser();
+      isFollowing = following.find((ele) => ele.user._id === id);
+      isFollower = followers.find((ele) => ele.user._id === id);
+      setLoading(false);
+    }, 600);
   }, []);
 
   return isLoading ? (
@@ -60,7 +100,13 @@ export default function Profile() {
           >
             <ProfilePicture isOwner={isOwner} size={150} image={profile.avatar} />
             <CardContent sx={{ display: 'grid', gridGrap: 20 }}>
-              <ProfileNameSection isOwner={isOwner} profile={profile} />
+              <ProfileNameSection
+                isOwner={isOwner}
+                profile={profile}
+                isFollowing={isFollowing}
+                isFollower={isFollower}
+                onLoading={callback}
+              />
               <PostCountSection />
               <NameBioSection profile={profile} />
             </CardContent>
@@ -78,7 +124,13 @@ export default function Profile() {
                 }}
               >
                 <ProfilePicture isOwner={isOwner} size={77} profile={profile} />
-                <ProfileNameSection isOwner={isOwner} profile={profile} />
+                <ProfileNameSection
+                  isOwner={isOwner}
+                  profile={profile}
+                  isFollowing={isFollowing}
+                  isFollower={isFollower}
+                  onLoading={callback}
+                />
               </Box>
               <NameBioSection />
             </CardContent>
