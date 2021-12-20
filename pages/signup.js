@@ -41,8 +41,7 @@ export default function SignUp() {
           router.replace('/');
         }
       } catch (error) {
-        const message = error.response?.data.message;
-        dispatch(setMessage({ type: 'error', message: message }));
+        dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
         setIsLoading(false);
       }
     })();

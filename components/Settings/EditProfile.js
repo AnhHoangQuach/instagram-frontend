@@ -8,20 +8,21 @@ import {
   Typography,
   Button,
   CircularProgress,
+  Dialog,
 } from '@mui/material';
 import { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import PhotoCameraOutlinedIcon from '@mui/icons-material/PhotoCameraOutlined';
 import { makeStyles } from '@mui/styles';
-import {
-  validateEmail,
-  validateFullName,
-  validateUsername,
-  validateBio,
-  validateWebsite,
-} from '../../utils/validation';
-import { useSelector } from 'react-redux';
+import { validateEmail, validateFullName, validateUsername } from '../../utils/validation';
+import { userService } from '../../services/user';
+import { setMessage } from '../../store/messageSlice';
+import { saveUser } from '../../store/userSlice';
+import GlobalLoading from '../GlobalLoading';
+import UserAvatarCrop from '../UserAvatarCrop';
+import { useSelector, useDispatch } from 'react-redux';
 import { Controller, useForm } from 'react-hook-form';
+import { useRouter } from 'next/router';
 
 const Input = styled('input')({
   display: 'none',
@@ -36,17 +37,66 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function EditProfile() {
+  const { currentUser } = useSelector((state) => state.user);
   const classes = useStyles();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isOpenAvatar, setIsOpenAvatar] = useState(false);
+  const dispatch = useDispatch();
+  const router = useRouter();
   const { control, handleSubmit } = useForm({ mode: 'onChange' });
-  const handleClickLogin = () => {
+  const [file, setFile] = useState();
+
+  const handleChooseFile = ({ target }) => {
+    const file = target.files[0];
+    if (!file.type.startsWith('image')) {
+      dispatch(setMessage({ type: 'error', message: 'File type is not allowed' }));
+    } else {
+      setFile(file);
+      setIsOpenAvatar(true);
+    }
+  };
+
+  const handleSuccess = async () => {
+    setIsLoading(true);
+    try {
+      const res = await userService.getUser({ userId: currentUser._id });
+      if (res.message === 'success') {
+        // handle set current user
+      }
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+    }
+    setIsOpenAvatar(false);
+  };
+
+  const handleEditProfile = () => {
     handleSubmit(async ({ fullname, username, website, bio, email }) => {
-      console.log(fullname, username, website, bio, email);
+      try {
+        setIsLoading(true);
+        const resEditProfile = await userService.editProfile({
+          fullname,
+          username,
+          website,
+          bio,
+          email,
+        });
+        if (resEditProfile.status === 'success') {
+          dispatch(setMessage({ type: 'success', message: resEditProfile.message }));
+          router.replace('/');
+        }
+        setIsLoading(false);
+      } catch (error) {
+        setIsLoading(false);
+        dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+      }
     })();
   };
-  const [isLoading, setLoading] = useState(false);
-  const { currentUser } = useSelector((state) => state.user);
 
-  return (
+  return isLoading ? (
+    <GlobalLoading />
+  ) : (
     <Grid
       container
       className="max-w-5xl"
@@ -74,12 +124,24 @@ export default function EditProfile() {
           >
             <Tooltip title="Update Avatar">
               <label htmlFor="icon-button-file">
-                <Input accept="image/*" id="icon-button-file" type="file" />
+                <Input
+                  accept="image/*"
+                  id="icon-button-file"
+                  type="file"
+                  onChange={handleChooseFile}
+                />
                 <IconButton className={classes.button} aria-label="upload picture" component="span">
                   <PhotoCameraOutlinedIcon />
                 </IconButton>
               </label>
             </Tooltip>
+            <Dialog open={isOpenAvatar} maxWidth="sm">
+              <UserAvatarCrop
+                file={file}
+                onSuccess={handleSuccess}
+                onCancel={() => setIsOpenAvatar(false)}
+              />
+            </Dialog>
           </Box>
         </Box>
         <Typography variant="h6">{currentUser?.username}</Typography>
@@ -137,11 +199,6 @@ export default function EditProfile() {
           name="website"
           defaultValue={currentUser?.website}
           control={control}
-          rules={{
-            validate: {
-              validator: (value) => validateWebsite(value),
-            },
-          }}
           render={({ field, fieldState: { invalid, error } }) => (
             <TextField
               {...field}
@@ -161,11 +218,6 @@ export default function EditProfile() {
           name="bio"
           defaultValue={currentUser?.bio}
           control={control}
-          rules={{
-            validate: {
-              validator: (value) => validateBio(value),
-            },
-          }}
           render={({ field, fieldState: { invalid, error } }) => (
             <TextField
               {...field}
@@ -211,7 +263,7 @@ export default function EditProfile() {
         size="large"
         fullWidth
         className="mb-4 w-2/5"
-        onClick={handleClickLogin}
+        onClick={handleEditProfile}
       >
         Save
       </Button>
