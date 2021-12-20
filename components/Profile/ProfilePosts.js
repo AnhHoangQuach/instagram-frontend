@@ -42,7 +42,7 @@ export default function ProfilePosts({ isOwner, posts }) {
     <Box sx={{ display: 'grid' }}>
       <Box className={classes.postContainer}>
         {posts.map((post) => (
-          <GridPost key={post.id} post={post} />
+          <GridPost key={post._id} post={post} />
         ))}
       </Box>
     </Box>

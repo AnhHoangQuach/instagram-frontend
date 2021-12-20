@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { LikeIcon, UnlikeIcon, RemoveIcon, SaveIcon } from '../../utils/icons';
 import { makeStyles } from '@mui/styles';
 import { userService } from '../../services/user';
+import { postService } from '../../services/post';
 import { useDispatch } from 'react-redux';
 import { setMessage } from '../../store/messageSlice';
 export const useStyles = makeStyles((theme) => ({
@@ -32,24 +33,36 @@ export const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function LikeButton() {
+export function LikeButton({ postId, isVotedPost, likes, parentCallback }) {
   const classes = useStyles();
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(isVotedPost);
   const Icon = liked ? UnlikeIcon : LikeIcon;
   const className = liked ? classes.liked : classes.like;
-  const onClick = liked ? handleUnlike : handleLike;
 
-  function handleLike() {
-    console.log('like');
-    setLiked(true);
+  const [likesCount, setLikesCount] = useState(likes);
+
+  const dispatch = useDispatch();
+  async function handleLikePost() {
+    try {
+      const res = await postService.votePost({ postId });
+      if (res.status === 'success') {
+        setLiked(!liked);
+      }
+    } catch (error) {
+      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+    }
   }
 
-  function handleUnlike() {
-    console.log('unlike');
-    setLiked(false);
-  }
-
-  return <Icon className={className} onClick={onClick} />;
+  return (
+    <Icon
+      className={className}
+      onClick={() => {
+        setLikesCount((likesCount) => likesCount + (liked ? -1 : 1));
+        parentCallback(likesCount + (liked ? -1 : 1));
+        handleLikePost();
+      }}
+    />
+  );
 }
 
 export function SaveButton({ postId, isBookmarked }) {

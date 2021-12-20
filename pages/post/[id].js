@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import {
   Grid,
   Box,
@@ -27,7 +27,6 @@ import FeedImage from '../../components/Feed/FeedImage';
 import Carousel from 'react-multi-carousel';
 import { setMessage } from '../../store/messageSlice';
 import 'react-multi-carousel/lib/styles.css';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import moment from 'moment';
 import { Controller, useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
@@ -211,11 +210,41 @@ export default function PostDetail() {
     })(e);
   };
 
-  const handleDeleteComment = () => {};
+  const handleDeleteComment = async (commentId) => {
+    try {
+      const commentRes = await commentService.deleteComment({ commentId });
+      if (commentRes.status === 'success') {
+        dispatch(setMessage({ type: 'success', message: commentRes.message }));
+        try {
+          const postRes = await postService.getPostByID({ postId: id });
+          if (postRes.status === 'success') {
+            setPostDetail(postRes.data.post);
+            setPostComments(postRes.data.comment);
+          }
+        } catch (error) {
+          dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+        }
+      }
+    } catch (error) {
+      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+    }
+  };
+
+  const handleShareLink = () => {
+    navigator.clipboard
+      .writeText(document.URL)
+      .then(() => dispatch(setMessage({ type: 'success', message: 'Link copied to clipboard' })))
+      .catch(() =>
+        dispatch(setMessage({ type: 'success', message: 'Could not copy link to clipboard.' }))
+      )
+      .finally(() => {
+        setOptionsDialog(false);
+      });
+  };
 
   //post
   const [postComments, setPostComments] = useState([]);
-
+  const [likesCount, setLikesCount] = useState();
   useEffect(async () => {
     try {
       setLoading(true);
@@ -223,6 +252,7 @@ export default function PostDetail() {
       if (postRes.status === 'success') {
         setPostDetail(postRes.data.post);
         setPostComments(postRes.data.comment);
+        setLikesCount(postRes.data.post.likes.length);
       }
       setLoading(false);
     } catch (error) {
@@ -230,6 +260,10 @@ export default function PostDetail() {
       dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
     }
   }, [id]);
+
+  const callback = useCallback((likesCount) => {
+    setLikesCount(likesCount);
+  }, []);
 
   return isLoading ? (
     <GlobalLoading />
@@ -268,7 +302,12 @@ export default function PostDetail() {
             {/* Post Buttons */}
             <div className={classes.postButtonsWrapper}>
               <div className={classes.postButtons}>
-                <LikeButton />
+                <LikeButton
+                  postId={postDetail?._id}
+                  isVotedPost={postDetail?.likes.find((ele) => ele.user === currentUser?._id)}
+                  parentCallback={callback}
+                  likes={likesCount}
+                />
                 <CommentIcon
                   onClick={() => {
                     commentRef.current.focus();
@@ -281,10 +320,8 @@ export default function PostDetail() {
                   isBookmarked={currentUser?.savedPosts.includes(postDetail?._id)}
                 />
               </div>
-              <Typography className={classes.likes} variant="subtitle2">
-                <span>
-                  {postDetail?.likes.length === 1 ? '1 like' : `${postDetail?.likes.length} likes`}
-                </span>
+              <Typography className={classes.likes} variant="subtitle2" component="span">
+                {likesCount === 1 ? '1 like' : `${likesCount} likes`}
               </Typography>
               <div className={classes.postCaptionContainer}>
                 <div className="flex my-4">
@@ -305,15 +342,21 @@ export default function PostDetail() {
                   <Box className="flex my-4" key={comment._id}>
                     <Avatar src="/assets/images/45851733.png" alt="" />
                     <div className="pl-4">
-                      <div>
-                        <Typography variant="body2" component="span">
-                          {comment.user.username} {comment.content}
-                        </Typography>{' '}
-                      </div>
+                      <Typography variant="body2" component="span" className="font-semibold mr-1">
+                        {comment.user.username}
+                      </Typography>
+                      <Typography variant="body2" component="span">
+                        {comment.content}
+                      </Typography>
                       <div style={{ fontSize: 12, color: '#8e8e8e' }}>
                         {moment(comment.createdAt).fromNow()}
                         {comment.user._id === currentUser?._id && (
-                          <span className={classes.deleteComment}>Delete</span>
+                          <span
+                            className={classes.deleteComment}
+                            onClick={() => handleDeleteComment(comment._id)}
+                          >
+                            Delete
+                          </span>
                         )}
                       </div>
                     </div>
@@ -364,7 +407,9 @@ export default function PostDetail() {
               <Divider />
               <Button className="normal-case">Share To</Button>
               <Divider />
-              <Button className="normal-case">Copy Link</Button>
+              <Button className="normal-case" onClick={handleShareLink}>
+                Copy Link
+              </Button>
             </DialogCommon>
           )}
         </Box>

@@ -1,5 +1,5 @@
-import { Hidden, Box, Button, Typography, Divider, Avatar } from '@mui/material';
 import { useState } from 'react';
+import { Hidden, Box, Button, Typography, Divider, Avatar } from '@mui/material';
 import router from 'next/router';
 import Link from 'next/link';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
@@ -9,7 +9,13 @@ import { setMessage } from '../../store/messageSlice';
 import { userService } from '../../services/user';
 import DialogCommon from '../DialogCommon';
 
-export default function ProfileNameSection({ isOwner, profile }) {
+export default function ProfileNameSection({
+  isOwner,
+  profile,
+  isFollowing,
+  isFollower,
+  onLoading,
+}) {
   const dispatch = useDispatch();
 
   const [showUnfollowDialog, setUnfollowDialog] = useState(false);
@@ -19,6 +25,8 @@ export default function ProfileNameSection({ isOwner, profile }) {
     dispatch(logout());
     router.push('/login');
   };
+
+  const [loading, setLoading] = useState(false);
 
   const handleFollowUser = async () => {
     try {
@@ -33,9 +41,21 @@ export default function ProfileNameSection({ isOwner, profile }) {
     }
   };
 
+  const handleUnfollowUser = async () => {
+    try {
+      const res = await userService.unfollowUser({ userId: profile._id });
+      if (res.status === 'success') {
+        dispatch(
+          setMessage({ type: 'success', message: `Unfollow user ${profile.username} success` })
+        );
+      }
+    } catch (error) {
+      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+    }
+    setUnfollowDialog(false);
+  };
+
   let followButton;
-  const isFollowing = false;
-  const isFollower = false;
 
   if (isFollowing) {
     followButton = (
@@ -45,13 +65,29 @@ export default function ProfileNameSection({ isOwner, profile }) {
     );
   } else if (isFollower) {
     followButton = (
-      <Button size="small" variant="contained" color="primary">
+      <Button
+        size="small"
+        variant="contained"
+        color="primary"
+        onClick={() => {
+          handleFollowUser();
+          onLoading(true);
+        }}
+      >
         Follow Back
       </Button>
     );
   } else {
     followButton = (
-      <Button size="small" variant="contained" color="primary" onClick={handleFollowUser}>
+      <Button
+        size="small"
+        variant="contained"
+        color="primary"
+        onClick={() => {
+          handleFollowUser();
+          onLoading(true);
+        }}
+      >
         Follow
       </Button>
     );
@@ -134,13 +170,21 @@ export default function ProfileNameSection({ isOwner, profile }) {
               padding: '32px 16px 16px',
             }}
           >
-            <Avatar src="/assets/images/45851733.png" alt="" sx={{ width: 90, height: 90 }} />
+            <Avatar src={profile.avatar} alt="" sx={{ width: 90, height: 90 }} />
           </Box>
           <Typography align="center" variant="body2" className="mb-2">
             Unfollow @{profile.username}?
           </Typography>
           <Divider />
-          <Button className="normal-case text-red-700">Unfollow</Button>
+          <Button
+            className="normal-case text-red-700"
+            onClick={() => {
+              handleUnfollowUser();
+              onLoading(true);
+            }}
+          >
+            Unfollow
+          </Button>
         </DialogCommon>
       )}
       {showSettingsDialog && (
