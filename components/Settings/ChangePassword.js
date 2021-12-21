@@ -13,6 +13,10 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { validatePassword } from '../../utils/validation';
+import { userService } from '../../services/user';
+import { setMessage } from '../../store/messageSlice';
+import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
 import { Controller, useForm } from 'react-hook-form';
 
 export default function ChangePassword() {
@@ -20,24 +24,27 @@ export default function ChangePassword() {
   //state
   const [isLoading, setIsLoading] = useState(false);
   const [hidePassword, setHidePassword] = useState(true);
+  const dispatch = useDispatch();
+  const router = useRouter();
 
   //formData
   const { control, handleSubmit } = useForm({ mode: 'onChange' });
   const handleClickSignUp = () => {
-    handleSubmit(async ({ email, fullname, username, password }) => {
-      setIsLoading(true);
+    handleSubmit(async ({ oldPassword, newPassword }) => {
       try {
-        const responseSignup = await authService.signup({ email, fullname, username, password });
-        if (responseSignup.status === 'success') {
-          localStorage.setItem('token', responseSignup.data.token);
-          dispatch(setMessage({ type: 'success', message: 'Register success' }));
-          setIsLoading(false);
+        setIsLoading(true);
+        const resChangePassword = await userService.changePassword({
+          oldPassword,
+          newPassword,
+        });
+        if (resChangePassword.status === 'success') {
+          dispatch(setMessage({ type: 'success', message: resChangePassword.message }));
           router.replace('/');
         }
-      } catch (error) {
-        const message = error.response?.data.message;
-        dispatch(setMessage({ type: 'error', message: message }));
         setIsLoading(false);
+      } catch (error) {
+        setIsLoading(false);
+        dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
       }
     })();
   };
@@ -67,7 +74,7 @@ export default function ChangePassword() {
       </Box>
       <FormGroup className="w-4/5 md:w-2/5 mt-4">
         <Controller
-          name="old_password"
+          name="oldPassword"
           defaultValue=""
           control={control}
           rules={{
@@ -98,7 +105,7 @@ export default function ChangePassword() {
           )}
         />
         <Controller
-          name="new_password"
+          name="newPassword"
           defaultValue=""
           control={control}
           rules={{
@@ -109,37 +116,6 @@ export default function ChangePassword() {
               {...field}
               className="mb-6"
               label="New Password"
-              variant="outlined"
-              size="small"
-              type={hidePassword ? 'password' : 'text'}
-              InputProps={{
-                endAdornment: hidePassword ? (
-                  <VisibilityOffOutlinedIcon
-                    onClick={handleShowPassword}
-                    className="cursor-pointer"
-                  />
-                ) : (
-                  <VisibilityOutlinedIcon onClick={handleShowPassword} className="cursor-pointer" />
-                ),
-              }}
-              required
-              error={invalid}
-              helperText={error?.message}
-            />
-          )}
-        />
-        <Controller
-          name="password"
-          defaultValue=""
-          control={control}
-          rules={{
-            validate: (value) => validatePassword(value),
-          }}
-          render={({ field, fieldState: { invalid, error } }) => (
-            <TextField
-              {...field}
-              className="mb-6"
-              label="Password"
               variant="outlined"
               size="small"
               type={hidePassword ? 'password' : 'text'}

@@ -12,6 +12,12 @@ const getFollowing = ({ userId }) => clientRaw.get(`/user/${userId}/following`);
 
 const getFollowers = ({ userId }) => clientRaw.get(`/user/${userId}/followers`);
 
+const changePassword = (body) => clientRaw.put(`/user/password`, body);
+
+const editProfile = (body) => clientRaw.put(`/user/update`, body);
+
+const changeAvatar = (body) => clientRaw.put(`/user/avatar`, body);
+
 export const userService = {
   getUser,
   bookmarkPost,
@@ -19,4 +25,7 @@ export const userService = {
   unfollowUser,
   getFollowing,
   getFollowers,
+  changePassword,
+  editProfile,
+  changeAvatar,
 };
