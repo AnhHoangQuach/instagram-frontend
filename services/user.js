@@ -18,6 +18,8 @@ const editProfile = (body) => clientRaw.put(`/user/update`, body);
 
 const changeAvatar = (body) => clientRaw.put(`/user/avatar`, body);
 
+const suggestedUser = ({ max }) => clientRaw.get(`/user/suggested/${max}`);
+
 export const userService = {
   getUser,
   bookmarkPost,
@@ -28,4 +30,5 @@ export const userService = {
   changePassword,
   editProfile,
   changeAvatar,
+  suggestedUser,
 };

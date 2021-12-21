@@ -28,6 +28,7 @@ import Carousel from 'react-multi-carousel';
 import { setMessage } from '../../store/messageSlice';
 import 'react-multi-carousel/lib/styles.css';
 import moment from 'moment';
+import Link from 'next/link';
 import { Controller, useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -325,7 +326,9 @@ export default function PostDetail() {
               </Typography>
               <div className={classes.postCaptionContainer}>
                 <div className="flex my-4">
-                  <Avatar src={postDetail?.user.avatar} alt="" />
+                  <Link href={`/profile/${postDetail?.user._id}`} passHref>
+                    <Avatar src={postDetail?.user.avatar} alt="" className="cursor-pointer" />
+                  </Link>
                   <div className="pl-4">
                     <Typography
                       variant="body2"
@@ -340,7 +343,7 @@ export default function PostDetail() {
                 </div>
                 {postComments?.comments?.map((comment) => (
                   <Box className="flex my-4" key={comment._id}>
-                    <Avatar src="/assets/images/45851733.png" alt="" />
+                    <Avatar src={comment.user.avatar} alt="" />
                     <div className="pl-4">
                       <Typography variant="body2" component="span" className="font-semibold mr-1">
                         {comment.user.username}

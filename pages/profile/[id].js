@@ -51,7 +51,7 @@ export default function Profile() {
   const handleGetFollowingUser = async () => {
     try {
       setLoading(true);
-      const res = await userService.getFollowing({ userId: currentUser._id });
+      const res = await userService.getFollowing({ userId: id });
       if (res.status === 'success') {
         setFollowing(res.data.following);
       }
@@ -65,7 +65,7 @@ export default function Profile() {
   const handleGetFollowersUser = async () => {
     try {
       setLoading(true);
-      const res = await userService.getFollowers({ userId: currentUser._id });
+      const res = await userService.getFollowers({ userId: id });
       if (res.status === 'success') {
         setFollowers(res.data.followers);
       }
@@ -96,16 +96,16 @@ export default function Profile() {
     getPostOfUser();
   }, [id]);
 
-  var isFollowing = following.find((ele) => ele.user._id === id);
-  var isFollower = followers.find((ele) => ele.user._id === id);
+  var isFollowing = following.find((ele) => ele.user._id === currentUser._id);
+  var isFollower = followers.find((ele) => ele.user._id === currentUser._id);
 
   const callback = useCallback((loading) => {
     setLoading(loading);
     setTimeout(() => {
       handleGetFollowingUser();
       handleGetFollowersUser();
-      isFollowing = following.find((ele) => ele.user._id === id);
-      isFollower = followers.find((ele) => ele.user._id === id);
+      isFollowing = following.find((ele) => ele.user._id === currentUser._id);
+      isFollower = followers.find((ele) => ele.user._id === currentUser._id);
       setLoading(false);
     }, 600);
   }, []);

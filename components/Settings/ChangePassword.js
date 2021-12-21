@@ -61,7 +61,7 @@ export default function ChangePassword() {
     >
       <Box sx={{ display: 'flex', alignItems: 'center', marginTop: '0.5rem' }}>
         <Avatar
-          src="/assets/images/45851733.png"
+          src={currentUser?.avatar}
           style={{
             width: 50,
             height: 50,
