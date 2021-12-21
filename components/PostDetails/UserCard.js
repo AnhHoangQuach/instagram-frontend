@@ -6,6 +6,7 @@ const useStyles = makeStyles({
   avatar: {
     width: ({ avatarSize = 44 }) => avatarSize,
     height: ({ avatarSize = 44 }) => avatarSize,
+    cursor: 'pointer',
   },
   typography: {
     textOverflow: 'ellipsis',
@@ -30,15 +31,13 @@ export default function UserCard({ user, avatarSize = 44 }) {
 
   return (
     <div className={classes.wrapper}>
-      <Link href={`/profile/${user?.id}`} passHref>
+      <Link href={`/profile/${user?._id}`} passHref>
         <Avatar src={user?.avatar} alt="User avatar" className={classes.avatar} />
       </Link>
       <div className={classes.nameWrapper}>
-        <Link href={`/profile/${user?.id}`} passHref>
-          <Typography variant="subtitle2" className={classes.typography}>
-            {user?.username}
-          </Typography>
-        </Link>
+        <Typography variant="subtitle2" className={classes.typography}>
+          {user?.username}
+        </Typography>
         <Typography color="textSecondary" variant="body2" className={classes.typography}>
           {user?.fullname}
         </Typography>
