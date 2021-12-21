@@ -3,6 +3,8 @@ import { Box, Button, Slider } from '@mui/material';
 import { userService } from '../../services/user';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import AvatarEditor from 'react-avatar-editor';
+import { useDispatch } from 'react-redux';
+import { setMessage } from '../../store/messageSlice';
 
 const UserAvatarCrop = ({ file, onSuccess, onCancel }) => {
   const inputEl = useRef();
@@ -37,15 +39,17 @@ const UserAvatarCrop = ({ file, onSuccess, onCancel }) => {
       const formData = new FormData();
       formData.append('avatar', new File([blob], file.name));
 
-      setIsLoading(true);
-      userService
-        .changeAvatar(formData)
-        .then(() => {
+      try {
+        setIsLoading(true);
+        const res = await userService.updateAvatar(formData);
+        if (res.status === 'success') {
           onSuccess();
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
+        }
+        setIsLoading(false);
+      } catch (error) {
+        setIsLoading(false);
+        dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+      }
     }
   };
 
