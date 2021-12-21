@@ -17,12 +17,12 @@ import { makeStyles } from '@mui/styles';
 import { validateEmail, validateFullName, validateUsername } from '../../utils/validation';
 import { userService } from '../../services/user';
 import { setMessage } from '../../store/messageSlice';
-import { saveUser } from '../../store/userSlice';
 import GlobalLoading from '../GlobalLoading';
 import UserAvatarCrop from '../UserAvatarCrop';
 import { useSelector, useDispatch } from 'react-redux';
 import { Controller, useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
+import { getMe } from '../../store/userSlice';
 
 const Input = styled('input')({
   display: 'none',
@@ -57,17 +57,7 @@ export default function EditProfile() {
   };
 
   const handleSuccess = async () => {
-    setIsLoading(true);
-    try {
-      const res = await userService.getUser({ userId: currentUser._id });
-      if (res.message === 'success') {
-        // handle set current user
-      }
-      setIsLoading(false);
-    } catch (error) {
-      setIsLoading(false);
-      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
-    }
+    await dispatch(getMe());
     setIsOpenAvatar(false);
   };
 
@@ -135,13 +125,15 @@ export default function EditProfile() {
                 </IconButton>
               </label>
             </Tooltip>
-            <Dialog open={isOpenAvatar} maxWidth="sm">
-              <UserAvatarCrop
-                file={file}
-                onSuccess={handleSuccess}
-                onCancel={() => setIsOpenAvatar(false)}
-              />
-            </Dialog>
+            {file && (
+              <Dialog open={isOpenAvatar} maxWidth="sm">
+                <UserAvatarCrop
+                  file={file}
+                  onSuccess={handleSuccess}
+                  onCancel={() => setIsOpenAvatar(false)}
+                />
+              </Dialog>
+            )}
           </Box>
         </Box>
         <Typography variant="h6">{currentUser?.username}</Typography>

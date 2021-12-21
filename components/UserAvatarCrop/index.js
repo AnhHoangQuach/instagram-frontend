@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState, useRef } from 'react';
-import { Box, Button, Slider } from '@mui/material';
+import { Box, Button, Slider, CircularProgress } from '@mui/material';
 import { userService } from '../../services/user';
-import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import AvatarEditor from 'react-avatar-editor';
 import { useDispatch } from 'react-redux';
 import { setMessage } from '../../store/messageSlice';
@@ -11,14 +10,7 @@ const UserAvatarCrop = ({ file, onSuccess, onCancel }) => {
   const [scale, setScale] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [innerWidth, setInnerWidth] = useState(window.innerWidth);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setInnerWidth(window.innerWidth);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  const dispatch = useDispatch();
 
   const image = useMemo(
     () => ({
@@ -41,9 +33,10 @@ const UserAvatarCrop = ({ file, onSuccess, onCancel }) => {
 
       try {
         setIsLoading(true);
-        const res = await userService.updateAvatar(formData);
+        const res = await userService.changeAvatar(formData);
         if (res.status === 'success') {
           onSuccess();
+          dispatch(setMessage({ type: 'success', message: res.message }));
         }
         setIsLoading(false);
       } catch (error) {
@@ -52,6 +45,14 @@ const UserAvatarCrop = ({ file, onSuccess, onCancel }) => {
       }
     }
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      setInnerWidth(window.innerWidth);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <Box className="p-6">
@@ -74,7 +75,7 @@ const UserAvatarCrop = ({ file, onSuccess, onCancel }) => {
           className="ml-3"
           variant="outlined"
           disabled={isLoading}
-          startIcon={<CheckOutlinedIcon />}
+          startIcon={isLoading && <CircularProgress size="1rem" />}
           onClick={handleClickSave}
         >
           Update
