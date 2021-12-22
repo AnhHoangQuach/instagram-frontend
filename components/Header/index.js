@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/userSlice';
 import { setMessage } from '../../store/messageSlice';
 import NewPost from '../../components/NewPost';
+import { systemService } from '../../services/system';
 import {
   HomeIcon,
   HomeActiveIcon,
@@ -29,6 +30,8 @@ export default function Header() {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const [keyword, setKeyword] = useState();
+  const [dataSearch, setDataSearch] = useState();
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -42,6 +45,23 @@ export default function Header() {
     dispatch(setMessage({ type: 'success', message: 'Logout success' }));
     router.push('/login');
   };
+
+  const handleSearch = async () => {
+    if (keyword) {
+      const res = await systemService.search({ keyword });
+      if (res.status === 'success') {
+        setDataSearch(res.data);
+      }
+    }
+  };
+
+  const handleKeyword = (e) => {
+    setKeyword(e.target.value);
+  };
+
+  useEffect(() => {
+    handleSearch();
+  }, [keyword]);
 
   const { systemTheme, theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -93,6 +113,7 @@ export default function Header() {
             placeholder="Search"
             variant="outlined"
             size="small"
+            onChange={handleKeyword}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">

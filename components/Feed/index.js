@@ -57,7 +57,6 @@ export default function Feed() {
   const [showCaption, setCaption] = useState(false);
   const [showOptionsDialog, setOptionsDialog] = useState(false);
   const [postIdNow, setPostIdNow] = useState(null);
-  const [comments, setComments] = useState([]);
 
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
@@ -67,7 +66,6 @@ export default function Feed() {
       const postRes = await postService.getFeedPosts({ limit: 5 });
       if (postRes.status === 'success') {
         setPosts(postRes.data.posts);
-        setComments(postRes.data.comment);
       }
       setLoading(false);
     } catch (error) {
@@ -173,18 +171,18 @@ export default function Feed() {
               )}
             </div>
           </Box>
-          <Link href="/" passHref>
-            <Typography variant="body2" component="div" className="text-gray-400">
-              View all 1 comments
+          <Link href={`/post/${post._id}`} passHref>
+            <Typography variant="body2" component="div" className="text-gray-400 cursor-pointer">
+              {post.comment.commentCount && `View all ${post.comment.commentCount} comments`}
             </Typography>
           </Link>
-          {comments?.map((item) => (
-            <div key={item.id}>
+          {post.comment.comments.slice(-2).map((item) => (
+            <div key={item._id}>
               <Typography variant="subtitle2" component="span" className="font-semibold">
-                hoanganh
+                {item.user.username}
               </Typography>{' '}
               <Typography variant="body2" component="span">
-                {item.comment}
+                {item.content}
               </Typography>
             </div>
           ))}
