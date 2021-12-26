@@ -144,6 +144,7 @@ export default function ChangePassword() {
           fullWidth
           className="mb-4"
           onClick={handleClickSignUp}
+          onKeyPress={(e) => e.key === 'Enter' && handleClickSignUp()}
         >
           Change Password
         </Button>

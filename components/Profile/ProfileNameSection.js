@@ -26,8 +26,6 @@ export default function ProfileNameSection({
     router.push('/login');
   };
 
-  const [loading, setLoading] = useState(false);
-
   const handleFollowUser = async () => {
     try {
       const res = await userService.followUser({ userId: profile._id });
@@ -59,12 +57,6 @@ export default function ProfileNameSection({
 
   if (isFollowing) {
     followButton = (
-      <Button size="small" onClick={() => setUnfollowDialog(true)} variant="outlined">
-        Following
-      </Button>
-    );
-  } else if (isFollower) {
-    followButton = (
       <Button
         size="small"
         variant="contained"
@@ -75,6 +67,12 @@ export default function ProfileNameSection({
         }}
       >
         Follow Back
+      </Button>
+    );
+  } else if (isFollower) {
+    followButton = (
+      <Button size="small" onClick={() => setUnfollowDialog(true)} variant="outlined">
+        Following
       </Button>
     );
   } else {

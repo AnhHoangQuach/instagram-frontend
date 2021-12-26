@@ -10,8 +10,7 @@ const votePost = ({ postId }) => clientRaw.post(`/post/${postId}`);
 
 const getFeedPosts = (params) => clientRaw.get(`/post/feed`, { params });
 
-const retrieveHashtagPosts = ({ hashtag, offset }) =>
-  clientRaw.get(`/post/hashtag/${hashtag}/${offset}`);
+const retrieveHashtagPosts = ({ hashtag }) => clientRaw.get(`/post/hashtag/${hashtag}`);
 
 export const postService = {
   createPost,

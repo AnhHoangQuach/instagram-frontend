@@ -50,7 +50,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function GridPost({ post }) {
   const classes = useStyles();
-  console.log(post);
   return (
     post && (
       <Link href={`/post/${post._id}`} passHref>

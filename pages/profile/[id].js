@@ -96,18 +96,18 @@ export default function Profile() {
     getPostOfUser();
   }, [id]);
 
-  var isFollowing = following.find((ele) => ele.user._id === currentUser._id);
-  var isFollower = followers.find((ele) => ele.user._id === currentUser._id);
+  var isFollowing = !!following.find((ele) => ele.user._id === currentUser?._id);
+  var isFollower = !!followers.find((ele) => ele.user._id === currentUser?._id);
 
   const callback = useCallback((loading) => {
     setLoading(loading);
     setTimeout(() => {
       handleGetFollowingUser();
       handleGetFollowersUser();
-      isFollowing = following.find((ele) => ele.user._id === currentUser._id);
-      isFollower = followers.find((ele) => ele.user._id === currentUser._id);
+      isFollowing = following.find((ele) => ele.user._id === currentUser?._id);
+      isFollower = followers.find((ele) => ele.user._id === currentUser?._id);
       setLoading(false);
-    }, 600);
+    }, 1000);
   }, []);
 
   return isLoading ? (

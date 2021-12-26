@@ -87,6 +87,24 @@ export default function Feed() {
       items: 1,
     },
   };
+
+  const callback = useCallback((loading) => {
+    setLoading(loading);
+    setTimeout(async () => {
+      try {
+        setLoading(true);
+        const postRes = await postService.getFeedPosts({ limit: 5 });
+        if (postRes.status === 'success') {
+          setPosts(postRes.data.posts);
+        }
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+      }
+    }, 1000);
+  }, []);
+
   return loading ? (
     <FeedSkeleton />
   ) : (
@@ -141,9 +159,9 @@ export default function Feed() {
             />
           </div>
           <Box mt={1}>
-            <Typography variant="subtitle2" className="font-semibold">
+            {/* <Typography variant="subtitle2" className="font-semibold">
               {post.likes.length === 1 ? '1 like' : `${post.likes.length} likes`}
-            </Typography>
+            </Typography> */}
             <div className={showCaption ? 'block' : 'flex items-center'}>
               <Link href="/" passHref>
                 <Typography variant="subtitle2" component="span" className="mr-1 font-semibold">
@@ -192,7 +210,7 @@ export default function Feed() {
         </Box>
         <Hidden xsDown>
           <Divider />
-          <FeedComment />
+          <FeedComment postId={post._id} parentCallback={callback} />
         </Hidden>
         {showOptionsDialog && (
           <DialogCommon onClose={() => setOptionsDialog(false)}>

@@ -10,15 +10,29 @@ export default function Suggestions() {
   const { currentUser } = useSelector((state) => state.user);
   const [suggestions, setSuggestions] = useState([]);
   const [isLoading, setLoading] = useState(false);
+  const [following, setFollowing] = useState([]);
   const dispatch = useDispatch();
 
-  var isFollowing = false;
+  const handleGetFollowingUser = async () => {
+    try {
+      setLoading(true);
+      const res = await userService.getFollowing({ userId: currentUser._id });
+      if (res.status === 'success') {
+        setFollowing(res.data.following);
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+    }
+  };
 
   const handleFollowUser = async (userId) => {
     try {
       const res = await userService.followUser({ userId });
       if (res.status === 'success') {
         dispatch(setMessage({ type: 'success', message: res.message }));
+        handleGetFollowingUser();
       }
     } catch (error) {
       dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
@@ -30,6 +44,7 @@ export default function Suggestions() {
       const res = await userService.unfollowUser({ userId });
       if (res.status === 'success') {
         dispatch(setMessage({ type: 'success', message: res.message }));
+        handleGetFollowingUser();
       }
     } catch (error) {
       dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
@@ -50,6 +65,7 @@ export default function Suggestions() {
       setLoading(false);
       dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
     }
+    handleGetFollowingUser();
   }, []);
   return (
     !isLoading && (
@@ -68,9 +84,9 @@ export default function Suggestions() {
               </Link>
               <div className="flex-1 ml-4">
                 <h2 className="text-sm font-semibold">{profile.username}</h2>
-                <h3 className="text-xs text-gray-400">Follow you</h3>
+                <h3 className="text-xs text-gray-400">New Member</h3>
               </div>
-              {isFollowing ? (
+              {following.filter((item) => item._id === profile._id).length > 0 ? (
                 <button
                   className="text-blue-400 text-xs font-bold"
                   onClick={() => {

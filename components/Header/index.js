@@ -181,12 +181,6 @@ export default function Header() {
                 <AccountCircleOutlinedIcon className="mr-2" /> Profile
               </MenuItem>
             </Link>
-            <Link href="/" passHref>
-              <MenuItem onClick={handleClose}>
-                <BookmarkBorderOutlinedIcon className="mr-2" />
-                Saved
-              </MenuItem>
-            </Link>
             <Link href="/profile/edit" passHref>
               <MenuItem onClick={handleClose} divider>
                 <SettingsOutlinedIcon className="mr-2" />

@@ -7,6 +7,8 @@ import { makeStyles } from '@mui/styles';
 import { Box, Grid, Avatar, Typography } from '@mui/material';
 import GridPost from '../../components/Profile/GridPost';
 import { postService } from '../../services/post';
+import { useDispatch } from 'react-redux';
+import { setMessage } from '../../store/messageSlice';
 
 const useStyles = makeStyles((theme) => ({
   postContainer: {
@@ -26,12 +28,12 @@ export default function Hashtag() {
   const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState([]);
   const [postsCount, setPostsCount] = useState(0);
+  const dispatch = useDispatch();
 
   const getHashtagPosts = async () => {
     try {
       setLoading(true);
-      const postRes = await postService.retrieveHashtagPosts({ hashtag: name, offset: 0 });
-      console.log(postRes);
+      const postRes = await postService.retrieveHashtagPosts({ hashtag: name });
       if (postRes.status === 'success') {
         setPosts(postRes.data.posts);
         setPostsCount(postRes.data.postCount);
