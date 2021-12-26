@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/userSlice';
 import { setMessage } from '../../store/messageSlice';
 import NewPost from '../../components/NewPost';
-import { systemService } from '../../services/system';
+import { stringify, parse } from 'query-string';
 import {
   HomeIcon,
   HomeActiveIcon,
@@ -23,15 +23,16 @@ import {
   ExploreActiveIcon,
   MessageIcon,
 } from '../../utils/icons';
+
 export default function Header() {
   //set link active
   const router = useRouter();
   const isActive = (route) => router.pathname === route;
-  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const [keyword, setKeyword] = useState();
-  const [dataSearch, setDataSearch] = useState();
+
+  const dispatch = useDispatch();
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -39,29 +40,32 @@ export default function Header() {
     setAnchorEl(null);
   };
 
+  //search
+  const { keywords = '' } = parse(router.query);
+  const [inputValue, setInputValue] = useState(keywords);
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      const { ...query } = parse(router.query);
+      router.push({
+        pathname: '/search',
+        search: stringify({ ...query, keywords: inputValue }),
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (router.pathname !== '/search') {
+      setInputValue('');
+    }
+  }, [router.pathname]);
+
   const handleLogOut = () => {
     setAnchorEl(null);
     dispatch(logout());
     dispatch(setMessage({ type: 'success', message: 'Logout success' }));
     router.push('/login');
   };
-
-  const handleSearch = async () => {
-    if (keyword) {
-      const res = await systemService.search({ keyword });
-      if (res.status === 'success') {
-        setDataSearch(res.data);
-      }
-    }
-  };
-
-  const handleKeyword = (e) => {
-    setKeyword(e.target.value);
-  };
-
-  useEffect(() => {
-    handleSearch();
-  }, [keyword]);
 
   const { systemTheme, theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -99,7 +103,7 @@ export default function Header() {
                 <img src="/assets/images/logo.png" className="cursor-pointer" />
               </Link>
             </Hidden>
-            <Hidden mdUp>
+            <Hidden smUp>
               <Link href="/" passHref>
                 <InstagramIcon fontSize="large" className="cursor-pointer" />
               </Link>
@@ -113,7 +117,9 @@ export default function Header() {
             placeholder="Search"
             variant="outlined"
             size="small"
-            onChange={handleKeyword}
+            value={inputValue}
+            onChange={(event) => setInputValue(event.target.value)}
+            onKeyPress={handleKeyPress}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">

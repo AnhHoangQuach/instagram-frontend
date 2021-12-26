@@ -16,7 +16,6 @@ import {
   CardHeader,
   Skeleton,
 } from '@mui/material';
-import faker from 'faker';
 import { postService } from '../../services/post';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
