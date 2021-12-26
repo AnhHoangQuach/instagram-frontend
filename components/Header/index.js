@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/userSlice';
 import { setMessage } from '../../store/messageSlice';
 import NewPost from '../../components/NewPost';
+import { stringify, parse } from 'query-string';
 import {
   HomeIcon,
   HomeActiveIcon,
@@ -22,19 +23,42 @@ import {
   ExploreActiveIcon,
   MessageIcon,
 } from '../../utils/icons';
+
 export default function Header() {
   //set link active
   const router = useRouter();
   const isActive = (route) => router.pathname === route;
-  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+
+  const dispatch = useDispatch();
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  //search
+  const { keywords = '' } = parse(router.query);
+  const [inputValue, setInputValue] = useState(keywords);
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      const { ...query } = parse(router.query);
+      router.push({
+        pathname: '/search',
+        search: stringify({ ...query, keywords: inputValue }),
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (router.pathname !== '/search') {
+      setInputValue('');
+    }
+  }, [router.pathname]);
 
   const handleLogOut = () => {
     setAnchorEl(null);
@@ -79,7 +103,7 @@ export default function Header() {
                 <img src="/assets/images/logo.png" className="cursor-pointer" />
               </Link>
             </Hidden>
-            <Hidden mdUp>
+            <Hidden smUp>
               <Link href="/" passHref>
                 <InstagramIcon fontSize="large" className="cursor-pointer" />
               </Link>
@@ -93,6 +117,9 @@ export default function Header() {
             placeholder="Search"
             variant="outlined"
             size="small"
+            value={inputValue}
+            onChange={(event) => setInputValue(event.target.value)}
+            onKeyPress={handleKeyPress}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">

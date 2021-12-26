@@ -14,7 +14,7 @@ import { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import PhotoCameraOutlinedIcon from '@mui/icons-material/PhotoCameraOutlined';
 import { makeStyles } from '@mui/styles';
-import { validateEmail, validateFullName, validateUsername } from '../../utils/validation';
+import { validateFullName, validateUsername } from '../../utils/validation';
 import { userService } from '../../services/user';
 import { setMessage } from '../../store/messageSlice';
 import GlobalLoading from '../GlobalLoading';
@@ -62,7 +62,7 @@ export default function EditProfile() {
   };
 
   const handleEditProfile = () => {
-    handleSubmit(async ({ fullname, username, website, bio, email }) => {
+    handleSubmit(async ({ fullname, username, website, bio }) => {
       try {
         setIsLoading(true);
         const resEditProfile = await userService.editProfile({
@@ -70,7 +70,6 @@ export default function EditProfile() {
           username,
           website,
           bio,
-          email,
         });
         if (resEditProfile.status === 'success') {
           dispatch(setMessage({ type: 'success', message: resEditProfile.message }));
@@ -224,28 +223,13 @@ export default function EditProfile() {
           )}
         />
         <Typography className="font-semibold">Email</Typography>
-        <Controller
-          className="mb-4 "
-          name="email"
-          defaultValue={currentUser?.email}
-          control={control}
-          rules={{
-            validate: {
-              validator: (value) => validateEmail(value),
-            },
-          }}
-          render={({ field, fieldState: { invalid, error } }) => (
-            <TextField
-              {...field}
-              className="mb-4"
-              variant="outlined"
-              size="small"
-              fullWidth
-              required
-              error={invalid}
-              helperText={error?.message}
-            />
-          )}
+        <TextField
+          className="mb-4"
+          variant="outlined"
+          size="small"
+          value={currentUser?.email}
+          disabled={true}
+          fullWidth
         />
       </div>
       <Button

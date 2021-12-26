@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import FeedComment from './FeedComment';
 import FeedImage from './FeedImage';
 import DialogCommon from '../DialogCommon';
@@ -16,7 +16,6 @@ import {
   CardHeader,
   Skeleton,
 } from '@mui/material';
-import faker from 'faker';
 import { postService } from '../../services/post';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
@@ -55,7 +54,6 @@ export default function Feed() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showCaption, setCaption] = useState(false);
-  const [comments, setComments] = useState([]);
   const [showOptionsDialog, setOptionsDialog] = useState(false);
   const [postIdNow, setPostIdNow] = useState(null);
 
@@ -64,7 +62,7 @@ export default function Feed() {
   useEffect(async () => {
     try {
       setLoading(true);
-      const postRes = await postService.getPosts({ page: 1, limit: 5, orderBy: 'desc' });
+      const postRes = await postService.getFeedPosts({ limit: 5 });
       if (postRes.status === 'success') {
         setPosts(postRes.data.posts);
       }
@@ -73,13 +71,6 @@ export default function Feed() {
       setLoading(false);
       dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
     }
-
-    const comments = [...Array(1)].map((_, i) => ({
-      comment: faker.lorem.sentences(),
-      id: i,
-    }));
-
-    setComments(comments);
   }, []);
 
   const responsive = {
@@ -135,7 +126,11 @@ export default function Feed() {
         <Box m={1}>
           <div className="flex justify-between">
             <div className="flex space-x-4">
-              <LikeButton />
+              <LikeButton
+                postId={post._id}
+                isVotedPost={post.likes.find((ele) => ele.user === currentUser?._id)}
+                likes={post.likes.length}
+              />
               <MessageIcon />
               <ShareOutlinedIcon />
             </div>
@@ -146,12 +141,12 @@ export default function Feed() {
           </div>
           <Box mt={1}>
             <Typography variant="subtitle2" className="font-semibold">
-              10 likes
+              {post.likes.length === 1 ? '1 like' : `${post.likes.length} likes`}
             </Typography>
             <div className={showCaption ? 'block' : 'flex items-center'}>
               <Link href="/" passHref>
                 <Typography variant="subtitle2" component="span" className="mr-1 font-semibold">
-                  hoanganh
+                  {post.user.username}
                 </Typography>
               </Link>
               {showCaption ? (
@@ -175,21 +170,19 @@ export default function Feed() {
               )}
             </div>
           </Box>
-          <Link href="/" passHref>
-            <Typography variant="body2" component="div" className="text-gray-400">
-              View all {comments.length} comments
+          <Link href={`/post/${post._id}`} passHref>
+            <Typography variant="body2" component="div" className="text-gray-400 cursor-pointer">
+              {post.comment.commentCount && `View all ${post.comment.commentCount} comments`}
             </Typography>
           </Link>
-          {comments.map((item) => (
-            <div key={item.id}>
-              {/* <Link href=""> */}
+          {post.comment.comments.slice(-2).map((item) => (
+            <div key={item._id}>
               <Typography variant="subtitle2" component="span" className="font-semibold">
-                hoanganh
+                {item.user.username}
               </Typography>{' '}
               <Typography variant="body2" component="span">
-                {item.comment}
+                {item.content}
               </Typography>
-              {/* </Link> */}
             </div>
           ))}
           <Typography color="textSecondary" className="py-2" style={{ fontSize: '0.75rem' }}>

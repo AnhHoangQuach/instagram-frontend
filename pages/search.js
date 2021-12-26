@@ -1,0 +1,62 @@
+import { useState, useEffect } from 'react';
+import Seo from '../components/Seo';
+import Header from '../components/Header';
+import CardUser from '../components/Search/CardUser';
+import { Grid, Tabs, Tab, Box } from '@mui/material';
+import { useRouter } from 'next/router';
+import { systemService } from '../services/system';
+export default function Search() {
+  const router = useRouter();
+  const { keywords } = router.query;
+  const [dataSearch, setDataSearch] = useState();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(async () => {
+    try {
+      setLoading(true);
+      const res = await systemService.search({ keywords: keywords });
+      if (res.status === 'success') {
+        setDataSearch(res.data);
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+    }
+  }, []);
+
+  const [activeTab, setActiveTab] = useState(0);
+  return (
+    <>
+      <Seo title="Search" description="Search Page" />
+      <Header />
+      <Grid container className="max-w-5xl mx-auto">
+        <Tabs value={activeTab} onChange={(_, value) => setActiveTab(value)}>
+          <Tab label="Users" />
+          <Tab label="Hashtags" />
+        </Tabs>
+      </Grid>
+      <Box sx={{ flexGrow: 1 }}>
+        {activeTab === 0 && (
+          <Grid
+            container
+            className="max-w-5xl mx-auto mt-8"
+            columns={{ xxs: 4, xs: 8, sm: 12, md: 12 }}
+          >
+            {loading ? (
+              <Grid item p={2} xxs={2} xs={4} sm={6} md={4}>
+                <CardUser.Skeleton />
+              </Grid>
+            ) : (
+              dataSearch?.users.map((user, index) => (
+                <Grid item p={2} xxs={2} xs={4} sm={6} md={4} key={index}>
+                  <CardUser user={user} index={index} />
+                </Grid>
+              ))
+            )}
+          </Grid>
+        )}
+      </Box>
+    </>
+  );
+}

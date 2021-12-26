@@ -8,9 +8,12 @@ const getPosts = (params) => clientRaw.get(`/post`, { params });
 
 const votePost = ({ postId }) => clientRaw.post(`/post/${postId}`);
 
+const getFeedPosts = (params) => clientRaw.get(`/post/feed`, { params });
+
 export const postService = {
   createPost,
   getPostByID,
   getPosts,
   votePost,
+  getFeedPosts,
 };
