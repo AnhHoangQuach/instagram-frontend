@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { Box, Button, IconButton, CircularProgress } from '@mui/material';
-import ControlPointIcon from '@mui/icons-material/ControlPoint';
+import { AddIcon } from '../../utils/icons';
 import VideoCameraBackOutlinedIcon from '@mui/icons-material/VideoCameraBackOutlined';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import { useRouter } from 'next/router';
@@ -188,7 +188,7 @@ export default function NewPost({}) {
 
   return (
     <>
-      <ControlPointIcon onClick={handleOpen} className="cursor-pointer" />
+      <AddIcon onClick={handleOpen} className="cursor-pointer" />
       {renderSections()}
       {step === 'files' && (
         <ModalCommon

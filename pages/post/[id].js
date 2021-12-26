@@ -406,7 +406,9 @@ export default function PostDetail() {
           </Box>
           {showOptionsDialog && (
             <DialogCommon onClose={() => setOptionsDialog(false)}>
-              <Button className="normal-case text-red-700 font-semibold">Unfollow</Button>
+              {currentUser._id !== postDetail.user._id && (
+                <Button className="normal-case text-red-700 font-semibold">Unfollow</Button>
+              )}
               <Divider />
               <Button className="normal-case">Share To</Button>
               <Divider />

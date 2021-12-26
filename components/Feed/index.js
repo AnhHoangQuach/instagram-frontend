@@ -130,6 +130,7 @@ export default function Feed() {
                 postId={post._id}
                 isVotedPost={post.likes.find((ele) => ele.user === currentUser?._id)}
                 likes={post.likes.length}
+                isOnly={false}
               />
               <MessageIcon />
               <ShareOutlinedIcon />

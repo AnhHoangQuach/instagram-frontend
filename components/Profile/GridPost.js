@@ -50,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function GridPost({ post }) {
   const classes = useStyles();
+  console.log(post);
   return (
     post && (
       <Link href={`/post/${post._id}`} passHref>
@@ -73,7 +74,7 @@ export default function GridPost({ post }) {
             <div className={classes.gridPostInfo}>
               <CommentIcon fill="#fff" />
               <Typography variant="subtitle2" className="font-semibold">
-                5
+                {post?.comments.length}
               </Typography>
             </div>
           </div>

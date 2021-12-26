@@ -33,7 +33,7 @@ export const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function LikeButton({ postId, isVotedPost, likes, parentCallback }) {
+export function LikeButton({ postId, isVotedPost, likes, parentCallback, isOnly = true }) {
   const classes = useStyles();
   const [liked, setLiked] = useState(isVotedPost);
   const Icon = liked ? UnlikeIcon : LikeIcon;
@@ -58,7 +58,7 @@ export function LikeButton({ postId, isVotedPost, likes, parentCallback }) {
       className={className}
       onClick={() => {
         setLikesCount((likesCount) => likesCount + (liked ? -1 : 1));
-        parentCallback(likesCount + (liked ? -1 : 1));
+        isOnly && parentCallback(likesCount + (liked ? -1 : 1));
         handleLikePost();
       }}
     />
