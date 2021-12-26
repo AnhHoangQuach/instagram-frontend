@@ -1,7 +1,7 @@
 import { Card, CardMedia, Skeleton, Box, Avatar, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Link from 'next/link';
-import { CrownIcon, TopThreeIcon, TopTenIcon } from '../../utils/icons';
+import { CrownIcon } from '../../utils/icons';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SellerPosition = ({ index }) => {
+export const SellerPosition = ({ index }) => {
   const classes = useStyles();
   return (
     <Box className={classes.position}>
@@ -97,7 +97,7 @@ const CardUser = ({ user, index }) => {
   );
 };
 
-const CardSkeleton = () => {
+export const CardSkeleton = () => {
   const classes = useStyles();
   return (
     <Card variant="outlined" className={classes.card}>

@@ -16,10 +16,11 @@ import { validatePassword } from '../../utils/validation';
 import { userService } from '../../services/user';
 import { setMessage } from '../../store/messageSlice';
 import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Controller, useForm } from 'react-hook-form';
 
 export default function ChangePassword() {
+  const { currentUser } = useSelector((state) => state.user);
   const largeScreen = useMediaQuery((theme) => theme.breakpoints.up('md'));
   //state
   const [isLoading, setIsLoading] = useState(false);
