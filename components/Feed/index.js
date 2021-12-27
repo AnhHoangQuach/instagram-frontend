@@ -104,6 +104,19 @@ export default function Feed() {
     fetchPosts();
   }, []);
 
+  //copy link
+  const handleShareLink = (postIdNow) => {
+    navigator.clipboard
+      .writeText(document.URL + `post/${postIdNow}`)
+      .then(() => dispatch(setMessage({ type: 'success', message: 'Link copied to clipboard' })))
+      .catch(() =>
+        dispatch(setMessage({ type: 'success', message: 'Could not copy link to clipboard.' }))
+      )
+      .finally(() => {
+        setOptionsDialog(false);
+      });
+  };
+
   const responsive = {
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
@@ -247,8 +260,6 @@ export default function Feed() {
           </Hidden>
           {showOptionsDialog && (
             <DialogCommon onClose={() => setOptionsDialog(false)}>
-              <Button className="normal-case text-red-700 font-semibold">Unfollow</Button>
-              <Divider />
               <Button className="normal-case">
                 <Link href={`/post/${postIdNow}`} underline="none">
                   Go to post
@@ -257,7 +268,14 @@ export default function Feed() {
               <Divider />
               <Button className="normal-case">Share</Button>
               <Divider />
-              <Button className="normal-case">Copy Link</Button>
+              <Button
+                className="normal-case"
+                onClick={() => {
+                  handleShareLink(postIdNow);
+                }}
+              >
+                Copy Link
+              </Button>
             </DialogCommon>
           )}
         </div>
