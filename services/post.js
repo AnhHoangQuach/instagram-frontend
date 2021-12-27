@@ -10,6 +10,8 @@ const votePost = ({ postId }) => clientRaw.post(`/post/${postId}`);
 
 const getFeedPosts = (params) => clientRaw.get(`/post/feed`, { params });
 
+const getExplorePosts = (params) => clientRaw.get(`/post/explore`, { params });
+
 const retrieveHashtagPosts = ({ hashtag }) => clientRaw.get(`/post/hashtag/${hashtag}`);
 
 export const postService = {
@@ -19,4 +21,5 @@ export const postService = {
   votePost,
   getFeedPosts,
   retrieveHashtagPosts,
+  getExplorePosts,
 };

@@ -2,7 +2,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
-import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import NightsStayIcon from '@mui/icons-material/NightsStay';
 import Brightness4Icon from '@mui/icons-material/Brightness4';

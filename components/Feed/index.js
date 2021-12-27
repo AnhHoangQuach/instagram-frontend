@@ -3,7 +3,6 @@ import { useState, useEffect, useCallback } from 'react';
 import FeedComment from './FeedComment';
 import FeedImage from './FeedImage';
 import DialogCommon from '../DialogCommon';
-
 import {
   Avatar,
   Typography,
@@ -132,7 +131,7 @@ export default function Feed() {
       dataLength={posts.length} //This is important field to render the next data
       next={fetchData}
       hasMore={hasMore}
-      loader={<FeedSkeleton />}
+      loader={loading && <FeedSkeleton />}
       endMessage={
         <p style={{ textAlign: 'center' }}>
           <b>Yay! You have seen it all</b>
@@ -191,8 +190,8 @@ export default function Feed() {
             </div>
             <Box mt={1}>
               {/* <Typography variant="subtitle2" className="font-semibold">
-          {post.likes.length === 1 ? '1 like' : `${post.likes.length} likes`}
-        </Typography> */}
+                  {post.likes.length === 1 ? '1 like' : `${post.likes.length} likes`}
+                </Typography> */}
               <div className={showCaption ? 'block' : 'flex items-center'}>
                 <Link href="/" passHref>
                   <Typography variant="subtitle2" component="span" className="mr-1 font-semibold">

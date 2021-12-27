@@ -16,8 +16,8 @@ import UserCard from '../../components/PostDetails/UserCard';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import Seo from '../../components/Seo';
-import DialogCommon from '../../components/DialogCommon';
 import Header from '../../components/Header';
+import DialogCommon from '../../components/DialogCommon';
 import { postService } from '../../services/post';
 import { commentService } from '../../services/comment';
 import { LikeButton, SaveButton } from '../../components/Feed/FeedAction';
@@ -108,7 +108,6 @@ export const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('sm')]: {
       width: 'initial !important',
       position: 'relative !important',
-      margin: '0 auto !important',
       textAlign: 'center',
       '& img': {
         maxHeight: '200px !important',
@@ -180,6 +179,7 @@ export default function PostDetail() {
   const [isLoading, setLoading] = useState(false);
   const [commentLoading, setCommentLoading] = useState(false);
   const commentRef = useRef(null);
+  const lastCommentRef = useRef(null);
   const isMatchPhone = useMediaQuery(theme.breakpoints.down('sm'));
 
   const { control, handleSubmit, reset } = useForm({ mode: 'onChange' });
@@ -262,6 +262,16 @@ export default function PostDetail() {
     }
   }, [id]);
 
+  useEffect(() => {
+    if (lastCommentRef.current) {
+      lastCommentRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'nearest',
+      });
+    }
+  }, [postComments]);
+
   const callback = useCallback((likesCount) => {
     setLikesCount(likesCount);
   }, []);
@@ -341,30 +351,32 @@ export default function PostDetail() {
                     <div style={{ fontSize: 12 }}>{moment(postDetail?.createdAt).fromNow()}</div>
                   </div>
                 </div>
-                {postComments?.comments?.map((comment) => (
-                  <Box className="flex my-4" key={comment._id}>
-                    <Avatar src={comment.user.avatar} alt="" />
-                    <div className="pl-4">
-                      <Typography variant="body2" component="span" className="font-semibold mr-1">
-                        {comment.user.username}
-                      </Typography>
-                      <Typography variant="body2" component="span">
-                        {comment.content}
-                      </Typography>
-                      <div style={{ fontSize: 12, color: '#8e8e8e' }}>
-                        {moment(comment.createdAt).fromNow()}
-                        {comment.user._id === currentUser?._id && (
-                          <span
-                            className={classes.deleteComment}
-                            onClick={() => handleDeleteComment(comment._id)}
-                          >
-                            Delete
-                          </span>
-                        )}
+                <Box sx={{ overflowY: 'auto', maxHeight: 165 }} ref={lastCommentRef}>
+                  {postComments?.comments?.map((comment) => (
+                    <Box className="flex my-4" key={comment._id}>
+                      <Avatar src={comment.user.avatar} alt="" />
+                      <div className="pl-4">
+                        <Typography variant="body2" component="span" className="font-semibold mr-1">
+                          {comment.user.username}
+                        </Typography>
+                        <Typography variant="body2" component="span">
+                          {comment.content}
+                        </Typography>
+                        <div style={{ fontSize: 12, color: '#8e8e8e' }}>
+                          {moment(comment.createdAt).fromNow()}
+                          {comment.user._id === currentUser?._id && (
+                            <span
+                              className={classes.deleteComment}
+                              onClick={() => handleDeleteComment(comment._id)}
+                            >
+                              Delete
+                            </span>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </Box>
-                ))}
+                    </Box>
+                  ))}
+                </Box>
               </div>
               <Typography color="textSecondary" className={classes.datePosted}>
                 {moment(postDetail?.createdAt).fromNow()}
