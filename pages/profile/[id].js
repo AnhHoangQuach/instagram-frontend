@@ -28,6 +28,7 @@ export default function Profile() {
   const [following, setFollowing] = useState([]);
   const [followers, setFollowers] = useState([]);
   const [posts, setPosts] = useState([]);
+  const [savedPosts, setSavedPosts] = useState([]);
 
   const getPostOfUser = async () => {
     try {
@@ -85,6 +86,7 @@ export default function Profile() {
       const res = await userService.getUser({ userId: id });
       if (res.status === 'success') {
         setProfile(res.data.user);
+        setSavedPosts(res.data.savedPosts);
       }
       setLoading(false);
     } catch (error) {
@@ -173,7 +175,7 @@ export default function Profile() {
             />
           </Card>
         </Hidden>
-        <ProfileTabs isOwner={isOwner} profile={profile} posts={posts} />
+        <ProfileTabs isOwner={isOwner} profile={profile} savedPosts={savedPosts} posts={posts} />
       </Box>
     </>
   );

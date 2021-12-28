@@ -86,7 +86,7 @@ export default function GridPost({ post }) {
               <video
                 src={post.images[0].url}
                 key={post.images[0].url}
-                className="object-contain h-full mx-auto"
+                className="object-contain h-96 mx-auto"
                 controls
               />
             )}

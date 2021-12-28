@@ -20,7 +20,7 @@ export default function SavedPosts({ savedPosts }) {
     <Box sx={{ display: 'grid' }}>
       <Box className={classes.postContainer}>
         {savedPosts.map((post) => (
-          <GridPost key={post.id} post={post} />
+          <GridPost key={post._id} post={post} />
         ))}
       </Box>
     </Box>

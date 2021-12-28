@@ -138,7 +138,7 @@ export const useStyles = makeStyles((theme) => ({
     order: 1,
     overflowX: 'hidden',
     flexGrow: 1,
-    overflow: 'hidden',
+    overflow: 'scroll',
   },
   deleteComment: {
     fontSize: '0.75rem',
@@ -351,7 +351,7 @@ export default function PostDetail() {
                     <div style={{ fontSize: 12 }}>{moment(postDetail?.createdAt).fromNow()}</div>
                   </div>
                 </div>
-                <Box sx={{ overflowY: 'auto', maxHeight: 165 }} ref={lastCommentRef}>
+                <Box ref={lastCommentRef}>
                   {postComments?.comments?.map((comment) => (
                     <Box className="flex my-4" key={comment._id}>
                       <Avatar src={comment.user.avatar} alt="" />

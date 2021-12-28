@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import FeedComment from './FeedComment';
 import FeedImage from './FeedImage';
 import DialogCommon from '../DialogCommon';
+import GlobalLoading from '../GlobalLoading';
 import {
   Avatar,
   Typography,
@@ -65,14 +66,11 @@ export default function Feed() {
 
   const getFeedPosts = async () => {
     try {
-      setLoading(true);
       const postRes = await postService.getFeedPosts({ page, limit: 2 });
       if (postRes.status === 'success') {
-        setLoading(false);
         return postRes.data.posts;
       }
     } catch (error) {
-      setLoading(false);
       dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
     }
   };
@@ -81,7 +79,7 @@ export default function Feed() {
     const postsFormServer = await getFeedPosts();
 
     setPosts([...posts, ...postsFormServer]);
-    if (postsFormServer.length === 0 || postsFormServer.length < 5) {
+    if (postsFormServer.length === 0) {
       setHasMore(false);
     }
     setPage(page + 1);
@@ -135,11 +133,22 @@ export default function Feed() {
   const callback = useCallback((loading) => {
     setLoading(loading);
     setTimeout(async () => {
-      getFeedPosts();
+      try {
+        const postRes = await postService.getFeedPosts({ page: 1, limit: 100 });
+        if (postRes.status === 'success') {
+          setLoading(false);
+          setPosts(postRes.data.posts);
+        }
+      } catch (error) {
+        setLoading(false);
+        dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+      }
     }, 1000);
   }, []);
 
-  return (
+  return loading ? (
+    <GlobalLoading />
+  ) : (
     <InfiniteScroll
       dataLength={posts.length} //This is important field to render the next data
       next={fetchData}
@@ -203,8 +212,8 @@ export default function Feed() {
             </div>
             <Box mt={1}>
               {/* <Typography variant="subtitle2" className="font-semibold">
-                  {post.likes.length === 1 ? '1 like' : `${post.likes.length} likes`}
-                </Typography> */}
+          {post.likes.length === 1 ? '1 like' : `${post.likes.length} likes`}
+        </Typography> */}
               <div className={showCaption ? 'block' : 'flex items-center'}>
                 <Link href="/" passHref>
                   <Typography variant="subtitle2" component="span" className="mr-1 font-semibold">

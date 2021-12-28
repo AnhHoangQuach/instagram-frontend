@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ProfileTabs({ isOwner, profile, posts }) {
+export default function ProfileTabs({ isOwner, profile, savedPosts, posts }) {
   const classes = useStyles();
   const [value, setValue] = useState(0);
 
@@ -73,7 +73,7 @@ export default function ProfileTabs({ isOwner, profile, posts }) {
           </Tabs>
         </Hidden>
         {value === 0 && <ProfilePosts isOwner={isOwner} posts={posts} />}
-        {value === 1 && <SavedPosts savedPosts={profile.savedPosts} />}
+        {value === 1 && <SavedPosts savedPosts={savedPosts} />}
       </section>
     </>
   );
