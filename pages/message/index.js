@@ -5,10 +5,20 @@ import ChatForm from '../../components/Chat/ChatForm';
 import ChatListSearch from '../../components/Chat/ChatListSearch';
 import { Grid, Divider, TextField, InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import { makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles((theme) => ({
+  searchMessage: {
+    [theme.breakpoints.down('xs')]: {
+      display: 'none !important',
+    },
+  },
+}));
 
 export default function Message({ chatsData }) {
   const [chats, setChats] = useState(chatsData);
   const [inputValue, setInputValue] = useState();
+  const classes = useStyles();
   return (
     <>
       <Seo title="Post Details" description="Post Details" />
@@ -24,7 +34,7 @@ export default function Message({ chatsData }) {
             placeholder="Search"
             variant="outlined"
             size="small"
-            className="p-2"
+            className={`p-2 ${classes.searchMessage}`}
             value={inputValue}
             onChange={(event) => setInputValue(event.target.value)}
             InputProps={{
