@@ -139,7 +139,7 @@ export default function Header() {
               )}
             </div>
           </Link>
-          <Link href="/message" passHref>
+          <Link href="/messages" passHref>
             <Badge badgeContent={4} color="error" className="cursor-pointer">
               <MessageIcon color="action" className="dark:text-white" />
             </Badge>

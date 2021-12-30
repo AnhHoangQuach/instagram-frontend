@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ChatListSearch() {
+function ChatListSearch({ chat, connectedUsers, deleteChat }) {
   const test = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
   const classes = useStyles();
   return (
