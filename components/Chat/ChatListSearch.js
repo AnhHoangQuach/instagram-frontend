@@ -1,46 +1,36 @@
-import React from 'react';
-import { Box, Avatar, Typography } from '@mui/material';
-import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
+import { useState } from 'react';
+import { TextField, InputAdornment } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme) => ({
-  typography: {
-    color: '#8e8e8e',
-    fontSize: '0.75rem',
-  },
-  infoMessage: {
-    marginLeft: '1rem',
+  searchMessage: {
     [theme.breakpoints.down('xs')]: {
-      display: 'none',
+      display: 'none !important',
     },
   },
 }));
 
-function ChatListSearch() {
-  const test = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+function ChatListSearch({ chats, setChats }) {
   const classes = useStyles();
+  const [inputValue, setInputValue] = useState();
   return (
-    <Box sx={{ padding: 2, overflowY: 'auto', maxHeight: 640 }}>
-      {test.map((i) => (
-        <Box
-          key={i}
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            padding: '0.5rem 0',
-          }}
-        >
-          <Avatar />
-          <Box className={classes.infoMessage}>
-            <Typography variant="body2">anhhoang362k</Typography>
-            <Typography variant="body2" className={classes.typography}>
-              Active {i}h ago
-            </Typography>
-          </Box>
-          <RemoveCircleOutlineOutlinedIcon className="flex-1 mx-4" />
-        </Box>
-      ))}
-    </Box>
+    <TextField
+      type="search"
+      placeholder="Search"
+      variant="outlined"
+      size="small"
+      className={`p-2 ${classes.searchMessage}`}
+      value={inputValue}
+      onChange={(event) => setInputValue(event.target.value)}
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <SearchIcon />
+          </InputAdornment>
+        ),
+      }}
+    />
   );
 }
 
