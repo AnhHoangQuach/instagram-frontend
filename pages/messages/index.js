@@ -5,15 +5,14 @@ import Chat from '../../components/Chat/Chat';
 import ChatListSearch from '../../components/Chat/ChatListSearch';
 import Message from '../../components/Chat/Message';
 import Banner from '../../components/Chat/Banner';
-import { Grid, Divider, TextField, Box, Avatar, Typography, Button } from '@mui/material';
+import { Grid, Divider, Box } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { chatService } from '../../services/chat';
 import { baseUrl } from '../../utils/helpers';
 import io from 'socket.io-client';
 import { useRouter } from 'next/router';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import MessageInputField from '../../components/Chat/MessageInputField';
-import GlobalLoading from '../../components/GlobalLoading';
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -31,8 +30,8 @@ const useStyles = makeStyles((theme) => ({
 const scrollDivToBottom = (divRef) =>
   divRef.current !== null && divRef.current?.scrollIntoView({ behavior: 'smooth' });
 
-export default function Messages() {
-  const [chats, setChats] = useState([]);
+export default function Messages({ chatsData }) {
+  const [chats, setChats] = useState(chatsData);
   const { currentUser } = useSelector((state) => state.user);
   const router = useRouter();
 
@@ -46,26 +45,6 @@ export default function Messages() {
   const openChatId = useRef('');
 
   const classes = useStyles();
-  const dispatch = useDispatch();
-
-  const [loading, setLoading] = useState(false);
-  const getChats = async () => {
-    setLoading(true);
-    try {
-      const res = await chatService.getChats();
-      if (res.status === 'success') {
-        setChats(res.data.messages);
-      }
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
-    }
-  };
-
-  useEffect(() => {
-    getChats();
-  }, []);
 
   //CONNECTION useEffect
   useEffect(() => {
@@ -77,7 +56,7 @@ export default function Messages() {
       socket.current.emit('join', { userId: currentUser._id });
 
       socket.current.on('connected-users', ({ users }) => {
-        users.length > 0 && setConnectedUsers(users);
+        setConnectedUsers(users);
       });
 
       if (chats?.length > 0 && !router.query.message) {
@@ -141,9 +120,7 @@ export default function Messages() {
     messages.length > 0 && scrollDivToBottom(divRef);
   }, [messages]);
 
-  return loading ? (
-    <GlobalLoading />
-  ) : (
+  return (
     <>
       <Seo title="Post Details" description="Post Details" />
       <Header />
@@ -190,3 +167,13 @@ export default function Messages() {
     </>
   );
 }
+
+Messages.getInitialProps = async (ctx) => {
+  try {
+    const res = await chatService.getChats();
+
+    return { chatsData: res.data.messages };
+  } catch (error) {
+    return { errorLoading: true };
+  }
+};

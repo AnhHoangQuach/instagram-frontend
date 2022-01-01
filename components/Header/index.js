@@ -22,6 +22,9 @@ import {
   ExploreActiveIcon,
   MessageIcon,
 } from '../../utils/icons';
+import { useRef } from 'react';
+import io from 'socket.io-client';
+import { baseUrl } from '../../utils/helpers';
 
 export default function Header() {
   //set link active
@@ -31,6 +34,7 @@ export default function Header() {
   const open = Boolean(anchorEl);
 
   const dispatch = useDispatch();
+  const socket = useRef();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -60,6 +64,15 @@ export default function Header() {
   }, [router.pathname]);
 
   const handleLogOut = () => {
+    if (!socket.current) {
+      socket.current = io(baseUrl);
+    }
+
+    if (socket.current) {
+      socket.current.disconnect();
+      socket.current.off();
+    }
+
     setAnchorEl(null);
     dispatch(logout());
     dispatch(setMessage({ type: 'success', message: 'Logout success' }));

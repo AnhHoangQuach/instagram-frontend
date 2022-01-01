@@ -3,6 +3,7 @@ import { Box, Avatar, Badge, Typography } from '@mui/material';
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
 import { makeStyles } from '@mui/styles';
 import { styled } from '@mui/material/styles';
+import moment from 'moment';
 
 const StyledBadge = styled(Badge, {
   shouldForwardProp: (prop) => prop !== 'isOnline',
@@ -72,7 +73,7 @@ function Chat({ connectedUsers, chat }) {
       <Box className={classes.infoMessage}>
         <Typography variant="body2">{chat.username}</Typography>
         <Typography variant="body2" className={classes.typography}>
-          Active 1h ago
+          Active {moment(chat.createdAt).fromNow()}
         </Typography>
       </Box>
       <RemoveCircleOutlineOutlinedIcon className="flex-1 mx-4" />
