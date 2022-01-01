@@ -6,4 +6,4 @@ export const getHashTag = (value) => {
 export const baseUrl =
   process.env.NODE_ENV !== 'production'
     ? 'http://localhost:5000'
-    : 'https://hippo-instagram.herokuapp.com';
+    : 'http://hippo-instagram.herokuapp.com';
