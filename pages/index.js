@@ -18,7 +18,7 @@ export default function Home() {
     }
 
     if (socket.current) {
-      socket.current.emit('join', { userId: currentUser._id });
+      socket.current.emit('join', { userId: currentUser?._id });
     }
 
     return () => {

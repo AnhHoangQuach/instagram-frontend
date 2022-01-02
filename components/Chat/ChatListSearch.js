@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { TextField, InputAdornment } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
+import { useState, useEffect } from 'react';
+import { TextField, Box, Autocomplete, Avatar, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
+import { systemService } from '../../services/system';
 
 const useStyles = makeStyles((theme) => ({
   searchMessage: {
@@ -16,22 +16,56 @@ function ChatListSearch({ chats, setChats }) {
   const classes = useStyles();
   const [inputValue, setInputValue] = useState();
   const router = useRouter();
+  const [results, setResults] = useState([]);
+
+  const addChat = (result) => {
+    const alreadyInChat =
+      chats.length > 0 && chats.filter((chat) => chat.messagesWith === result._id).length > 0;
+
+    if (alreadyInChat) {
+      return router.push(`/messages?message=${result._id}`);
+    } else {
+      const newChat = {
+        messagesWith: result._id,
+        username: result.username,
+        avatar: result.avatar,
+        lastMessage: '',
+        createdAt: Date.now(),
+      };
+
+      setChats((prev) => [newChat, ...prev]);
+      return router.push(`/messages?message=${result._id}`);
+    }
+  };
+
+  const handleSearch = async () => {
+    const res = await systemService.search({ keywords: inputValue });
+    if (res.status === 'success') {
+      setResults(res.data.users);
+    }
+  };
+  useEffect(() => {
+    handleSearch();
+  }, []);
+
   return (
-    <TextField
-      type="search"
-      placeholder="Search"
-      variant="outlined"
-      size="small"
+    <Autocomplete
+      disablePortal
       className={`p-2 ${classes.searchMessage}`}
-      value={inputValue}
-      onChange={(event) => setInputValue(event.target.value)}
-      InputProps={{
-        startAdornment: (
-          <InputAdornment position="start">
-            <SearchIcon />
-          </InputAdornment>
-        ),
+      options={results}
+      renderOption={(props, option) => (
+        <Box component="li" key={option._id} {...props}>
+          <Avatar src={option.avatar} />
+          <Typography className="ml-2">{option.username}</Typography>
+        </Box>
+      )}
+      onChange={(event, value) => {
+        addChat(value);
       }}
+      getOptionLabel={(option) => option.username}
+      renderInput={(params) => (
+        <TextField {...params} variant="outlined" size="small" label="Search" />
+      )}
     />
   );
 }

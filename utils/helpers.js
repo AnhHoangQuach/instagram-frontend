@@ -4,7 +4,7 @@ export const getHashTag = (value) => {
 };
 
 export const baseUrl =
-  process.env.NODE_ENV !== 'production' // localhost is development
+  process.env.NODE_ENV === 'production' // localhost is development
     ? 'http://localhost:5000'
     : 'https://howling-cheateau-40911.herokuapp.com';
 

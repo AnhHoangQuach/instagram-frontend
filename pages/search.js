@@ -6,11 +6,14 @@ import CardTags from '../components/Search/CardTags';
 import { Grid, Tabs, Tab, Box } from '@mui/material';
 import { useRouter } from 'next/router';
 import { systemService } from '../services/system';
+import { useDispatch } from 'react-redux';
 export default function Search() {
   const router = useRouter();
   const { keywords } = router.query;
   const [dataSearch, setDataSearch] = useState();
   const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
 
   useEffect(async () => {
     try {

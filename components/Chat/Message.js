@@ -38,7 +38,7 @@ function Message({ message, user, bannerProfilePic, divRef }) {
   const classes = useStyles();
   const [deleteIcon, showDeleteIcon] = useState(false);
 
-  const ifYouSender = message.sender === user._id;
+  const ifYouSender = message.sender === user?._id;
   return (
     <div
       ref={divRef}

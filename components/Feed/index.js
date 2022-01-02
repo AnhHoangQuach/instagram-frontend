@@ -23,9 +23,7 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import HTMLEllipsis from 'react-lines-ellipsis/lib/html';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { MessageIcon } from '../../utils/icons';
 import { LikeButton, SaveButton } from '../Feed/FeedAction';
-import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import { setMessage } from '../../store/messageSlice';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useRouter } from 'next/router';
@@ -74,29 +72,6 @@ export default function Feed() {
       }
     } catch (error) {
       dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
-    }
-  };
-
-  const addChat = (result) => {
-    const alreadyInChat =
-      chats.length > 0 && chats.filter((chat) => chat.messagesWith === result._id).length > 0;
-
-    if (alreadyInChat) {
-      return router.push(`/messages?message=${result._id}`);
-    }
-    //
-    else {
-      const newChat = {
-        messagesWith: result._id,
-        username: result.username,
-        avatar: result.avatar,
-        lastMessage: '',
-        createdAt: Date.now(),
-      };
-
-      setChats((prev) => [newChat, ...prev]);
-
-      return router.push(`/messages?message=${result._id}`);
     }
   };
 
@@ -227,11 +202,6 @@ export default function Feed() {
                   likes={post.likes.length}
                   isOnly={false}
                 />
-                <MessageIcon
-                  onClick={() => handleMessage(post.user._id)}
-                  className="cursor-pointer"
-                />
-                <ShareOutlinedIcon />
               </div>
               <SaveButton
                 postId={post._id}

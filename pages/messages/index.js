@@ -43,6 +43,8 @@ export default function Messages({ chatsData }) {
   const [messages, setMessages] = useState([]);
 
   const [bannerData, setBannerData] = useState({ username: '', avatar: '' });
+
+  // This ref is for persisting the state of query string in url throughout re-renders. This ref is the value of query string inside url
   const openChatId = useRef('');
 
   const classes = useStyles();
@@ -60,7 +62,7 @@ export default function Messages({ chatsData }) {
         setConnectedUsers(users);
       });
 
-      if (chats?.length > 0 && !router.query.message) {
+      if (chats.length > 0 && !router.query.message) {
         router.push(`/messages?message=${chats[0].messagesWith}`, undefined, {
           shallow: true,
         });
@@ -95,9 +97,11 @@ export default function Messages({ chatsData }) {
       });
 
       socket.current.on('no-chat-found', async () => {
-        const { username, avatar } = await userService.getUser({ userId: router.query.message });
-        setBannerData({ username, avatar });
-        setMessages([]);
+        const res = await userService.getUser({ userId: router.query.message });
+        if (res.status === 'success') {
+          setBannerData({ username: res.data.user.username, avatar: res.data.user.avatar });
+          setMessages([]);
+        }
 
         openChatId.current = router.query.message;
       });
@@ -116,7 +120,7 @@ export default function Messages({ chatsData }) {
     }
   };
 
-  // Confirming msg is sent and receving the messages useEffect
+  // Confirming msg is sent and receiving the messages useEffect
   useEffect(() => {
     if (socket.current) {
       socket.current.on('msg-sent', ({ data }) => {
@@ -125,8 +129,10 @@ export default function Messages({ chatsData }) {
 
           setChats((prev) => {
             const previousChat = prev.find((chat) => chat.messagesWith === data.newMsg.receiver);
-            previousChat.lastMessage = data.newMsg.msg;
-            previousChat.createdAt = data.newMsg.createdAt;
+            if (previousChat) {
+              previousChat.lastMessage = data.newMsg.msg;
+              previousChat.createdAt = data.newMsg.createdAt;
+            }
 
             return [...prev];
           });
@@ -142,10 +148,11 @@ export default function Messages({ chatsData }) {
 
           setChats((prev) => {
             const previousChat = prev.find((chat) => chat.messagesWith === data.newMsg.sender);
-            previousChat.lastMessage = data.newMsg.msg;
-            previousChat.createdAt = data.newMsg.createdAt;
-
-            senderName = previousChat.name;
+            if (previousChat) {
+              previousChat.lastMessage = data.newMsg.msg;
+              previousChat.createdAt = data.newMsg.createdAt;
+              senderName = previousChat.name;
+            }
 
             return [...prev];
           });
@@ -158,10 +165,12 @@ export default function Messages({ chatsData }) {
           if (ifPreviouslyMessaged) {
             setChats((prev) => {
               const previousChat = prev.find((chat) => chat.messagesWith === data.newMsg.sender);
-              previousChat.lastMessage = data.newMsg.msg;
-              previousChat.createdAt = data.newMsg.createdAt;
+              if (previousChat) {
+                previousChat.lastMessage = data.newMsg.msg;
+                previousChat.createdAt = data.newMsg.createdAt;
 
-              senderName = previousChat.name;
+                senderName = previousChat.name;
+              }
 
               return [
                 previousChat,
@@ -172,17 +181,19 @@ export default function Messages({ chatsData }) {
 
           //IF NO PREVIOUS CHAT WITH THE SENDER
           else {
-            const { username, avatar } = await userService.getUser({ userId: data.newMsg.sender });
-            senderName = username;
+            const res = await userService.getUser({ userId: data.newMsg.sender });
+            if (res.status === 'success') {
+              senderName = res.data.user.username;
 
-            const newChat = {
-              messagesWith: data.newMsg.sender,
-              username,
-              avatar,
-              lastMessage: data.newMsg.msg,
-              createdAt: data.newMsg.createdAt,
-            };
-            setChats((prev) => [newChat, ...prev]);
+              const newChat = {
+                messagesWith: data.newMsg.sender,
+                username: res.data.user.username,
+                avatar: res.data.user.avatar,
+                lastMessage: data.newMsg.msg,
+                createdAt: data.newMsg.createdAt,
+              };
+              setChats((prev) => [newChat, ...prev]);
+            }
           }
         }
 
@@ -204,40 +215,34 @@ export default function Messages({ chatsData }) {
         className="max-w-5xl mx-auto mt-8"
         columns={{ xxs: 4, xs: 8, sm: 12, md: 12 }}
       >
-        {chats.length > 0 ? (
-          <>
-            <Grid item xxs={1} xs={4} sm={3} md={3} className="border border-gray-200">
-              <ChatListSearch />
-              <Divider />
-              <Box sx={{ padding: 2, overflowY: 'auto', maxHeight: 640 }}>
-                {chats.map((chat, i) => (
-                  <Chat key={i} connectedUsers={connectedUsers} chat={chat} />
+        <Grid item xxs={1} xs={4} sm={3} md={3} className="border border-gray-200">
+          <ChatListSearch chats={chats} setChats={setChats} />
+          <Divider />
+          <Box sx={{ padding: 2, overflowY: 'auto', maxHeight: 640 }}>
+            {chats.map((chat, i) => (
+              <Chat key={i} connectedUsers={connectedUsers} chat={chat} />
+            ))}
+          </Box>
+        </Grid>
+        <Grid item xxs={3} xs={4} sm={9} md={9} className="border border-gray-200">
+          <Box className={classes.box}>
+            <Banner bannerData={bannerData} />
+            <Divider />
+            <Box className={classes.listMessage}>
+              {messages.length > 0 &&
+                messages.map((message, i) => (
+                  <Message
+                    divRef={divRef}
+                    key={i}
+                    bannerProfilePic={bannerData.avatar}
+                    message={message}
+                    user={currentUser}
+                  />
                 ))}
-              </Box>
-            </Grid>
-            <Grid item xxs={3} xs={4} sm={9} md={9} className="border border-gray-200">
-              <Box className={classes.box}>
-                <Banner bannerData={bannerData} />
-                <Divider />
-                <Box className={classes.listMessage}>
-                  {messages.length > 0 &&
-                    messages.map((message, i) => (
-                      <Message
-                        divRef={divRef}
-                        key={i}
-                        bannerProfilePic={bannerData.avatar}
-                        message={message}
-                        user={currentUser}
-                      />
-                    ))}
-                </Box>
-                <MessageInputField sendMsg={sendMsg} />
-              </Box>
-            </Grid>
-          </>
-        ) : (
-          <p>No Messages</p>
-        )}
+            </Box>
+            <MessageInputField sendMsg={sendMsg} />
+          </Box>
+        </Grid>
       </Grid>
     </>
   );
