@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { TextField, InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { makeStyles } from '@mui/styles';
+import { useRouter } from 'next/router';
 
 const useStyles = makeStyles((theme) => ({
   searchMessage: {
@@ -14,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
 function ChatListSearch({ chats, setChats }) {
   const classes = useStyles();
   const [inputValue, setInputValue] = useState();
+  const router = useRouter();
   return (
     <TextField
       type="search"

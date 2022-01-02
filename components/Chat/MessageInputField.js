@@ -1,6 +1,13 @@
-import { Box, Typography, Button, TextField } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
+import { useState } from 'react';
 
 function MessageInputField({ sendMsg }) {
+  const [text, setText] = useState('');
+  const handleSendMessage = () => {
+    sendMsg(text);
+    setText('');
+  };
+
   return (
     <Box sx={{ position: 'sticky', display: 'flex', bottom: 0 }}>
       <TextField
@@ -8,9 +15,14 @@ function MessageInputField({ sendMsg }) {
         placeholder="Search"
         variant="outlined"
         size="small"
+        value={text}
         className="w-full"
+        onChange={(e) => setText(e.target.value)}
+        onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
       />
-      <Button color="primary">Post</Button>
+      <Button color="primary" onClick={handleSendMessage}>
+        Post
+      </Button>
     </Box>
   );
 }

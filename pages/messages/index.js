@@ -8,7 +8,8 @@ import Banner from '../../components/Chat/Banner';
 import { Grid, Divider, Box } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { chatService } from '../../services/chat';
-import { baseUrl } from '../../utils/helpers';
+import { userService } from '../../services/user';
+import { baseUrl, newMsgSound } from '../../utils/helpers';
 import io from 'socket.io-client';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
@@ -94,8 +95,7 @@ export default function Messages({ chatsData }) {
       });
 
       socket.current.on('no-chat-found', async () => {
-        const { username, avatar } = await getUser(router.query.message);
-
+        const { username, avatar } = await userService.getUser({ userId: router.query.message });
         setBannerData({ username, avatar });
         setMessages([]);
 
@@ -115,6 +115,81 @@ export default function Messages({ chatsData }) {
       });
     }
   };
+
+  // Confirming msg is sent and receving the messages useEffect
+  useEffect(() => {
+    if (socket.current) {
+      socket.current.on('msg-sent', ({ data }) => {
+        if (data.newMsg.receiver === openChatId.current) {
+          setMessages((prev) => [...prev, data.newMsg]);
+
+          setChats((prev) => {
+            const previousChat = prev.find((chat) => chat.messagesWith === data.newMsg.receiver);
+            previousChat.lastMessage = data.newMsg.msg;
+            previousChat.createdAt = data.newMsg.createdAt;
+
+            return [...prev];
+          });
+        }
+      });
+
+      socket.current.on('new-msg-received', async ({ data }) => {
+        let senderName;
+
+        // WHEN CHAT WITH SENDER IS CURRENTLY OPENED INSIDE YOUR BROWSER
+        if (data.newMsg.sender === openChatId.current) {
+          setMessages((prev) => [...prev, data.newMsg]);
+
+          setChats((prev) => {
+            const previousChat = prev.find((chat) => chat.messagesWith === data.newMsg.sender);
+            previousChat.lastMessage = data.newMsg.msg;
+            previousChat.createdAt = data.newMsg.createdAt;
+
+            senderName = previousChat.name;
+
+            return [...prev];
+          });
+        }
+        //
+        else {
+          const ifPreviouslyMessaged =
+            chats.filter((chat) => chat.messagesWith === data.newMsg.sender).length > 0;
+
+          if (ifPreviouslyMessaged) {
+            setChats((prev) => {
+              const previousChat = prev.find((chat) => chat.messagesWith === data.newMsg.sender);
+              previousChat.lastMessage = data.newMsg.msg;
+              previousChat.createdAt = data.newMsg.createdAt;
+
+              senderName = previousChat.name;
+
+              return [
+                previousChat,
+                ...prev.filter((chat) => chat.messagesWith !== data.newMsg.sender),
+              ];
+            });
+          }
+
+          //IF NO PREVIOUS CHAT WITH THE SENDER
+          else {
+            const { username, avatar } = await userService.getUser({ userId: data.newMsg.sender });
+            senderName = username;
+
+            const newChat = {
+              messagesWith: data.newMsg.sender,
+              username,
+              avatar,
+              lastMessage: data.newMsg.msg,
+              createdAt: data.newMsg.createdAt,
+            };
+            setChats((prev) => [newChat, ...prev]);
+          }
+        }
+
+        newMsgSound(senderName);
+      });
+    }
+  }, []);
 
   useEffect(() => {
     messages.length > 0 && scrollDivToBottom(divRef);

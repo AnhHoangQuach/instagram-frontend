@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Avatar, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
   message: {
@@ -47,7 +48,9 @@ function Message({ message, user, bannerProfilePic, divRef }) {
       <Typography variant="body1" className="px-2 break-all">
         {message.msg}
       </Typography>
-      <span className={ifYouSender ? classes.timeRight : classes.timeLeft}>11:00</span>
+      <span className={ifYouSender ? classes.timeRight : classes.timeLeft}>
+        {moment(message.createdAt).format('HH:mm')}
+      </span>
     </div>
   );
 }

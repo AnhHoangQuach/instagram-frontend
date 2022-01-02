@@ -168,7 +168,6 @@ export default function Header() {
             </div>
           </Link>
 
-          <FavoriteBorderOutlinedIcon className="nav-btn" />
           {renderThemeChanger()}
           <Avatar
             src={currentUser?.avatar}

@@ -28,6 +28,7 @@ import { LikeButton, SaveButton } from '../Feed/FeedAction';
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import { setMessage } from '../../store/messageSlice';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { useRouter } from 'next/router';
 
 const FeedSkeleton = () => {
   return (
@@ -57,6 +58,7 @@ export default function Feed() {
   const [showCaption, setCaption] = useState(false);
   const [showOptionsDialog, setOptionsDialog] = useState(false);
   const [postIdNow, setPostIdNow] = useState(null);
+  const router = useRouter();
 
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
@@ -72,6 +74,29 @@ export default function Feed() {
       }
     } catch (error) {
       dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+    }
+  };
+
+  const addChat = (result) => {
+    const alreadyInChat =
+      chats.length > 0 && chats.filter((chat) => chat.messagesWith === result._id).length > 0;
+
+    if (alreadyInChat) {
+      return router.push(`/messages?message=${result._id}`);
+    }
+    //
+    else {
+      const newChat = {
+        messagesWith: result._id,
+        username: result.username,
+        avatar: result.avatar,
+        lastMessage: '',
+        createdAt: Date.now(),
+      };
+
+      setChats((prev) => [newChat, ...prev]);
+
+      return router.push(`/messages?message=${result._id}`);
     }
   };
 
@@ -202,7 +227,10 @@ export default function Feed() {
                   likes={post.likes.length}
                   isOnly={false}
                 />
-                <MessageIcon />
+                <MessageIcon
+                  onClick={() => handleMessage(post.user._id)}
+                  className="cursor-pointer"
+                />
                 <ShareOutlinedIcon />
               </div>
               <SaveButton
