@@ -3,6 +3,7 @@ import { Box, Avatar, Badge, Typography } from '@mui/material';
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
 import { makeStyles } from '@mui/styles';
 import { styled } from '@mui/material/styles';
+import { useRouter } from 'next/router';
 import moment from 'moment';
 
 const StyledBadge = styled(Badge, {
@@ -49,8 +50,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Chat({ connectedUsers, chat }) {
+function Chat({ connectedUsers, chat, deleteChat }) {
   const classes = useStyles();
+  const router = useRouter();
   const isOnline =
     connectedUsers.length > 0 &&
     connectedUsers.filter((user) => user.userId === chat.messagesWith).length > 0;
@@ -65,8 +67,14 @@ function Chat({ connectedUsers, chat }) {
       <StyledBadge
         isOnline={isOnline}
         overlap="circular"
+        className="cursor-pointer"
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         variant="dot"
+        onClick={() =>
+          router.push(`/messages?message=${chat.messagesWith}`, undefined, {
+            shallow: true,
+          })
+        }
       >
         <Avatar alt="" src={chat.avatar} />
       </StyledBadge>
@@ -76,7 +84,10 @@ function Chat({ connectedUsers, chat }) {
           Active {moment(chat.createdAt).fromNow()}
         </Typography>
       </Box>
-      <RemoveCircleOutlineOutlinedIcon className="flex-1 mx-4" />
+      <RemoveCircleOutlineOutlinedIcon
+        className="flex-1 cursor-pointer"
+        onClick={() => deleteChat(chat.messagesWith)}
+      />
     </Box>
   );
 }

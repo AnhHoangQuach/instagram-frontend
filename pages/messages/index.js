@@ -14,6 +14,8 @@ import io from 'socket.io-client';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import MessageInputField from '../../components/Chat/MessageInputField';
+import { useDispatch } from 'react-redux';
+import { setMessage } from '../../store/messageSlice';
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -48,7 +50,7 @@ export default function Messages({ chatsData }) {
   const openChatId = useRef('');
 
   const classes = useStyles();
-
+  const dispatch = useDispatch();
   //CONNECTION useEffect
   useEffect(() => {
     if (!socket.current) {
@@ -108,7 +110,7 @@ export default function Messages({ chatsData }) {
     };
 
     if (socket.current && router.query.message) loadMessages();
-  }, [router.query.message]);
+  }, [router.query.message, chats]);
 
   const sendMsg = (msg) => {
     if (socket.current) {
@@ -206,6 +208,19 @@ export default function Messages({ chatsData }) {
     messages.length > 0 && scrollDivToBottom(divRef);
   }, [messages]);
 
+  const deleteChat = async (messagesWith) => {
+    try {
+      const res = await chatService.deleteChat({ messagesWith });
+      if (res.status === 'success') {
+        dispatch(setMessage({ type: 'success', message: res.message }));
+      }
+      setChats((prev) => prev.filter((chat) => chat.messagesWith !== messagesWith));
+      router.push('/messages');
+    } catch (error) {
+      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+    }
+  };
+
   return (
     <>
       <Seo title="Post Details" description="Post Details" />
@@ -218,31 +233,35 @@ export default function Messages({ chatsData }) {
         <Grid item xxs={1} xs={4} sm={3} md={3} className="border border-gray-200">
           <ChatListSearch chats={chats} setChats={setChats} />
           <Divider />
-          <Box sx={{ padding: 2, overflowY: 'auto', maxHeight: 640 }}>
-            {chats.map((chat, i) => (
-              <Chat key={i} connectedUsers={connectedUsers} chat={chat} />
-            ))}
-          </Box>
-        </Grid>
-        <Grid item xxs={3} xs={4} sm={9} md={9} className="border border-gray-200">
-          <Box className={classes.box}>
-            <Banner bannerData={bannerData} />
-            <Divider />
-            <Box className={classes.listMessage}>
-              {messages.length > 0 &&
-                messages.map((message, i) => (
-                  <Message
-                    divRef={divRef}
-                    key={i}
-                    bannerProfilePic={bannerData.avatar}
-                    message={message}
-                    user={currentUser}
-                  />
-                ))}
+          {chats.length > 0 && (
+            <Box sx={{ padding: 2, overflowY: 'auto', maxHeight: 640 }}>
+              {chats.map((chat, i) => (
+                <Chat key={i} chat={chat} connectedUsers={connectedUsers} deleteChat={deleteChat} />
+              ))}
             </Box>
-            <MessageInputField sendMsg={sendMsg} />
-          </Box>
+          )}
         </Grid>
+        {router.query.message && (
+          <Grid item xxs={3} xs={4} sm={9} md={9} className="border border-gray-200">
+            <Box className={classes.box}>
+              <Banner bannerData={bannerData} />
+              <Divider />
+              <Box className={classes.listMessage}>
+                {messages.length > 0 &&
+                  messages.map((message, i) => (
+                    <Message
+                      divRef={divRef}
+                      key={i}
+                      bannerProfilePic={bannerData.avatar}
+                      message={message}
+                      user={currentUser}
+                    />
+                  ))}
+              </Box>
+              <MessageInputField sendMsg={sendMsg} />
+            </Box>
+          </Grid>
+        )}
       </Grid>
     </>
   );
