@@ -208,6 +208,20 @@ export default function Messages({ chatsData }) {
     messages.length > 0 && scrollDivToBottom(divRef);
   }, [messages]);
 
+  const deleteMsg = (messageId) => {
+    if (socket.current) {
+      socket.current.emit('delete-msg', {
+        userId: currentUser._id,
+        messagesWith: openChatId.current,
+        messageId,
+      });
+
+      socket.current.on('msg-deleted', () => {
+        setMessages((prev) => prev.filter((message) => message._id !== messageId));
+      });
+    }
+  };
+
   const deleteChat = async (messagesWith) => {
     try {
       const res = await chatService.deleteChat({ messagesWith });
@@ -255,6 +269,7 @@ export default function Messages({ chatsData }) {
                       bannerProfilePic={bannerData.avatar}
                       message={message}
                       user={currentUser}
+                      deleteMsg={deleteMsg}
                     />
                   ))}
               </Box>

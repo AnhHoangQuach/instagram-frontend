@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Avatar, Typography } from '@mui/material';
+import { Avatar, Typography, Button } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import moment from 'moment';
+import ModalCommon from '../ModalCommon';
 
 const useStyles = makeStyles((theme) => ({
   message: {
@@ -34,15 +35,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Message({ message, user, bannerProfilePic, divRef }) {
+function Message({ message, user, deleteMsg, bannerProfilePic, divRef }) {
   const classes = useStyles();
-  const [deleteIcon, showDeleteIcon] = useState(false);
+  const [deleteIcon, setShowDelete] = useState(false);
 
   const ifYouSender = message.sender === user?._id;
   return (
     <div
       ref={divRef}
-      className={`${classes.message} ${ifYouSender ? classes.darker : classes.messageReverse}`}
+      className={`${classes.message} ${!ifYouSender ? classes.darker : classes.messageReverse}`}
+      onClick={() => ifYouSender && setShowDelete(!deleteIcon)}
     >
       <Avatar src={ifYouSender ? user.avatar : bannerProfilePic} />
       <Typography variant="body1" className="px-2 break-all">
@@ -51,6 +53,26 @@ function Message({ message, user, bannerProfilePic, divRef }) {
       <span className={ifYouSender ? classes.timeRight : classes.timeLeft}>
         {moment(message.createdAt).format('HH:mm')}
       </span>
+
+      {deleteIcon && (
+        <ModalCommon
+          title="Popup"
+          actions={
+            <div className="flex w-full justify-end">
+              <Button autoFocus onClick={() => setShowDelete(false)}>
+                Cancel
+              </Button>
+              <Button autoFocus onClick={() => deleteMsg(message._id)}>
+                Delete
+              </Button>
+            </div>
+          }
+          open={deleteIcon}
+          onClose={() => setShowDelete(false)}
+        >
+          Do you want to delete message
+        </ModalCommon>
+      )}
     </div>
   );
 }
