@@ -1,4 +1,3 @@
-import faker from 'faker';
 import Story from './Story';
 import { useState, useEffect } from 'react';
 import Carousel from 'react-multi-carousel';
@@ -6,14 +5,6 @@ import 'react-multi-carousel/lib/styles.css';
 
 export default function Stories() {
   const [suggestions, setSuggestions] = useState([]);
-  useEffect(() => {
-    const suggestions = [...Array(10)].map((_, i) => ({
-      ...faker.helpers.contextualCard(),
-      avatar: faker.image.image(),
-      id: i,
-    }));
-    setSuggestions(suggestions);
-  }, []);
 
   const responsive = {
     desktop: {

@@ -20,6 +20,8 @@ const changeAvatar = (body) => clientRaw.put(`/user/avatar`, body);
 
 const suggestedUser = ({ max }) => clientRaw.get(`/user/suggested/${max}`);
 
+const getStories = ({ userId }) => clientRaw.get(`/user/${userId}/stories`);
+
 export const userService = {
   getUser,
   bookmarkPost,
@@ -31,4 +33,5 @@ export const userService = {
   editProfile,
   changeAvatar,
   suggestedUser,
+  getStories,
 };
