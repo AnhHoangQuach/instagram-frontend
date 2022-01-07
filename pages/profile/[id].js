@@ -109,7 +109,7 @@ export default function Profile() {
       isFollowing = following.find((ele) => ele.user._id === currentUser?._id);
       isFollower = followers.find((ele) => ele.user._id === currentUser?._id);
       setLoading(false);
-    }, 1000);
+    }, 1200);
   }, []);
 
   return isLoading ? (
