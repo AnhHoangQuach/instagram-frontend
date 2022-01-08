@@ -73,7 +73,8 @@ export default function Stories() {
   };
 
   return (
-    !loading && (
+    !loading &&
+    suggestions.length > 0 && (
       <div className="p-4 mt-8 border-gray-200 border rounded-sm">
         <Carousel responsive={responsive}>
           {suggestions.map((item, index) => (

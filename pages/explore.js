@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import Seo from '../components/Seo';
 import Header from '../components/Header';
 import GridPost from '../components/Profile/GridPost';
@@ -29,7 +29,7 @@ export default function Explore() {
   const getExplorePosts = async () => {
     try {
       setLoading(true);
-      const postRes = await postService.getExplorePosts({ page, limit: 2 });
+      const postRes = await postService.getExplorePosts({ page, limit: 7 });
       if (postRes.status === 'success') {
         setLoading(false);
         return postRes.data.posts;
@@ -44,7 +44,7 @@ export default function Explore() {
     const postsFormServer = await getExplorePosts();
 
     setPosts([...posts, ...postsFormServer]);
-    if (postsFormServer.length === 0 || postsFormServer.length < 5) {
+    if (postsFormServer.length === 0) {
       setHasMore(false);
     }
     setPage(page + 1);
@@ -54,7 +54,7 @@ export default function Explore() {
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        const postRes = await postService.getExplorePosts({ page: 1, limit: 2 });
+        const postRes = await postService.getExplorePosts({ page: 1, limit: 7 });
         if (postRes.status === 'success') {
           setPosts([...posts, ...postRes.data.posts]);
         }
@@ -72,24 +72,33 @@ export default function Explore() {
       <Seo title="Explore" description="Explore Page" />
       <Header />
       <Box className="max-w-5xl xl:mx-auto mt-8">
-        <InfiniteScroll
-          dataLength={posts.length} //This is important field to render the next data
-          next={fetchData}
-          hasMore={hasMore}
-          endMessage={
-            <p style={{ textAlign: 'center' }}>
-              <b>Yay! You have seen it all</b>
-            </p>
-          }
-        >
-          <Box sx={{ display: 'grid' }}>
-            <Box className={classes.postContainer}>
-              {posts.map((post) => (
-                <GridPost key={post._id} post={post} />
-              ))}
+        {posts.length > 0 ? (
+          <InfiniteScroll
+            dataLength={posts.length} //This is important field to render the next data
+            next={fetchData}
+            hasMore={hasMore}
+            endMessage={
+              <p style={{ textAlign: 'center' }}>
+                <b>Yay! You have seen it all</b>
+              </p>
+            }
+          >
+            <Box sx={{ display: 'grid' }}>
+              <Box className={classes.postContainer}>
+                {posts.map((post) => (
+                  <GridPost key={post._id} post={post} />
+                ))}
+              </Box>
             </Box>
-          </Box>
-        </InfiniteScroll>
+          </InfiniteScroll>
+        ) : (
+          <div className="flex flex-col items-center justify-center h-full">
+            <img src="/assets/images/gif-no-posts.gif" />
+            <Typography variant="h6">
+              Follow others to discover many interesting things about life
+            </Typography>
+          </div>
+        )}
       </Box>
     </>
   );

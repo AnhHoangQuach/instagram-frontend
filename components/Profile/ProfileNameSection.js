@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Hidden, Box, Button, Typography, Divider, Avatar } from '@mui/material';
 import router from 'next/router';
 import Link from 'next/link';
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../store/userSlice';
 import { setMessage } from '../../store/messageSlice';
@@ -115,10 +114,6 @@ export default function ProfileNameSection({
                   Edit Profile
                 </Button>
               </Link>
-              <SettingsOutlinedIcon
-                className="cursor-pointer"
-                onClick={() => setSettingsDialog(true)}
-              />
             </>
           ) : (
             <>{followButton}</>
@@ -138,12 +133,6 @@ export default function ProfileNameSection({
             }}
           >
             <Typography className="text-xl">{profile.username}</Typography>
-            {isOwner && (
-              <SettingsOutlinedIcon
-                className="cursor-pointer"
-                onClick={() => setSettingsDialog(true)}
-              />
-            )}
           </Box>
           {isOwner ? (
             <Link href="/profile/edit" passHref>
@@ -182,14 +171,6 @@ export default function ProfileNameSection({
             }}
           >
             Unfollow
-          </Button>
-        </DialogCommon>
-      )}
-      {showSettingsDialog && (
-        <DialogCommon onClose={() => setSettingsDialog(false)}>
-          <Divider />
-          <Button className="normal-case" onClick={handleLogout}>
-            Logout
           </Button>
         </DialogCommon>
       )}

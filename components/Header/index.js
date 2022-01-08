@@ -1,14 +1,13 @@
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import InstagramIcon from '@mui/icons-material/Instagram';
-import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import NightsStayIcon from '@mui/icons-material/NightsStay';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
-import { TextField, InputAdornment, Badge, Avatar, Hidden, Menu, MenuItem } from '@mui/material';
+import { TextField, InputAdornment, Avatar, Hidden, Menu, MenuItem } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/userSlice';
@@ -125,6 +124,7 @@ export default function Header() {
 
         <div className="hidden md:block">
           <TextField
+            className="dark:bg-white"
             type="search"
             placeholder="Search"
             variant="outlined"
@@ -153,9 +153,9 @@ export default function Header() {
             </div>
           </Link>
           <Link href="/messages" passHref>
-            <Badge badgeContent={4} color="error" className="cursor-pointer">
-              <MessageIcon color="action" className="dark:text-white" />
-            </Badge>
+            <div>
+              <MessageIcon color="action" className="cursor-pointer" />
+            </div>
           </Link>
           <NewPost />
           <Link href="/explore" passHref>

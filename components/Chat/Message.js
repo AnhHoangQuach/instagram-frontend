@@ -47,7 +47,7 @@ function Message({ message, user, deleteMsg, bannerProfilePic, divRef }) {
       onClick={() => ifYouSender && setShowDelete(!deleteIcon)}
     >
       <Avatar src={ifYouSender ? user.avatar : bannerProfilePic} />
-      <Typography variant="body1" className="px-2 break-all">
+      <Typography variant="body1" className="px-2 break-all dark:text-black">
         {message.msg}
       </Typography>
       <span className={ifYouSender ? classes.timeRight : classes.timeLeft}>

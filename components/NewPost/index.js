@@ -14,6 +14,7 @@ import { useDropzone } from 'react-dropzone';
 import { Mention, MentionsInput } from 'react-mentions';
 import { setMessage } from '../../store/messageSlice';
 import { getHashTag } from '../../utils/helpers';
+import { useTheme } from 'next-themes';
 
 //fake data
 const users = [
@@ -79,6 +80,8 @@ export default function NewPost({}) {
       items: 1,
     },
   };
+
+  const { theme } = useTheme();
 
   const renderSections = () => {
     switch (step) {
