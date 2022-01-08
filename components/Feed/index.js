@@ -136,9 +136,9 @@ export default function Feed() {
       try {
         const postRes = await postService.getFeedPosts({ page: 1, limit: 100 });
         if (postRes.status === 'success') {
-          setLoading(false);
           setPosts(postRes.data.posts);
         }
+        setLoading(false);
       } catch (error) {
         setLoading(false);
         dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
@@ -148,7 +148,7 @@ export default function Feed() {
 
   return loading ? (
     <GlobalLoading />
-  ) : (
+  ) : posts.length > 0 ? (
     <InfiniteScroll
       dataLength={posts.length} //This is important field to render the next data
       next={fetchData}
@@ -198,7 +198,7 @@ export default function Feed() {
               <div className="flex space-x-4">
                 <LikeButton
                   postId={post._id}
-                  isVotedPost={post.likes.find((ele) => ele.user === currentUser?._id)}
+                  isVotedPost={post.likes.filter((ele) => ele.user === currentUser?._id).length > 0}
                   likes={post.likes.length}
                   isOnly={false}
                 />
@@ -257,7 +257,11 @@ export default function Feed() {
                 </Typography>
               </div>
             ))}
-            <Typography color="textSecondary" className="py-2" style={{ fontSize: '0.75rem' }}>
+            <Typography
+              color="textSecondary"
+              className="py-2 dark:text-white"
+              style={{ fontSize: '0.75rem' }}
+            >
               {moment(post.createdAt).fromNow()}
             </Typography>
           </Box>
@@ -288,5 +292,10 @@ export default function Feed() {
         </div>
       ))}
     </InfiniteScroll>
+  ) : (
+    <div className="flex flex-col items-center justify-center h-full">
+      <img src="/assets/images/gif-no-posts.gif" />
+      <Typography variant="h6">Welcome To Page</Typography>
+    </div>
   );
 }

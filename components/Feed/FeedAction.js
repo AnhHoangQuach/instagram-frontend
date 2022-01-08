@@ -38,7 +38,6 @@ export function LikeButton({ postId, isVotedPost, likes, parentCallback, isOnly 
   const [liked, setLiked] = useState(isVotedPost);
   const Icon = liked ? UnlikeIcon : LikeIcon;
   const className = liked ? classes.liked : classes.like;
-
   const [likesCount, setLikesCount] = useState(likes);
 
   const dispatch = useDispatch();

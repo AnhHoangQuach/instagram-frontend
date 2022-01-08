@@ -5,6 +5,7 @@ import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlin
 import { makeStyles } from '@mui/styles';
 import ProfilePosts from './ProfilePosts';
 import SavedPosts from './SavedPosts';
+import { useTheme } from 'next-themes';
 
 const useStyles = makeStyles((theme) => ({
   tabsIndicator: {
@@ -28,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
 export default function ProfileTabs({ isOwner, profile, savedPosts, posts }) {
   const classes = useStyles();
   const [value, setValue] = useState(0);
+  const { theme } = useTheme();
 
   return (
     <>
@@ -45,6 +47,7 @@ export default function ProfileTabs({ isOwner, profile, savedPosts, posts }) {
             <Tab
               icon={<GridOnOutlinedIcon style={{ margin: '0 0.3125rem', fontSize: '0.875rem' }} />}
               label="POSTS"
+              className="dark:text-white"
               classes={{ root: classes.tabWrapper, labelIcon: classes.tabLabelIcon }}
             />
             {isOwner && (
@@ -55,6 +58,7 @@ export default function ProfileTabs({ isOwner, profile, savedPosts, posts }) {
                   />
                 }
                 label="SAVED"
+                className="dark:text-white"
                 classes={{ root: classes.tabWrapper, labelIcon: classes.tabLabelIcon }}
               />
             )}

@@ -52,7 +52,7 @@ function ChatListSearch({ chats, setChats }) {
   return (
     <Autocomplete
       disablePortal
-      className={`p-2 ${classes.searchMessage}`}
+      className={`p-2 ${classes.searchMessage} dark:bg-white`}
       options={results}
       renderOption={(props, option) =>
         option._id !== currentUser._id && (

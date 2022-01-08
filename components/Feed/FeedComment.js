@@ -46,6 +46,7 @@ export default function FeedComment({ postId, parentCallback }) {
         render={({ field, fieldState: { invalid, error } }) => (
           <TextField
             {...field}
+            className="dark:bg-white"
             fullWidth
             placeholder="Add a comment..."
             multiline

@@ -13,7 +13,7 @@ function Banner({ bannerData }) {
           </Typography>
         </>
       ) : (
-        <CircularProgress size="2rem"/>
+        <CircularProgress size="2rem" />
       )}
     </Box>
   );

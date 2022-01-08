@@ -121,7 +121,7 @@ export default function Profile() {
       <Box className="max-w-5xl xl:mx-auto mt-8">
         <Hidden smDown>
           <Card
-            className="bg-transparent"
+            className="bg-transparent dark:bg-white"
             sx={{
               display: 'grid',
               gridAutoFlow: 'column',
