@@ -65,6 +65,9 @@ export default function Suggestions() {
       setLoading(false);
       dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
     }
+  }, []);
+
+  useEffect(() => {
     handleGetFollowingUser();
   }, []);
   return (
@@ -85,25 +88,18 @@ export default function Suggestions() {
                 <h2 className="text-sm font-semibold">{profile.username}</h2>
                 <h3 className="text-xs text-gray-400">New Member</h3>
               </div>
-              {following.filter((item) => item._id === profile._id).length > 0 ? (
-                <button
-                  className="text-blue-400 text-xs font-bold"
-                  onClick={() => {
-                    handleUnfollowUser(profile._id);
-                  }}
-                >
-                  Unfollow
-                </button>
-              ) : (
-                <button
-                  className="text-blue-400 text-xs font-bold"
-                  onClick={() => {
-                    handleFollowUser(profile._id);
-                  }}
-                >
-                  Follow
-                </button>
-              )}
+              <button
+                className="text-blue-400 text-xs font-bold"
+                onClick={() => {
+                  following.filter((item) => item.user._id === profile._id).length > 0
+                    ? handleUnfollowUser(profile._id)
+                    : handleFollowUser(profile._id);
+                }}
+              >
+                {following.filter((item) => item.user._id === profile._id).length > 0
+                  ? 'Unfollow'
+                  : 'Follow'}
+              </button>
             </div>
           ))}
         </div>
