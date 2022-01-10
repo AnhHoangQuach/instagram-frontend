@@ -70,7 +70,7 @@ const CardUser = ({ user, index }) => {
   return (
     <Link href={`/profile/${user._id}`} passHref>
       <Card variant="outlined" className="Card-Container">
-        <CardMedia className={classes.cardMedia}>
+        <CardMedia className={classes.cardMedia} image={user.avatar}>
           <Skeleton variant="rect" width="100%" height="100%" />
         </CardMedia>
         <Box className={classes.box}>
