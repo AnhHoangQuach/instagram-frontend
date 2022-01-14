@@ -2,8 +2,9 @@ import Link from 'next/link';
 import { useState, useEffect, useCallback } from 'react';
 import FeedComment from './FeedComment';
 import FeedImage from './FeedImage';
-import DialogCommon from '../DialogCommon';
 import GlobalLoading from '../GlobalLoading';
+import DialogCommon from '../DialogCommon';
+import PopupQrCode from './PopupQrCode';
 import {
   Avatar,
   Typography,
@@ -15,6 +16,7 @@ import {
   CardMedia,
   CardHeader,
   Skeleton,
+  Dialog,
 } from '@mui/material';
 import { postService } from '../../services/post';
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,7 +28,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { LikeButton, SaveButton } from '../Feed/FeedAction';
 import { setMessage } from '../../store/messageSlice';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { useRouter } from 'next/router';
+import QrCode2OutlinedIcon from '@mui/icons-material/QrCode2Outlined';
 
 const FeedSkeleton = () => {
   return (
@@ -56,7 +58,9 @@ export default function Feed() {
   const [showCaption, setCaption] = useState(false);
   const [showOptionsDialog, setOptionsDialog] = useState(false);
   const [postIdNow, setPostIdNow] = useState(null);
-  const router = useRouter();
+
+  const [isOpenQrCode, setIsOpenQrCode] = useState(false);
+  const [postQrCode, setPostQrCode] = useState(null);
 
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
@@ -167,9 +171,11 @@ export default function Feed() {
               <Link href={`/profile/${post.user._id}`} passHref>
                 <Avatar src={post.user.avatar} className="cursor-pointer" />
               </Link>
-              <Typography variant="subtitle2" className="font-light mx-4">
-                {post.user.username}
-              </Typography>
+              <Link href={`/profile/${post.user._id}`} passHref>
+                <Typography variant="subtitle2" className="font-light mx-4 cursor-pointer">
+                  {post.user.username}
+                </Typography>
+              </Link>
             </div>
             <MoreHorizIcon
               className="cursor-pointer"
@@ -201,6 +207,13 @@ export default function Feed() {
                   isVotedPost={post.likes.filter((ele) => ele.user === currentUser?._id).length > 0}
                   likes={post.likes.length}
                   isOnly={false}
+                />
+                <QrCode2OutlinedIcon
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setPostQrCode(post._id);
+                    setIsOpenQrCode(true);
+                  }}
                 />
               </div>
               <SaveButton
@@ -289,6 +302,9 @@ export default function Feed() {
               </Button>
             </DialogCommon>
           )}
+          <Dialog open={isOpenQrCode} onClose={() => setIsOpenQrCode(false)} className="p-6">
+            <PopupQrCode postId={postQrCode} onClose={() => setIsOpenQrCode(false)} />
+          </Dialog>
         </div>
       ))}
     </InfiniteScroll>

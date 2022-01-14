@@ -14,8 +14,6 @@ export default function MiniProfile() {
         <h2 className="font-semibold">{currentUser?.username}</h2>
         <h3 className="text-sm text-gray-400">Welcomte to Instagram</h3>
       </Box>
-
-      <button className="text-blue-400 text-sm font-semibold">Switch</button>
     </div>
   );
 }

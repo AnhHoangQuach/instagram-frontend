@@ -85,7 +85,9 @@ export default function Suggestions() {
                 <Avatar src={profile.avatar} alt="" className="cursor-pointer" />
               </Link>
               <div className="flex-1 ml-4">
-                <h2 className="text-sm font-semibold">{profile.username}</h2>
+                <Link href={`/profile/${profile._id}`} passHref>
+                  <h2 className="text-sm font-semibold cursor-pointer">{profile.username}</h2>
+                </Link>
                 <h3 className="text-xs text-gray-400">New Member</h3>
               </div>
               <button

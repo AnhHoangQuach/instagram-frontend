@@ -146,7 +146,7 @@ export default function Login() {
             >
               Login with facebook
             </Button>
-            <Link href="/" underline="none">
+            <Link href="/forgot-password" underline="none">
               <Typography className="text-xs text-blue-medium cursor-pointer">
                 Forgot Password?
               </Typography>
