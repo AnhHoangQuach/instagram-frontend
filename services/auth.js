@@ -8,9 +8,15 @@ const getMe = () => clientRaw.get(`/auth/me`);
 
 const loginByFacebook = `${process.env.NEXT_PUBLIC_API_URL}/auth/facebook`;
 
+const getVerifyCode = (params) => clientRaw.get(`/auth/send-verify-code`, { params });
+
+const resetPassword = (body) => clientRaw.post(`/auth/reset-password`, body);
+
 export const authService = {
   signup,
   login,
   getMe,
   loginByFacebook,
+  getVerifyCode,
+  resetPassword,
 };

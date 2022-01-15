@@ -35,7 +35,7 @@ export default function RouteGuard({ children }) {
 
   function authCheck(url) {
     // redirect to login page if accessing a private page and not logged in
-    const publicPaths = ['/login', '/signup'];
+    const publicPaths = ['/login', '/signup', '/forgot-password'];
     const path = url.split('?')[0];
     const token = localStorage.getItem('token');
     if (!token && !publicPaths.includes(path)) {
