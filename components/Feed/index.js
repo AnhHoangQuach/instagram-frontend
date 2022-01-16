@@ -26,9 +26,11 @@ import 'react-multi-carousel/lib/styles.css';
 import HTMLEllipsis from 'react-lines-ellipsis/lib/html';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { LikeButton, SaveButton } from '../Feed/FeedAction';
+import { MessageIcon } from '../../utils/icons';
 import { setMessage } from '../../store/messageSlice';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import QrCode2OutlinedIcon from '@mui/icons-material/QrCode2Outlined';
+import { useRouter } from 'next/router';
 
 const FeedSkeleton = () => {
   return (
@@ -62,6 +64,7 @@ export default function Feed() {
   const [isOpenQrCode, setIsOpenQrCode] = useState(false);
   const [postQrCode, setPostQrCode] = useState(null);
 
+  const router = useRouter();
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
 
@@ -207,6 +210,16 @@ export default function Feed() {
                   isVotedPost={post.likes.filter((ele) => ele.user === currentUser?._id).length > 0}
                   likes={post.likes.length}
                   isOnly={false}
+                />
+                <MessageIcon
+                  className="cursor-pointer"
+                  onClick={() => {
+                    {
+                      router.push(`/messages?message=${post.user._id}`, undefined, {
+                        shallow: true,
+                      });
+                    }
+                  }}
                 />
                 <QrCode2OutlinedIcon
                   className="cursor-pointer"

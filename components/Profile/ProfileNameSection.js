@@ -18,7 +18,6 @@ export default function ProfileNameSection({
   const dispatch = useDispatch();
 
   const [showUnfollowDialog, setUnfollowDialog] = useState(false);
-  const [showSettingsDialog, setSettingsDialog] = useState(false);
 
   const handleLogout = () => {
     dispatch(logout());
