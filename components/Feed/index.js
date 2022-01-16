@@ -239,8 +239,12 @@ export default function Feed() {
           {post.likes.length === 1 ? '1 like' : `${post.likes.length} likes`}
         </Typography> */}
               <div className={showCaption ? 'block' : 'flex items-center'}>
-                <Link href="/" passHref>
-                  <Typography variant="subtitle2" component="span" className="mr-1 font-semibold">
+                <Link href={`/profile/${post.user._id}`} passHref>
+                  <Typography
+                    variant="subtitle2"
+                    component="span"
+                    className="cursor-pointer mr-1 font-semibold"
+                  >
                     {post.user.username}
                   </Typography>
                 </Link>
@@ -275,9 +279,15 @@ export default function Feed() {
             </Link>
             {post.comment.comments.slice(-2).map((item) => (
               <div key={item._id}>
-                <Typography variant="subtitle2" component="span" className="font-semibold">
-                  {item.user.username}
-                </Typography>{' '}
+                <Link href={`/profile/${item.user._id}`} passHref>
+                  <Typography
+                    variant="subtitle2"
+                    component="span"
+                    className="cursor-pointer font-semibold"
+                  >
+                    {item.user.username}
+                  </Typography>
+                </Link>{' '}
                 <Typography variant="body2" component="span">
                   {item.content}
                 </Typography>
