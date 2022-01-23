@@ -1,5 +1,6 @@
 import '../styles/globals.css';
 import '../styles/nprogress.css';
+import App from 'next/app';
 import { ThemeProvider } from 'next-themes';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import store from '../store';
@@ -8,20 +9,31 @@ import Message from '../components/Message';
 import RouteGuard from '../components/RouteGuard';
 import theme from '../configs/theme';
 
-function MyApp({ Component, pageProps }) {
-  return (
-    <Provider store={store}>
-      <ThemeProvider enableSystem={true} attribute="class">
-        <MuiThemeProvider theme={theme}>
-          <RouteGuard>
-            <Component {...pageProps} />
-          </RouteGuard>
-          <div id="_overlay"></div>
-          <Message />
-        </MuiThemeProvider>
-      </ThemeProvider>
-    </Provider>
-  );
+class MyApp extends App {
+  static async getInitialProps({ Component, ctx }) {
+    let pageProps = {};
+    if (Component.getInitialProps) {
+      pageProps = await Component.getInitialProps(ctx);
+    }
+
+    return { pageProps };
+  }
+  render() {
+    const { Component, pageProps } = this.props;
+    return (
+      <Provider store={store}>
+        <ThemeProvider enableSystem={true} attribute="class">
+          <MuiThemeProvider theme={theme}>
+            <RouteGuard>
+              <Component {...pageProps} />
+            </RouteGuard>
+            <div id="_overlay"></div>
+            <Message />
+          </MuiThemeProvider>
+        </ThemeProvider>
+      </Provider>
+    );
+  }
 }
 
 export default MyApp;

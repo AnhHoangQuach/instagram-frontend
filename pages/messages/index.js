@@ -64,7 +64,7 @@ export default function Messages({ chatsData }) {
         setConnectedUsers(users);
       });
 
-      if (chats.length > 0 && !router.query.message) {
+      if (chats?.length > 0 && !router.query.message) {
         router.push(`/messages?message=${chats[0].messagesWith}`, undefined, {
           shallow: true,
         });
@@ -247,7 +247,7 @@ export default function Messages({ chatsData }) {
         <Grid item xxs={1} xs={4} sm={3} md={3} className="border border-gray-200">
           <ChatListSearch chats={chats} setChats={setChats} />
           <Divider />
-          {chats.length > 0 && (
+          {chats?.length > 0 && (
             <Box sx={{ padding: 2, overflowY: 'auto', maxHeight: 640 }}>
               {chats.map((chat, i) => (
                 <Chat key={i} chat={chat} connectedUsers={connectedUsers} deleteChat={deleteChat} />
