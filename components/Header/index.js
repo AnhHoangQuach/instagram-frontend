@@ -75,7 +75,7 @@ export default function Header() {
     setAnchorEl(null);
     dispatch(logout());
     dispatch(setMessage({ type: 'success', message: 'Logout success' }));
-    router.push('/login');
+    router.replace('/login');
   };
 
   const { systemTheme, theme, setTheme } = useTheme();

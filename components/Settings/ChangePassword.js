@@ -71,7 +71,7 @@ export default function ChangePassword() {
             backgroundColor: '#fff',
           }}
         />
-        <Typography variant="h6">anhhoang362k</Typography>
+        <Typography variant="h6">{currentUser?.username}</Typography>
       </Box>
       <FormGroup className="w-4/5 md:w-2/5 mt-4">
         <Controller

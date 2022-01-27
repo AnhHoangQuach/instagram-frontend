@@ -19,11 +19,6 @@ export default function ProfileNameSection({
 
   const [showUnfollowDialog, setUnfollowDialog] = useState(false);
 
-  const handleLogout = () => {
-    dispatch(logout());
-    router.push('/login');
-  };
-
   const handleFollowUser = async () => {
     try {
       const res = await userService.followUser({ userId: profile._id });
