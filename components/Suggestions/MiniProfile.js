@@ -12,7 +12,7 @@ export default function MiniProfile() {
 
       <Box className="flex-1 mx-4">
         <h2 className="font-semibold">{currentUser?.username}</h2>
-        <h3 className="text-sm text-gray-400">Welcomte to Instagram</h3>
+        <h3 className="text-sm text-gray-400">Welcome to Instagram</h3>
       </Box>
     </div>
   );

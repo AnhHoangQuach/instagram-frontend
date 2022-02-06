@@ -41,7 +41,7 @@ const PopupQrCode = ({ onClose, postId }) => {
           onOpen={() => setIsCopy(false)}
           onClick={handleClickCopy}
         >
-          <Typography variant="body2" className="text-ellipsis cursor-pointer">
+          <Typography variant="body2" className="text-ellipsis break-words cursor-pointer">
             {url}
           </Typography>
         </Tooltip>

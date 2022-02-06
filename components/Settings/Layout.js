@@ -72,8 +72,8 @@ export default function Layout({ url, children }) {
         <Hidden smUp>
           <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '100%' }}>
             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-              <Tab label="Item One" {...a11yProps(0)} />
-              <Tab label="Item Two" {...a11yProps(1)} />
+              <Tab label="Edit Profile" {...a11yProps(0)} />
+              <Tab label="Change Password" {...a11yProps(1)} />
             </Tabs>
           </Box>
           <TabPanel value={value} index={0}>
