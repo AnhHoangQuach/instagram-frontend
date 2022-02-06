@@ -6,7 +6,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 const PopupQrCode = ({ onClose, postId }) => {
   const classes = useStyles();
-  const url = `${window.location.href}${postId}`;
+  const url = `${window.location.href}post/${postId}`;
 
   const [isCopy, setIsCopy] = useState(false);
 
