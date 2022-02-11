@@ -21,4 +21,5 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## Bug or feature need improve
 - Notification
 - Filter for create post
-- Chats
+- Edit, delete post
+- Create stories
