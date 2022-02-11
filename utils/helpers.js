@@ -6,7 +6,7 @@ export const getHashTag = (value) => {
 export const baseUrl =
   process.env.NODE_ENV !== 'production' // localhost is development
     ? 'http://localhost:5000'
-    : 'https://howling-cheateau-40911.herokuapp.com';
+    : 'https://quiet-coast-32482.herokuapp.com';
 
 export const newMsgSound = (senderName) => {
   const sound = new Audio('/assets/sound/light.mp3');
