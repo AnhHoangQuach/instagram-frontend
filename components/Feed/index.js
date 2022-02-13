@@ -60,6 +60,7 @@ export default function Feed() {
   const [showCaption, setCaption] = useState(false);
   const [showOptionsDialog, setOptionsDialog] = useState(false);
   const [postIdNow, setPostIdNow] = useState(null);
+  const [postChoice, setPostChoice] = useState();
 
   const [isOpenQrCode, setIsOpenQrCode] = useState(false);
   const [postQrCode, setPostQrCode] = useState(null);
@@ -92,20 +93,35 @@ export default function Feed() {
     setPage(page + 1);
   };
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        setLoading(true);
-        const postRes = await postService.getFeedPosts({ page: 1, limit: 2 });
-        if (postRes.status === 'success') {
-          setPosts([...posts, ...postRes.data.posts]);
-        }
-        setLoading(false);
-      } catch (error) {
-        setLoading(false);
-        dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+  const handleDeletePost = async (postIdNow) => {
+    try {
+      const res = await postService.deletePost({ postId: postIdNow });
+      if (res.status === 'success') {
+        dispatch(setMessage({ type: 'success', message: res.message }));
+        setOptionsDialog(false);
+        fetchPosts();
       }
-    };
+    } catch (error) {
+      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+      setOptionsDialog(false);
+    }
+  };
+
+  const fetchPosts = async () => {
+    try {
+      setLoading(true);
+      const postRes = await postService.getFeedPosts({ page: 1, limit: 2 });
+      if (postRes.status === 'success') {
+        setPosts(postRes.data.posts);
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+    }
+  };
+
+  useEffect(() => {
     fetchPosts();
   }, []);
 
@@ -184,6 +200,7 @@ export default function Feed() {
               className="cursor-pointer"
               onClick={() => {
                 setPostIdNow(post._id);
+                setPostChoice(post);
                 setOptionsDialog(true);
               }}
             />
@@ -307,13 +324,24 @@ export default function Feed() {
           </Hidden>
           {showOptionsDialog && (
             <DialogCommon onClose={() => setOptionsDialog(false)}>
+              {currentUser?._id === postChoice.user._id && (
+                <>
+                  <Button
+                    className="normal-case text-red-400"
+                    onClick={() => {
+                      handleDeletePost(postIdNow);
+                    }}
+                  >
+                    Delete post
+                  </Button>
+                  <Divider />
+                </>
+              )}
               <Button className="normal-case">
                 <Link href={`/post/${postIdNow}`} underline="none">
                   Go to post
                 </Link>
               </Button>
-              <Divider />
-              <Button className="normal-case">Share</Button>
               <Divider />
               <Button
                 className="normal-case"

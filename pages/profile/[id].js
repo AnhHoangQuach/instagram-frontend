@@ -157,7 +157,7 @@ export default function Profile() {
                   gridGap: 40,
                 }}
               >
-                <ProfilePicture isOwner={isOwner} size={77} profile={profile} />
+                <ProfilePicture isOwner={isOwner} size={77} image={profile.avatar} />
                 <ProfileNameSection
                   isOwner={isOwner}
                   profile={profile}

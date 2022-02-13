@@ -19,6 +19,7 @@ import Seo from '../../components/Seo';
 import Header from '../../components/Header';
 import DialogCommon from '../../components/DialogCommon';
 import { postService } from '../../services/post';
+import { userService } from '../../services/user';
 import { commentService } from '../../services/comment';
 import { LikeButton, SaveButton } from '../../components/Feed/FeedAction';
 import GlobalLoading from '../../components/GlobalLoading';
@@ -243,6 +244,31 @@ export default function PostDetail() {
       });
   };
 
+  const handleDeletePost = async (postIdNow) => {
+    try {
+      const res = await postService.deletePost({ postId: postIdNow });
+      if (res.status === 'success') {
+        dispatch(setMessage({ type: 'success', message: res.message }));
+        setOptionsDialog(false);
+        router.replace('/');
+      }
+    } catch (error) {
+      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+      setOptionsDialog(false);
+    }
+  };
+
+  const handleUnfollowUser = async (userId) => {
+    try {
+      const res = await userService.unfollowUser({ userId });
+      if (res.status === 'success') {
+        dispatch(setMessage({ type: 'success', message: res.message }));
+      }
+    } catch (error) {
+      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+    }
+  };
+
   //post
   const [postComments, setPostComments] = useState([]);
   const [likesCount, setLikesCount] = useState();
@@ -418,12 +444,22 @@ export default function PostDetail() {
           </Box>
           {showOptionsDialog && (
             <DialogCommon onClose={() => setOptionsDialog(false)}>
-              {currentUser._id !== postDetail.user._id && (
-                <Button className="normal-case text-red-700 font-semibold">Unfollow</Button>
+              {currentUser._id !== postDetail.user._id ? (
+                <>
+                  <Button className="normal-case text-red-700 font-semibold">Unfollow</Button>
+                  <Divider />
+                </>
+              ) : (
+                <>
+                  <Button
+                    className="normal-case text-red-700 font-semibold"
+                    onClick={() => handleDeletePost(postDetail._id)}
+                  >
+                    Delete Post
+                  </Button>
+                  <Divider />
+                </>
               )}
-              <Divider />
-              <Button className="normal-case">Share To</Button>
-              <Divider />
               <Button className="normal-case" onClick={handleShareLink}>
                 Copy Link
               </Button>

@@ -5,6 +5,7 @@ import { userService } from '../../services/user';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMessage } from '../../store/messageSlice';
 import Link from 'next/link';
+import moment from 'moment';
 
 export default function Suggestions() {
   const { currentUser } = useSelector((state) => state.user);
@@ -88,7 +89,11 @@ export default function Suggestions() {
                 <Link href={`/profile/${profile._id}`} passHref>
                   <h2 className="text-sm font-semibold cursor-pointer">{profile.username}</h2>
                 </Link>
-                <h3 className="text-xs text-gray-400">New Member</h3>
+                <h3 className="text-xs text-gray-400">
+                  {profile.posts.length === 0 ||
+                    (moment.duration(moment(new Date()).diff(profile.createdAt)).asMonths() <= 1 &&
+                      'New Member')}
+                </h3>
               </div>
               <button
                 className="text-blue-400 text-xs font-bold"

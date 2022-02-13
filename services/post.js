@@ -14,6 +14,8 @@ const getExplorePosts = (params) => clientRaw.get(`/post/explore`, { params });
 
 const retrieveHashtagPosts = ({ hashtag }) => clientRaw.get(`/post/hashtag/${hashtag}`);
 
+const deletePost = ({ postId }) => clientRaw.delete(`/post/${postId}`);
+
 export const postService = {
   createPost,
   getPostByID,
@@ -22,4 +24,5 @@ export const postService = {
   getFeedPosts,
   retrieveHashtagPosts,
   getExplorePosts,
+  deletePost,
 };

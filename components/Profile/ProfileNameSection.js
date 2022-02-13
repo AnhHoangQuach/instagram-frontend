@@ -3,7 +3,7 @@ import { Hidden, Box, Button, Typography, Divider, Avatar } from '@mui/material'
 import router from 'next/router';
 import Link from 'next/link';
 import { useDispatch } from 'react-redux';
-import { logout } from '../../store/userSlice';
+import { MessageIcon } from '../../utils/icons';
 import { setMessage } from '../../store/messageSlice';
 import { userService } from '../../services/user';
 import DialogCommon from '../DialogCommon';
@@ -110,7 +110,20 @@ export default function ProfileNameSection({
               </Link>
             </>
           ) : (
-            <>{followButton}</>
+            <>
+              {followButton}
+              <MessageIcon
+                color="action"
+                className="cursor-pointer"
+                onClick={() => {
+                  {
+                    router.push(`/messages?message=${profile._id}`, undefined, {
+                      shallow: true,
+                    });
+                  }
+                }}
+              />
+            </>
           )}
         </Box>
       </Hidden>
@@ -127,6 +140,17 @@ export default function ProfileNameSection({
             }}
           >
             <Typography className="text-xl">{profile.username}</Typography>
+            <MessageIcon
+              color="action"
+              className="cursor-pointer"
+              onClick={() => {
+                {
+                  router.push(`/messages?message=${profile._id}`, undefined, {
+                    shallow: true,
+                  });
+                }
+              }}
+            />
           </Box>
           {isOwner ? (
             <Link href="/profile/edit" passHref>
