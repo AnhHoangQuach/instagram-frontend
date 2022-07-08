@@ -1,4 +1,4 @@
-export default {
+const defaultStyle = {
   control: {
     backgroundColor: '#fff',
     fontSize: 14,
@@ -20,3 +20,5 @@ export default {
     },
   },
 };
+
+export default defaultStyle;

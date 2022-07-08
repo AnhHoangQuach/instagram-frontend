@@ -171,7 +171,7 @@ export default function Login() {
             </Link>
           </div>
           <div className="flex justify-center items-center w-full p-4 rounded border border-gray-primary">
-            <Typography variant="subtitle2 text-sm">Don't have an account?</Typography>
+            <Typography variant="subtitle2 text-sm">Not have an account?</Typography>
             <Link href="/signup" underline="none">
               <Typography className="text-sm ml-1 text-blue-medium cursor-pointer">
                 Sign up

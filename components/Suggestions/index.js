@@ -52,7 +52,7 @@ export default function Suggestions() {
     }
   };
 
-  useEffect(async () => {
+  const getSuggestions = async () => {
     try {
       setLoading(true);
       const res = await userService.suggestedUser({
@@ -66,10 +66,11 @@ export default function Suggestions() {
       setLoading(false);
       dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
     }
-  }, []);
+  };
 
   useEffect(() => {
     handleGetFollowingUser();
+    getSuggestions();
   }, []);
   return (
     !isLoading && (

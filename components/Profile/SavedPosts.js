@@ -41,7 +41,7 @@ export default function SavedPosts({ savedPosts }) {
         </Typography>
         <Typography align="center">
           Save photos and videos that you want to see again. No one is notified, and only you can
-          see what you've saved.
+          see what you have saved.
         </Typography>
       </Box>
     </Box>
