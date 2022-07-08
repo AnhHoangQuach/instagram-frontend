@@ -1,8 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { LikeIcon, CommentIcon } from '../../utils/icons';
-import FilterOutlinedIcon from '@mui/icons-material/FilterOutlined';
-import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
+import { FilterOutlined, Public, Lock, PlayCircleOutlineOutlined } from '@mui/icons-material';
 import FeedImage from '../Feed/FeedImage';
 import Link from 'next/link';
 
@@ -59,10 +58,13 @@ export default function GridPost({ post }) {
               {post.images[0].format === 'jpg' ||
               post.images[0].format === 'png' ||
               post.images[0].format === 'gif' ? (
-                <FilterOutlinedIcon className={classes.sizeTypeIcon} />
+                <FilterOutlined className={classes.sizeTypeIcon} />
               ) : (
-                <PlayCircleOutlineOutlinedIcon className={classes.sizeTypeIcon} />
+                <PlayCircleOutlineOutlined className={classes.sizeTypeIcon} />
               )}
+            </div>
+            <div className={classes.gridPostInfo}>
+              {post.type === 'private' ? <Lock /> : <Public />}
             </div>
             <div className={classes.gridPostInfo}>
               <LikeIcon fill="#fff" />

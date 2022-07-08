@@ -24,12 +24,11 @@ import moment from 'moment';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import HTMLEllipsis from 'react-lines-ellipsis/lib/html';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { LikeButton, SaveButton } from '../Feed/FeedAction';
 import { MessageIcon } from '../../utils/icons';
 import { setMessage } from '../../store/messageSlice';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import QrCode2OutlinedIcon from '@mui/icons-material/QrCode2Outlined';
+import { MoreHoriz, QrCode2Outlined } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 
 const FeedSkeleton = () => {
@@ -74,7 +73,7 @@ export default function Feed() {
 
   const getFeedPosts = async () => {
     try {
-      const postRes = await postService.getFeedPosts({ page, limit: 2 });
+      const postRes = await postService.getFeedPosts({ page, size: 2 });
       if (postRes.status === 'success') {
         return postRes.data.posts;
       }
@@ -110,7 +109,7 @@ export default function Feed() {
   const fetchPosts = async () => {
     try {
       setLoading(true);
-      const postRes = await postService.getFeedPosts({ page: 1, limit: 2 });
+      const postRes = await postService.getFeedPosts({ page: 1, size: 2 });
       if (postRes.status === 'success') {
         setPosts(postRes.data.posts);
       }
@@ -157,7 +156,7 @@ export default function Feed() {
     setLoading(loading);
     setTimeout(async () => {
       try {
-        const postRes = await postService.getFeedPosts({ page: 1, limit: 100 });
+        const postRes = await postService.getFeedPosts({ page: 1, size: 100 });
         if (postRes.status === 'success') {
           setPosts(postRes.data.posts);
         }
@@ -196,7 +195,7 @@ export default function Feed() {
                 </Typography>
               </Link>
             </div>
-            <MoreHorizIcon
+            <MoreHoriz
               className="cursor-pointer"
               onClick={() => {
                 setPostIdNow(post._id);
@@ -238,7 +237,7 @@ export default function Feed() {
                     }
                   }}
                 />
-                <QrCode2OutlinedIcon
+                <QrCode2Outlined
                   className="cursor-pointer"
                   onClick={() => {
                     setPostQrCode(post._id);

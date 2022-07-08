@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Box, Avatar, Badge, Typography } from '@mui/material';
-import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
+import { RemoveCircleOutlineOutlined } from '@mui/icons-material';
 import { makeStyles } from '@mui/styles';
 import { styled } from '@mui/material/styles';
 import { useRouter } from 'next/router';
@@ -84,7 +84,7 @@ function Chat({ connectedUsers, chat, deleteChat }) {
           Active {moment(chat.createdAt).fromNow()}
         </Typography>
       </Box>
-      <RemoveCircleOutlineOutlinedIcon
+      <RemoveCircleOutlineOutlined
         className="flex-1 cursor-pointer"
         onClick={() => deleteChat(chat.messagesWith)}
       />

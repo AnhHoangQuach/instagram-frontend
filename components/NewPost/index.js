@@ -1,8 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
-import { Box, Button, IconButton, CircularProgress } from '@mui/material';
+import { Box, Button, IconButton, CircularProgress, Select, MenuItem } from '@mui/material';
 import { AddIcon } from '../../utils/icons';
-import VideoCameraBackOutlinedIcon from '@mui/icons-material/VideoCameraBackOutlined';
-import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
+import { VideoCameraBackOutlined, ArrowBackOutlined } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 import FeedImage from '../Feed/FeedImage';
 import ModalCommon from '../ModalCommon';
@@ -14,7 +13,6 @@ import { useDropzone } from 'react-dropzone';
 import { Mention, MentionsInput } from 'react-mentions';
 import { setMessage } from '../../store/messageSlice';
 import { getHashTag } from '../../utils/helpers';
-import { useTheme } from 'next-themes';
 
 //fake data
 const users = [
@@ -37,6 +35,12 @@ export default function NewPost({}) {
     setStep('files');
   };
 
+  const [typePost, setTypePost] = useState('public');
+
+  const handleTypeChange = (event) => {
+    setTypePost(event.target.value);
+  };
+
   const handleCreatePost = async () => {
     const formData = new FormData();
     for (const file of files) {
@@ -51,7 +55,8 @@ export default function NewPost({}) {
       }
     }
 
-    formData.set('caption', caption);
+    formData.append('caption', caption);
+    formData.append('type', typePost);
     try {
       setLoading(true);
       const postRes = await postService.createPost(formData);
@@ -81,8 +86,6 @@ export default function NewPost({}) {
     },
   };
 
-  const { theme } = useTheme();
-
   const renderSections = () => {
     switch (step) {
       case 'caption':
@@ -92,7 +95,7 @@ export default function NewPost({}) {
             actions={
               <div className="flex w-full justify-between">
                 <IconButton aria-label="close" onClick={() => setStep('filters')}>
-                  <ArrowBackOutlinedIcon />
+                  <ArrowBackOutlined />
                 </IconButton>
                 <Button autoFocus disabled={loading} onClick={handleCreatePost}>
                   {loading && <CircularProgress size="1rem" className="m-1" />}
@@ -150,7 +153,7 @@ export default function NewPost({}) {
             actions={
               <div className="flex w-full justify-between">
                 <IconButton aria-label="close" onClick={() => setStep('files')}>
-                  <ArrowBackOutlinedIcon />
+                  <VideoCameraBackOutlined />
                 </IconButton>
                 <Button autoFocus onClick={() => setStep('caption')}>
                   Next
@@ -160,7 +163,10 @@ export default function NewPost({}) {
             open={open}
             onClose={handleClose}
           >
-            Thinking
+            <Select value={typePost} onChange={handleTypeChange}>
+              <MenuItem value="public">Public</MenuItem>
+              <MenuItem value="private">Private</MenuItem>
+            </Select>
           </ModalCommon>
         );
     }
@@ -224,7 +230,7 @@ export default function NewPost({}) {
               <div className="focus:outline-none w-full" {...getRootProps()}>
                 <input {...getInputProps()} />
                 <div className="flex flex-col items-center justify-center h-full">
-                  <VideoCameraBackOutlinedIcon fontSize="large" />
+                  <VideoCameraBackOutlined fontSize="large" />
                   {isDragReject ? (
                     <p className="text-red-500">Sorry, file type not supported</p>
                   ) : (

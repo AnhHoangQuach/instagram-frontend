@@ -35,7 +35,7 @@ export default function Profile() {
       setLoading(true);
       const postRes = await postService.getPosts({
         page: 1,
-        limit: 5,
+        size: 5,
         orderBy: 'desc',
         user: id,
       });

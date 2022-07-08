@@ -1,8 +1,5 @@
 import { useState, useEffect } from 'react';
-import { TextField, Button, Divider, Typography, FormGroup, CircularProgress } from '@mui/material';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import { TextField, Button, Typography, FormGroup, CircularProgress } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -12,6 +9,11 @@ import { validateEmail, validatePassword } from '../utils/validation';
 import { authService } from '../services/auth';
 import { useDispatch } from 'react-redux';
 import { Controller, useForm } from 'react-hook-form';
+import { VisibilityOutlined, VisibilityOffOutlined } from '@mui/icons-material';
+import clsx from 'clsx';
+
+const screenshots = [1, 2, 3, 4];
+
 export default function Login() {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -55,12 +57,35 @@ export default function Login() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const [visibleIndex, setVisibleIndex] = useState(0);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setVisibleIndex((prevIndex) => (prevIndex >= screenshots.length - 1 ? 0 : prevIndex + 1));
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   return (
     <>
       <Seo title="Login" description="Login" />
       <div className="container flex mx-auto max-w-screen-md items-center h-full pt-20">
-        <div className="hidden md:flex md:w-3/5">
-          <Image src="/assets/images/iphone-with-profile.png" alt="" width="454" height="618" />
+        <div className={clsx('relative', 'hidden lg:block h-[581.15px]')}>
+          <img src="/assets/images/empty-screenshot.png" alt="Screenshot" draggable={false} />
+          {screenshots.map((number, index) => (
+            <img
+              className={clsx(
+                'absolute right-[60px] bottom-[16px]',
+                'transition-all duration-[1.5s] ease-out',
+                index === visibleIndex ? 'opacity-100 visible' : 'opacity-0 invisible'
+              )}
+              key={number}
+              src={`/assets/images/screenshot${number}.png`}
+              alt="Screenshot"
+              draggable={false}
+            />
+          ))}
         </div>
         <div className="flex flex-col px-16 md:w-2/5 md:px-0">
           <div className="flex flex-col items-center p-4 border border-gray-primary mb-4 rounded">
@@ -110,12 +135,12 @@ export default function Login() {
                     onKeyPress={(e) => e.key === 'Enter' && handleClickLogin()}
                     InputProps={{
                       endAdornment: hidePassword ? (
-                        <VisibilityOffOutlinedIcon
+                        <VisibilityOffOutlined
                           onClick={handleShowPassword}
                           className="cursor-pointer"
                         />
                       ) : (
-                        <VisibilityOutlinedIcon
+                        <VisibilityOutlined
                           onClick={handleShowPassword}
                           className="cursor-pointer"
                         />
@@ -139,13 +164,6 @@ export default function Login() {
                 Login
               </Button>
             </FormGroup>
-            <Divider>OR</Divider>
-            <Button
-              startIcon={<FacebookIcon />}
-              className="my-2 text-white text-xs md:text-sm hover:text-blue-medium hover:bg-white bg-blue-medium"
-            >
-              Login with facebook
-            </Button>
             <Link href="/forgot-password" underline="none">
               <Typography className="text-xs text-blue-medium cursor-pointer">
                 Forgot Password?

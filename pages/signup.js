@@ -63,7 +63,7 @@ export default function SignUp() {
   return (
     <>
       <Seo title="Sign Up" description="Sign Up" />
-      <div className="container mx-auto max-w-screen-md items-center h-full pt-3 md:pt-20 w-2/3 md:w-1/5">
+      <div className="container mx-auto max-w-screen-sm items-center h-full pt-3 md:pt-20 w-3/4 md:w-1/3 2xl:w-1/5">
         <div className="flex flex-col items-center border border-gray-primary mb-4 rounded py-8">
           <div className="my-4">
             <Image src="/assets/images/logo-auth.png" alt="" width="175" height="62" />
@@ -71,14 +71,6 @@ export default function SignUp() {
           <Typography variant="subtitle1" className="mx-4 text-gray-400" align="center">
             Sign up to see photos and videos from your friends.
           </Typography>
-          <Button
-            startIcon={<FacebookIcon />}
-            className="my-2 text-white text-xs md:text-sm hover:text-blue-medium hover:bg-white bg-blue-medium"
-            href={authService.loginByFacebook}
-          >
-            Signup with facebook
-          </Button>
-          <Divider>OR</Divider>
           <FormGroup className="w-4/5">
             <Controller
               name="email"

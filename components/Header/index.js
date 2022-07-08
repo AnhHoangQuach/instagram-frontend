@@ -1,9 +1,11 @@
-import SearchIcon from '@mui/icons-material/Search';
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
-import NightsStayIcon from '@mui/icons-material/NightsStay';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
+import {
+  Search,
+  AccountCircleOutlined,
+  Instagram,
+  SettingsOutlined,
+  NightsStay,
+  Brightness4,
+} from '@mui/icons-material';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
@@ -90,11 +92,9 @@ export default function Header() {
     const currentTheme = theme === 'system' ? systemTheme : theme;
 
     if (currentTheme === 'dark') {
-      return (
-        <Brightness4Icon onClick={() => setTheme('light')} className="w-7 h-7" role="button" />
-      );
+      return <Brightness4 onClick={() => setTheme('light')} className="w-7 h-7" role="button" />;
     } else {
-      return <NightsStayIcon onClick={() => setTheme('dark')} className="w-7 h-7" role="button" />;
+      return <NightsStay onClick={() => setTheme('dark')} className="w-7 h-7" role="button" />;
     }
   };
 
@@ -105,7 +105,7 @@ export default function Header() {
       <div className="flex justify-between items-center max-w-5xl mx-5 xl:mx-auto py-1">
         {theme === 'dark' ? (
           <Link href="/" passHref>
-            <InstagramIcon fontSize="large" className="cursor-pointer" />
+            <Instagram fontSize="large" className="cursor-pointer" />
           </Link>
         ) : (
           <div>
@@ -116,7 +116,7 @@ export default function Header() {
             </Hidden>
             <Hidden smUp>
               <Link href="/" passHref>
-                <InstagramIcon fontSize="large" className="cursor-pointer" />
+                <Instagram fontSize="large" className="cursor-pointer" />
               </Link>
             </Hidden>
           </div>
@@ -135,7 +135,7 @@ export default function Header() {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon />
+                  <Search />
                 </InputAdornment>
               ),
             }}
@@ -189,12 +189,12 @@ export default function Header() {
           >
             <Link href={`/profile/${currentUser?._id}`} passHref>
               <MenuItem onClick={handleClose}>
-                <AccountCircleOutlinedIcon className="mr-2" /> Profile
+                <AccountCircleOutlined className="mr-2" /> Profile
               </MenuItem>
             </Link>
             <Link href="/profile/edit" passHref>
               <MenuItem onClick={handleClose} divider>
-                <SettingsOutlinedIcon className="mr-2" />
+                <SettingsOutlined className="mr-2" />
                 Settings
               </MenuItem>
             </Link>

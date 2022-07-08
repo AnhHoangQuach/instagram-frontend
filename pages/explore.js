@@ -29,7 +29,7 @@ export default function Explore() {
   const getExplorePosts = async () => {
     try {
       setLoading(true);
-      const postRes = await postService.getExplorePosts({ page, limit: 7 });
+      const postRes = await postService.getExplorePosts({ page, size: 7 });
       if (postRes.status === 'success') {
         setLoading(false);
         return postRes.data.posts;
@@ -54,7 +54,7 @@ export default function Explore() {
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        const postRes = await postService.getExplorePosts({ page: 1, limit: 7 });
+        const postRes = await postService.getExplorePosts({ page: 1, size: 7 });
         if (postRes.status === 'success') {
           setPosts([...posts, ...postRes.data.posts]);
         }
@@ -94,9 +94,7 @@ export default function Explore() {
         ) : (
           <div className="flex flex-col items-center justify-center h-full">
             <img src="/assets/images/gif-no-posts.gif" />
-            <Typography variant="h6">
-              Follow others to discover many interesting things about life
-            </Typography>
+            <Typography variant="h6">Discover many interesting things about life</Typography>
           </div>
         )}
       </Box>
