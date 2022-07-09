@@ -91,17 +91,25 @@ export default function Header() {
 
   const darkReaderOptions = { brightness: 100, contrast: 96, sepia: 0 };
 
+  const { mode } = useSelector((state) => state.coreUi);
+
   async function toggleDarkMode() {
     if (typeof window != 'undefined') {
       const { isEnabled, enable, disable, setFetchMethod } = await import('darkreader');
       setFetchMethod(window.fetch);
       const isOn = isEnabled();
       isOn ? disable() : enable(darkReaderOptions);
-      dispatch(updateDarkmode(!isOn));
+      dispatch(updateDarkmode(isOn ? 'light' : 'dark'));
     }
   }
 
-  const { isDarkmode } = useSelector((state) => state.coreUi);
+  useEffect(() => {
+    (async () => {
+      const { enable, disable, setFetchMethod } = await import('darkreader');
+      setFetchMethod(window.fetch);
+      mode === 'light' ? disable() : enable(darkReaderOptions);
+    })();
+  }, [mode]);
 
   //set info user
   const { currentUser } = useSelector((state) => state.user);
@@ -111,7 +119,7 @@ export default function Header() {
         <div>
           <Hidden smDown>
             <Link href="/" passHref>
-              {!isDarkmode ? (
+              {!mode ? (
                 <img src="/assets/images/logo.png" className="cursor-pointer" />
               ) : (
                 <Instagram fontSize="large" className="cursor-pointer" />
@@ -170,8 +178,8 @@ export default function Header() {
             </div>
           </Link>
           <div className="flex items-center">
-            <Switch checked={isDarkmode === true} onClick={toggleDarkMode} />
-            {isDarkmode === true ? <Brightness4Outlined /> : <Brightness5Outlined />}
+            <Switch checked={mode === 'dark'} onClick={toggleDarkMode} />
+            {mode === 'dark' ? <Brightness4Outlined /> : <Brightness5Outlined />}
           </div>
           <Avatar
             src={currentUser?.avatar}

@@ -3,12 +3,12 @@ import { createSlice } from '@reduxjs/toolkit';
 const coreUiSlice = createSlice({
   name: 'core',
   initialState: {
-    isDarkmode: false,
+    mode: 'light',
   },
   reducers: {
     updateDarkmode(state, action) {
-      state.isDarkmode = action.payload;
-      localStorage.setItem('isDarkmode', action.payload);
+      state.mode = action.payload;
+      localStorage.setItem('mode', action.payload);
     },
   },
 });

@@ -15,18 +15,15 @@ export default function RouteGuard({ children }) {
     const publicPaths = ['/login', '/signup', '/forgot-password'];
     const path = url.split('?')[0];
     const token = localStorage.getItem('token');
-    const isDarkmode = localStorage.getItem('isDarkmode') ?? false;
+    const mode = localStorage.getItem('mode') ?? 'light';
+    dispatch(updateDarkmode(mode));
     if (!token && !publicPaths.includes(path)) {
       setAuthorized(false);
       router.push({
         pathname: '/login',
       });
     } else {
-      Promise.all([
-        dispatch(getMe()),
-        dispatch(addToken()),
-        dispatch(updateDarkmode(isDarkmode)),
-      ]).then(() => {
+      Promise.all([dispatch(getMe()), dispatch(addToken())]).then(() => {
         setAuthorized(true);
       });
     }
