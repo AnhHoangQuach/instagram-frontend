@@ -4,7 +4,6 @@ import Header from '../../components/Header';
 import Seo from '../../components/Seo';
 import ChangePassword from '../../components/Settings/ChangePassword';
 import EditProfile from '../../components/Settings/EditProfile';
-import { useTheme } from 'next-themes';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -38,7 +37,6 @@ function a11yProps(index) {
 
 export default function Layout({ url, children }) {
   const [value, setValue] = useState(0);
-  const { theme } = useTheme();
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };

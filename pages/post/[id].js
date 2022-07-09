@@ -22,7 +22,6 @@ import { postService } from '../../services/post';
 import { userService } from '../../services/user';
 import { commentService } from '../../services/comment';
 import { LikeButton, SaveButton } from '../../components/Feed/FeedAction';
-import GlobalLoading from '../../components/GlobalLoading';
 import { useRouter } from 'next/router';
 import FeedImage from '../../components/Feed/FeedImage';
 import Carousel from 'react-multi-carousel';
@@ -272,7 +271,8 @@ export default function PostDetail() {
   //post
   const [postComments, setPostComments] = useState([]);
   const [likesCount, setLikesCount] = useState();
-  useEffect(async () => {
+
+  const getPostDetail = async () => {
     try {
       setLoading(true);
       const postRes = await postService.getPostByID({ postId: id });
@@ -286,6 +286,10 @@ export default function PostDetail() {
       setLoading(false);
       dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
     }
+  };
+
+  useEffect(() => {
+    getPostDetail();
   }, [id]);
 
   useEffect(() => {
@@ -302,171 +306,175 @@ export default function PostDetail() {
     setLikesCount(likesCount);
   }, []);
 
-  return isLoading ? (
-    <GlobalLoading />
-  ) : (
-    <>
-      <Seo title="Post Details" description="Post Details" />
-      <Header />
-      <Grid container className="max-w-5xl mx-auto mt-8">
-        <Box className={classes.postContainer}>
-          <Box className={classes.article}>
-            {/* Post Header */}
-            <div className={classes.postHeader}>
-              <UserCard user={postDetail?.user} avatarSize={32} />
-              <MoreHorizIcon className="cursor-pointer" onClick={() => setOptionsDialog(true)} />
-            </div>
-            {/* Post Image */}
-            <Carousel
-              responsive={responsive}
-              showDots={true}
-              keyBoardControl={true}
-              className={classes.postImage}
-            >
-              {postDetail?.images.map((item) =>
-                item.format === 'jpg' || item.format === 'png' || item.format === 'gif' ? (
-                  <FeedImage key={item.url} img={item.url} />
-                ) : (
-                  <video
-                    src={item.url}
-                    key={item.url}
-                    className="object-contain h-full mx-auto"
-                    controls
-                  />
-                )
-              )}
-            </Carousel>
-            {/* Post Buttons */}
-            <div className={classes.postButtonsWrapper}>
-              <div className={classes.postButtons}>
-                <LikeButton
-                  postId={postDetail?._id}
-                  isVotedPost={postDetail?.likes.find((ele) => ele.user === currentUser?._id)}
-                  parentCallback={callback}
-                  likes={likesCount}
-                />
-                <CommentIcon
-                  onClick={() => {
-                    commentRef.current.focus();
-                  }}
-                  className="cursor-pointer"
-                />
-                <ShareOutlinedIcon />
-                <SaveButton
-                  postId={postDetail?._id}
-                  isBookmarked={currentUser?.savedPosts.includes(postDetail?._id)}
-                />
+  return (
+    !isLoading && (
+      <>
+        <Seo title="Post Details" description="Post Details" />
+        <Header />
+        <Grid container className="max-w-5xl mx-auto mt-8">
+          <Box className={classes.postContainer}>
+            <Box className={classes.article}>
+              {/* Post Header */}
+              <div className={classes.postHeader}>
+                <UserCard user={postDetail?.user} avatarSize={32} />
+                <MoreHorizIcon className="cursor-pointer" onClick={() => setOptionsDialog(true)} />
               </div>
-              <Typography className={classes.likes} variant="subtitle2" component="span">
-                {likesCount === 1 ? '1 like' : `${likesCount} likes`}
-              </Typography>
-              <div className={classes.postCaptionContainer}>
-                <div className="flex my-4">
-                  <Link href={`/profile/${postDetail?.user._id}`} passHref>
-                    <Avatar src={postDetail?.user.avatar} alt="" className="cursor-pointer" />
-                  </Link>
-                  <div className="pl-4">
-                    <Typography
-                      variant="body2"
-                      className="font-semibold"
-                      component="span"
-                      dangerouslySetInnerHTML={{
-                        __html: `${postDetail?.user.username} ${postDetail?.caption}`,
-                      }}
+              {/* Post Image */}
+              <Carousel
+                responsive={responsive}
+                showDots={true}
+                keyBoardControl={true}
+                className={classes.postImage}
+              >
+                {postDetail?.images.map((item) =>
+                  item.format === 'jpg' || item.format === 'png' || item.format === 'gif' ? (
+                    <FeedImage key={item.url} img={item.url} />
+                  ) : (
+                    <video
+                      src={item.url}
+                      key={item.url}
+                      className="object-contain h-full mx-auto"
+                      controls
                     />
-                    <div style={{ fontSize: 12 }}>{moment(postDetail?.createdAt).fromNow()}</div>
+                  )
+                )}
+              </Carousel>
+              {/* Post Buttons */}
+              <div className={classes.postButtonsWrapper}>
+                <div className={classes.postButtons}>
+                  <LikeButton
+                    postId={postDetail?._id}
+                    isVotedPost={postDetail?.likes.find((ele) => ele.user === currentUser?._id)}
+                    parentCallback={callback}
+                    likes={likesCount}
+                  />
+                  <CommentIcon
+                    onClick={() => {
+                      commentRef.current.focus();
+                    }}
+                    className="cursor-pointer"
+                  />
+                  <ShareOutlinedIcon />
+                  <SaveButton
+                    postId={postDetail?._id}
+                    isBookmarked={currentUser?.savedPosts.includes(postDetail?._id)}
+                  />
+                </div>
+                <Typography className={classes.likes} variant="subtitle2" component="span">
+                  {likesCount === 1 ? '1 like' : `${likesCount} likes`}
+                </Typography>
+                <div className={classes.postCaptionContainer}>
+                  <div className="flex my-4">
+                    <Link href={`/profile/${postDetail?.user._id}`} passHref>
+                      <Avatar src={postDetail?.user.avatar} alt="" className="cursor-pointer" />
+                    </Link>
+                    <div className="pl-4">
+                      <Typography
+                        variant="body2"
+                        className="font-semibold"
+                        component="span"
+                        dangerouslySetInnerHTML={{
+                          __html: `${postDetail?.user.username} ${postDetail?.caption}`,
+                        }}
+                      />
+                      <div style={{ fontSize: 12 }}>{moment(postDetail?.createdAt).fromNow()}</div>
+                    </div>
+                  </div>
+                  <Box ref={lastCommentRef}>
+                    {postComments?.comments?.map((comment) => (
+                      <Box className="flex my-4" key={comment._id}>
+                        <Avatar src={comment.user.avatar} alt="" />
+                        <div className="pl-4">
+                          <Typography
+                            variant="body2"
+                            component="span"
+                            className="font-semibold mr-1"
+                          >
+                            {comment.user.username}
+                          </Typography>
+                          <Typography variant="body2" component="span">
+                            {comment.content}
+                          </Typography>
+                          <div style={{ fontSize: 12, color: '#8e8e8e' }}>
+                            {moment(comment.createdAt).fromNow()}
+                            {comment.user._id === currentUser?._id && (
+                              <span
+                                className={classes.deleteComment}
+                                onClick={() => handleDeleteComment(comment._id)}
+                              >
+                                Delete
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </Box>
+                    ))}
+                  </Box>
+                </div>
+                <Typography color="textSecondary" className={classes.datePosted}>
+                  {moment(postDetail?.createdAt).fromNow()}
+                </Typography>
+                <div className={classes.comment}>
+                  <Divider />
+                  <div className={classes.commentContainer}>
+                    <Controller
+                      name="content"
+                      defaultValue=""
+                      control={control}
+                      render={({ field, fieldState: { invalid, error } }) => (
+                        <TextField
+                          {...field}
+                          size={isMatchPhone ? 'small' : 'medium'}
+                          name="content"
+                          inputRef={commentRef}
+                          placeholder="Add a comment..."
+                          multiline
+                          rows={1}
+                          required
+                          error={invalid}
+                          helperText={error?.message}
+                        />
+                      )}
+                    />
+                    <Button
+                      color="primary"
+                      className={classes.commentButton}
+                      onClick={handleCreateComment}
+                      disabled={commentLoading}
+                    >
+                      {commentLoading && <CircularProgress size="1rem" className="m-1" />}
+                      Post
+                    </Button>
                   </div>
                 </div>
-                <Box ref={lastCommentRef}>
-                  {postComments?.comments?.map((comment) => (
-                    <Box className="flex my-4" key={comment._id}>
-                      <Avatar src={comment.user.avatar} alt="" />
-                      <div className="pl-4">
-                        <Typography variant="body2" component="span" className="font-semibold mr-1">
-                          {comment.user.username}
-                        </Typography>
-                        <Typography variant="body2" component="span">
-                          {comment.content}
-                        </Typography>
-                        <div style={{ fontSize: 12, color: '#8e8e8e' }}>
-                          {moment(comment.createdAt).fromNow()}
-                          {comment.user._id === currentUser?._id && (
-                            <span
-                              className={classes.deleteComment}
-                              onClick={() => handleDeleteComment(comment._id)}
-                            >
-                              Delete
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </Box>
-                  ))}
-                </Box>
               </div>
-              <Typography color="textSecondary" className={classes.datePosted}>
-                {moment(postDetail?.createdAt).fromNow()}
-              </Typography>
-              <div className={classes.comment}>
-                <Divider />
-                <div className={classes.commentContainer}>
-                  <Controller
-                    name="content"
-                    defaultValue=""
-                    control={control}
-                    render={({ field, fieldState: { invalid, error } }) => (
-                      <TextField
-                        {...field}
-                        size={isMatchPhone ? 'small' : 'medium'}
-                        name="content"
-                        inputRef={commentRef}
-                        placeholder="Add a comment..."
-                        multiline
-                        rows={1}
-                        required
-                        error={invalid}
-                        helperText={error?.message}
-                      />
-                    )}
-                  />
-                  <Button
-                    color="primary"
-                    className={classes.commentButton}
-                    onClick={handleCreateComment}
-                    disabled={commentLoading}
-                  >
-                    {commentLoading && <CircularProgress size="1rem" className="m-1" />}
-                    Post
-                  </Button>
-                </div>
-              </div>
-            </div>
+            </Box>
+            {showOptionsDialog && (
+              <DialogCommon onClose={() => setOptionsDialog(false)}>
+                {currentUser._id !== postDetail.user._id ? (
+                  <>
+                    <Button className="normal-case text-red-700 font-semibold">Unfollow</Button>
+                    <Divider />
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      className="normal-case text-red-700 font-semibold"
+                      onClick={() => handleDeletePost(postDetail._id)}
+                    >
+                      Delete Post
+                    </Button>
+                    <Divider />
+                  </>
+                )}
+                <Button className="normal-case" onClick={handleShareLink}>
+                  Copy Link
+                </Button>
+              </DialogCommon>
+            )}
           </Box>
-          {showOptionsDialog && (
-            <DialogCommon onClose={() => setOptionsDialog(false)}>
-              {currentUser._id !== postDetail.user._id ? (
-                <>
-                  <Button className="normal-case text-red-700 font-semibold">Unfollow</Button>
-                  <Divider />
-                </>
-              ) : (
-                <>
-                  <Button
-                    className="normal-case text-red-700 font-semibold"
-                    onClick={() => handleDeletePost(postDetail._id)}
-                  >
-                    Delete Post
-                  </Button>
-                  <Divider />
-                </>
-              )}
-              <Button className="normal-case" onClick={handleShareLink}>
-                Copy Link
-              </Button>
-            </DialogCommon>
-          )}
-        </Box>
-      </Grid>
-    </>
+        </Grid>
+      </>
+    )
   );
 }

@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/link-passhref */
+/* eslint-disable @next/next/no-img-element */
 import { useState, useEffect } from 'react';
 import { TextField, Button, Typography, FormGroup, CircularProgress } from '@mui/material';
 import Image from 'next/image';
@@ -62,7 +64,7 @@ export default function Login() {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setVisibleIndex((prevIndex) => (prevIndex >= screenshots.length - 1 ? 0 : prevIndex + 1));
-    }, 5000);
+    }, 3000);
 
     return () => clearInterval(intervalId);
   }, []);

@@ -6,7 +6,6 @@ import PostCountSection from '../../components/Profile/PostCountSection';
 import ProfileNameSection from '../../components/Profile/ProfileNameSection';
 import NameBioSection from '../../components/Profile/NameBioSection';
 import ProfileTabs from '../../components/Profile/ProfileTabs';
-import GlobalLoading from '../../components/GlobalLoading';
 import { Box, Hidden, Card, CardContent } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
@@ -112,16 +111,14 @@ export default function Profile() {
     }, 1200);
   }, []);
 
-  return isLoading ? (
-    <GlobalLoading />
-  ) : (
+  return (
     <>
       <Seo title={`${profile.fullname} (@${profile.username})`} />
       <Header />
       <Box className="max-w-5xl xl:mx-auto mt-8">
         <Hidden smDown>
           <Card
-            className="bg-transparent dark:bg-white"
+            className="bg-transparent"
             sx={{
               display: 'grid',
               gridAutoFlow: 'column',

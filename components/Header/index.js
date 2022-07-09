@@ -3,17 +3,26 @@ import {
   AccountCircleOutlined,
   Instagram,
   SettingsOutlined,
-  NightsStay,
-  Brightness4,
+  Brightness4Outlined,
+  Brightness5Outlined,
 } from '@mui/icons-material';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useTheme } from 'next-themes';
-import { TextField, InputAdornment, Avatar, Hidden, Menu, MenuItem } from '@mui/material';
+import {
+  TextField,
+  InputAdornment,
+  Avatar,
+  Hidden,
+  Menu,
+  MenuItem,
+  Button,
+  Switch,
+} from '@mui/material';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/userSlice';
 import { setMessage } from '../../store/messageSlice';
+import { updateDarkmode } from '../../store/coreUiSlice';
 import NewPost from '../../components/NewPost';
 import { stringify, parse } from 'query-string';
 import {
@@ -80,51 +89,44 @@ export default function Header() {
     router.replace('/login');
   };
 
-  const { systemTheme, theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const darkReaderOptions = { brightness: 100, contrast: 96, sepia: 0 };
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const renderThemeChanger = () => {
-    if (!mounted) return null;
-    const currentTheme = theme === 'system' ? systemTheme : theme;
-
-    if (currentTheme === 'dark') {
-      return <Brightness4 onClick={() => setTheme('light')} className="w-7 h-7" role="button" />;
-    } else {
-      return <NightsStay onClick={() => setTheme('dark')} className="w-7 h-7" role="button" />;
+  async function toggleDarkMode() {
+    if (typeof window != 'undefined') {
+      const { isEnabled, enable, disable, setFetchMethod } = await import('darkreader');
+      setFetchMethod(window.fetch);
+      const isOn = isEnabled();
+      isOn ? disable() : enable(darkReaderOptions);
+      dispatch(updateDarkmode(!isOn));
     }
-  };
+  }
+
+  const { isDarkmode } = useSelector((state) => state.coreUi);
 
   //set info user
   const { currentUser } = useSelector((state) => state.user);
   return (
-    <div className="shadow-sm bg-white dark:bg-gray-900 border sticky top-0 z-50 dark:border-gray-700">
+    <div className="shadow-sm bg-white border sticky top-0 z-50">
       <div className="flex justify-between items-center max-w-5xl mx-5 xl:mx-auto py-1">
-        {theme === 'dark' ? (
-          <Link href="/" passHref>
-            <Instagram fontSize="large" className="cursor-pointer" />
-          </Link>
-        ) : (
-          <div>
-            <Hidden smDown>
-              <Link href="/" passHref>
+        <div>
+          <Hidden smDown>
+            <Link href="/" passHref>
+              {!isDarkmode ? (
                 <img src="/assets/images/logo.png" className="cursor-pointer" />
-              </Link>
-            </Hidden>
-            <Hidden smUp>
-              <Link href="/" passHref>
+              ) : (
                 <Instagram fontSize="large" className="cursor-pointer" />
-              </Link>
-            </Hidden>
-          </div>
-        )}
+              )}
+            </Link>
+          </Hidden>
+          <Hidden smUp>
+            <Link href="/" passHref>
+              <Instagram fontSize="large" className="cursor-pointer" />
+            </Link>
+          </Hidden>
+        </div>
 
         <div className="hidden md:block">
           <TextField
-            className="dark:bg-white"
             type="search"
             placeholder="Search"
             variant="outlined"
@@ -167,8 +169,10 @@ export default function Header() {
               )}
             </div>
           </Link>
-
-          {renderThemeChanger()}
+          <div className="flex items-center">
+            <Switch checked={isDarkmode === true} onClick={toggleDarkMode} />
+            {isDarkmode === true ? <Brightness4Outlined /> : <Brightness5Outlined />}
+          </div>
           <Avatar
             src={currentUser?.avatar}
             id="basic-avatar"

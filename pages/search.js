@@ -7,13 +7,11 @@ import { Grid, Tabs, Tab, Box } from '@mui/material';
 import { useRouter } from 'next/router';
 import { systemService } from '../services/system';
 import { useDispatch } from 'react-redux';
-import { useTheme } from 'next-themes';
 export default function Search() {
   const router = useRouter();
   const { keywords } = router.query;
   const [dataSearch, setDataSearch] = useState();
   const [loading, setLoading] = useState(false);
-  const { theme } = useTheme();
   const dispatch = useDispatch();
 
   useEffect(async () => {
@@ -37,8 +35,8 @@ export default function Search() {
       <Header />
       <Grid container className="max-w-5xl mx-auto">
         <Tabs value={activeTab} onChange={(_, value) => setActiveTab(value)}>
-          <Tab label="Users" style={{ color: theme === 'dark' && '#fff' }} />
-          <Tab label="Hashtags" style={{ color: theme === 'dark' && '#fff' }} />
+          <Tab label="Users" />
+          <Tab label="Hashtags" />
         </Tabs>
       </Grid>
       <Box sx={{ flexGrow: 1 }}>

@@ -17,7 +17,6 @@ import { makeStyles } from '@mui/styles';
 import { validateFullName, validateUsername } from '../../utils/validation';
 import { userService } from '../../services/user';
 import { setMessage } from '../../store/messageSlice';
-import GlobalLoading from '../GlobalLoading';
 import UserAvatarCrop from '../UserAvatarCrop';
 import { useSelector, useDispatch } from 'react-redux';
 import { Controller, useForm } from 'react-hook-form';
@@ -83,9 +82,7 @@ export default function EditProfile() {
     })();
   };
 
-  return isLoading ? (
-    <GlobalLoading />
-  ) : (
+  return (
     <Grid
       container
       className="max-w-5xl"

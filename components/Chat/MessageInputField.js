@@ -16,7 +16,7 @@ function MessageInputField({ sendMsg }) {
         variant="outlined"
         size="small"
         value={text}
-        className="w-full dark:bg-white"
+        className="w-full"
         onChange={(e) => setText(e.target.value)}
         onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
       />

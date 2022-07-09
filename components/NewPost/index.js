@@ -1,5 +1,13 @@
 import { useState, useCallback, useEffect } from 'react';
-import { Box, Button, IconButton, CircularProgress, Select, MenuItem } from '@mui/material';
+import {
+  Box,
+  Button,
+  IconButton,
+  CircularProgress,
+  TextField,
+  MenuItem,
+  Typography,
+} from '@mui/material';
 import { AddIcon } from '../../utils/icons';
 import { VideoCameraBackOutlined, ArrowBackOutlined } from '@mui/icons-material';
 import { useRouter } from 'next/router';
@@ -20,7 +28,7 @@ const users = [
   { display: 'messi', id: 'messi@gmail.com' },
 ];
 
-export default function NewPost({}) {
+export default function NewPost() {
   const [files, setFiles] = useState([]);
   const [caption, setCaption] = useState('');
   const [open, setOpen] = useState(false);
@@ -36,10 +44,6 @@ export default function NewPost({}) {
   };
 
   const [typePost, setTypePost] = useState('public');
-
-  const handleTypeChange = (event) => {
-    setTypePost(event.target.value);
-  };
 
   const handleCreatePost = async () => {
     const formData = new FormData();
@@ -163,10 +167,7 @@ export default function NewPost({}) {
             open={open}
             onClose={handleClose}
           >
-            <Select value={typePost} onChange={handleTypeChange}>
-              <MenuItem value="public">Public</MenuItem>
-              <MenuItem value="private">Private</MenuItem>
-            </Select>
+            Thinking
           </ModalCommon>
         );
     }
@@ -211,20 +212,35 @@ export default function NewPost({}) {
           onClose={handleClose}
         >
           {files.length > 0 ? (
-            <Carousel responsive={responsive} showDots={true} keyBoardControl={true} itemClass>
-              {files.map((item) =>
-                item.type.startsWith('image') ? (
-                  <FeedImage key={item.name} img={item.preview} isCreatePost={true} />
-                ) : (
-                  <video
-                    src={item.preview}
-                    key={item.name}
-                    className="object-contain h-full mx-auto"
-                    controls
-                  />
-                )
-              )}
-            </Carousel>
+            <>
+              <TextField
+                className="mb-4"
+                select
+                label="Type"
+                autoWidth
+                value={typePost}
+                onChange={(event) => {
+                  setTypePost(event.target.value);
+                }}
+              >
+                <MenuItem value="public">Public</MenuItem>
+                <MenuItem value="private">Private</MenuItem>
+              </TextField>
+              <Carousel responsive={responsive} showDots={true} keyBoardControl={true} itemClass>
+                {files.map((item) =>
+                  item.type.startsWith('image') ? (
+                    <FeedImage key={item.name} img={item.preview} isCreatePost={true} />
+                  ) : (
+                    <video
+                      src={item.preview}
+                      key={item.name}
+                      className="object-contain h-full mx-auto"
+                      controls
+                    />
+                  )
+                )}
+              </Carousel>
+            </>
           ) : (
             <Box className="p-4 w-full">
               <div className="focus:outline-none w-full" {...getRootProps()}>

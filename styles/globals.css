@@ -2,13 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  body,
-  head {
-    @apply dark:bg-gray-900;
-  }
-}
-
 .mentions {
   margin: 0.5rem 0;
 }

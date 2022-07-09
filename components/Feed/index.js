@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { useState, useEffect, useCallback } from 'react';
 import FeedComment from './FeedComment';
 import FeedImage from './FeedImage';
-import GlobalLoading from '../GlobalLoading';
 import DialogCommon from '../DialogCommon';
 import PopupQrCode from './PopupQrCode';
 import {
@@ -168,9 +167,7 @@ export default function Feed() {
     }, 1000);
   }, []);
 
-  return loading ? (
-    <GlobalLoading />
-  ) : posts.length > 0 ? (
+  return posts.length > 0 ? (
     <InfiniteScroll
       dataLength={posts.length} //This is important field to render the next data
       next={fetchData}
@@ -251,9 +248,6 @@ export default function Feed() {
               />
             </div>
             <Box mt={1}>
-              {/* <Typography variant="subtitle2" className="font-semibold">
-          {post.likes.length === 1 ? '1 like' : `${post.likes.length} likes`}
-        </Typography> */}
               <div className={showCaption ? 'block' : 'flex items-center'}>
                 <Link href={`/profile/${post.user._id}`} passHref>
                   <Typography
@@ -309,11 +303,7 @@ export default function Feed() {
                 </Typography>
               </div>
             ))}
-            <Typography
-              color="textSecondary"
-              className="py-2 dark:text-white"
-              style={{ fontSize: '0.75rem' }}
-            >
+            <Typography color="textSecondary" className="py-2" style={{ fontSize: '0.75rem' }}>
               {moment(post.createdAt).fromNow()}
             </Typography>
           </Box>
@@ -332,6 +322,10 @@ export default function Feed() {
                     }}
                   >
                     Delete post
+                  </Button>
+                  <Divider />
+                  <Button className="normal-case" onClick={() => {}}>
+                    Edit post
                   </Button>
                   <Divider />
                 </>

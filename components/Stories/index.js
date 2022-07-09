@@ -6,10 +6,8 @@ import { setMessage } from '../../store/messageSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { Avatar, Typography, Dialog, Zoom } from '@mui/material';
 import ReactInstagramStories from 'react-insta-stories';
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import moment from 'moment';
 import { makeStyles } from '@mui/styles';
-import DialogCommon from '../../components/DialogCommon';
 
 const useStyles = makeStyles((theme) => ({
   stories: {

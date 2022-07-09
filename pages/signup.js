@@ -65,10 +65,10 @@ export default function SignUp() {
       <Seo title="Sign Up" description="Sign Up" />
       <div className="container mx-auto max-w-screen-sm items-center h-full pt-3 md:pt-20 w-3/4 md:w-1/3 2xl:w-1/5">
         <div className="flex flex-col items-center border border-gray-primary mb-4 rounded py-8">
-          <div className="my-4">
+          <div className="mt-4">
             <Image src="/assets/images/logo-auth.png" alt="" width="175" height="62" />
           </div>
-          <Typography variant="subtitle1" className="mx-4 text-gray-400" align="center">
+          <Typography variant="subtitle1" className="mx-4 mb-4 text-gray-400" align="center">
             Sign up to see photos and videos from your friends.
           </Typography>
           <FormGroup className="w-4/5">
