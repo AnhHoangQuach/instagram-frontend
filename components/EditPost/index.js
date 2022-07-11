@@ -1,6 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
 import { Box, Button, IconButton, CircularProgress, TextField, MenuItem } from '@mui/material';
-import { AddIcon } from '../../utils/icons';
 import { VideoCameraBackOutlined, ArrowBackOutlined } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 import FeedImage from '../Feed/FeedImage';
@@ -20,27 +19,24 @@ const users = [
   { display: 'messi', id: 'messi@gmail.com' },
 ];
 
-export default function NewPost() {
-  const [files, setFiles] = useState([]);
-  const [caption, setCaption] = useState('');
-  const [open, setOpen] = useState(false);
+export default function EditPost({ post, onClose }) {
+  const [files, setFiles] = useState(post.images);
+  const [caption, setCaption] = useState(post.caption);
   const [step, setStep] = useState('files');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => {
-    setOpen(false);
-    setFiles([]);
-    setStep('files');
-  };
 
-  const [typePost, setTypePost] = useState('public');
+  const [isChangeFiles, setIsChangeFiles] = useState(false);
 
-  const handleCreatePost = async () => {
+  const [typePost, setTypePost] = useState(post.type);
+
+  const handleEditPost = async () => {
     const formData = new FormData();
     for (const file of files) {
-      formData.append('pictures', file);
+      if (file instanceof File) {
+        formData.append('file', file);
+      }
     }
 
     const hashtags = getHashTag(caption);
@@ -53,11 +49,12 @@ export default function NewPost() {
 
     formData.append('caption', caption);
     formData.append('type', typePost);
+
     try {
       setLoading(true);
-      const postRes = await postService.createPost(formData);
+      const postRes = await postService.editPost({ postId: post._id, formData });
       if (postRes.status === 'success') {
-        dispatch(setMessage({ type: 'success', message: 'Created Post successfully' }));
+        dispatch(setMessage({ type: 'success', message: 'Edit Post successfully' }));
         router.push('/');
       }
       setLoading(false);
@@ -93,14 +90,14 @@ export default function NewPost() {
                 <IconButton aria-label="close" onClick={() => setStep('filters')}>
                   <ArrowBackOutlined />
                 </IconButton>
-                <Button autoFocus disabled={loading} onClick={handleCreatePost}>
+                <Button autoFocus disabled={loading} onClick={handleEditPost}>
                   {loading && <CircularProgress size="1rem" className="m-1" />}
-                  Share
+                  Update
                 </Button>
               </div>
             }
-            open={open}
-            onClose={handleClose}
+            open={true}
+            onClose={onClose}
           >
             <div className="flex justify-between">
               <MentionsInput
@@ -131,10 +128,26 @@ export default function NewPost() {
                   itemClass
                 >
                   {files.map((item) =>
-                    item.type.startsWith('image') ? (
-                      <FeedImage key={item.name} img={item.preview} isCreatePost={true} />
+                    isChangeFiles ? (
+                      item.type.startsWith('image') ? (
+                        <FeedImage key={item.name} img={item.preview} isCreatePost={true} />
+                      ) : (
+                        <video
+                          src={item.preview}
+                          key={item.name}
+                          className="object-contain h-full mx-auto"
+                          controls
+                        />
+                      )
+                    ) : ['jpg', 'png', 'jpeg'].includes(item.format) ? (
+                      <FeedImage key={item.name} img={item.secure_url} isCreatePost={true} />
                     ) : (
-                      <video src={item.preview} key={item.name} controls />
+                      <video
+                        src={item.secure_url}
+                        key={item.name}
+                        className="object-contain h-full mx-auto"
+                        controls
+                      />
                     )
                   )}
                 </Carousel>
@@ -156,8 +169,8 @@ export default function NewPost() {
                 </Button>
               </div>
             }
-            open={open}
-            onClose={handleClose}
+            open={true}
+            onClose={onClose}
           >
             Thinking
           </ModalCommon>
@@ -190,41 +203,62 @@ export default function NewPost() {
 
   return (
     <>
-      <AddIcon onClick={handleOpen} className="cursor-pointer" />
       {renderSections()}
       {step === 'files' && (
         <ModalCommon
-          title="Create new post"
+          title="Edit post"
           actions={
             <Button autoFocus onClick={() => setStep('filters')}>
               Next
             </Button>
           }
-          open={open}
-          onClose={handleClose}
+          onClose={onClose}
+          open={true}
         >
           {files.length > 0 ? (
             <>
-              <TextField
-                className="mb-4"
-                select
-                label="Type"
-                autoWidth
-                value={typePost}
-                onChange={(event) => {
-                  setTypePost(event.target.value);
-                }}
-              >
-                <MenuItem value="public">Public</MenuItem>
-                <MenuItem value="private">Private</MenuItem>
-              </TextField>
+              <div className="flex items-center justify-between">
+                <TextField
+                  className="mb-4"
+                  select
+                  label="Type"
+                  autoWidth
+                  value={typePost}
+                  onChange={(event) => {
+                    setTypePost(event.target.value);
+                  }}
+                >
+                  <MenuItem value="public">Public</MenuItem>
+                  <MenuItem value="private">Private</MenuItem>
+                </TextField>
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    setFiles([]);
+                    setIsChangeFiles(true);
+                  }}
+                >
+                  Change Files
+                </Button>
+              </div>
               <Carousel responsive={responsive} showDots={true} keyBoardControl={true} itemClass>
                 {files.map((item) =>
-                  item.type.startsWith('image') ? (
-                    <FeedImage key={item.name} img={item.preview} isCreatePost={true} />
+                  isChangeFiles ? (
+                    item.type.startsWith('image') ? (
+                      <FeedImage key={item.name} img={item.preview} isCreatePost={true} />
+                    ) : (
+                      <video
+                        src={item.preview}
+                        key={item.name}
+                        className="object-contain h-full mx-auto"
+                        controls
+                      />
+                    )
+                  ) : ['jpg', 'png', 'jpeg'].includes(item.format) ? (
+                    <FeedImage key={item.name} img={item.secure_url} isCreatePost={true} />
                   ) : (
                     <video
-                      src={item.preview}
+                      src={item.secure_url}
                       key={item.name}
                       className="object-contain h-full mx-auto"
                       controls

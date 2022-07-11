@@ -119,7 +119,7 @@ export default function Header() {
         <div>
           <Hidden smDown>
             <Link href="/" passHref>
-              {!mode ? (
+              {mode === 'light' ? (
                 <img src="/assets/images/logo.png" className="cursor-pointer" />
               ) : (
                 <Instagram fontSize="large" className="cursor-pointer" />

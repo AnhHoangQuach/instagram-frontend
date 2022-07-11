@@ -2,6 +2,8 @@ import { clientRaw } from './axios';
 
 const createPost = (body) => clientRaw.post(`/post/create`, body);
 
+const editPost = ({ postId, formData }) => clientRaw.post(`/post/edit/${postId}`, formData);
+
 const getPostByID = ({ postId }) => clientRaw.get(`/post/${postId}`);
 
 const getPosts = (params) => clientRaw.get(`/post`, { params });
@@ -18,6 +20,7 @@ const deletePost = ({ postId }) => clientRaw.delete(`/post/${postId}`);
 
 export const postService = {
   createPost,
+  editPost,
   getPostByID,
   getPosts,
   votePost,

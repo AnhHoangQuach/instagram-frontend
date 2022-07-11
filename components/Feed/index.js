@@ -4,6 +4,7 @@ import FeedComment from './FeedComment';
 import FeedImage from './FeedImage';
 import DialogCommon from '../DialogCommon';
 import PopupQrCode from './PopupQrCode';
+import EditPost from '../EditPost';
 import {
   Avatar,
   Typography,
@@ -62,6 +63,8 @@ export default function Feed() {
 
   const [isOpenQrCode, setIsOpenQrCode] = useState(false);
   const [postQrCode, setPostQrCode] = useState(null);
+
+  const [showEditPost, setShowEditPost] = useState(false);
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -324,7 +327,12 @@ export default function Feed() {
                     Delete post
                   </Button>
                   <Divider />
-                  <Button className="normal-case" onClick={() => {}}>
+                  <Button
+                    className="normal-case"
+                    onClick={() => {
+                      setShowEditPost(true);
+                    }}
+                  >
                     Edit post
                   </Button>
                   <Divider />
@@ -346,6 +354,15 @@ export default function Feed() {
               </Button>
             </DialogCommon>
           )}
+          <Dialog open={showEditPost} onClose={() => setShowEditPost(false)} className="p-6">
+            <EditPost
+              post={postChoice}
+              onClose={() => {
+                setShowEditPost(false);
+                setOptionsDialog(false);
+              }}
+            />
+          </Dialog>
           <Dialog open={isOpenQrCode} onClose={() => setIsOpenQrCode(false)} className="p-6">
             <PopupQrCode postId={postQrCode} onClose={() => setIsOpenQrCode(false)} />
           </Dialog>
