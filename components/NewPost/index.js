@@ -63,7 +63,9 @@ export default function NewPost() {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+      dispatch(
+        setMessage({ type: 'error', message: error.response?.data.message || error.message })
+      );
     }
   };
 

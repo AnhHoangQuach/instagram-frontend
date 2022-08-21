@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
-import { TextField, Button, Divider, Typography, FormGroup, CircularProgress } from '@mui/material';
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
-import FacebookIcon from '@mui/icons-material/Facebook';
+import { TextField, Button, Typography, FormGroup, CircularProgress } from '@mui/material';
+import { VisibilityOutlined, VisibilityOffOutlined } from '@mui/icons-material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -18,32 +16,28 @@ import {
 } from '../utils/validation';
 import { authService } from '../services/auth';
 import { Controller, useForm } from 'react-hook-form';
+import { useMutation } from 'react-query';
 
 export default function SignUp() {
   const dispatch = useDispatch();
   const router = useRouter();
 
   //state
-  const [isLoading, setIsLoading] = useState(false);
   const [hidePassword, setHidePassword] = useState(true);
+
+  const { mutate: signup, isLoading } = useMutation(authService.signup, {
+    onSuccess: (data) => {
+      localStorage.setItem('token', data.data.token);
+      dispatch(setMessage({ type: 'success', message: 'Register success' }));
+      router.replace('/');
+    },
+  });
 
   //formData
   const { control, handleSubmit } = useForm({ mode: 'onChange' });
   const handleClickSignUp = () => {
-    handleSubmit(async ({ email, fullname, username, password }) => {
-      setIsLoading(true);
-      try {
-        const responseSignup = await authService.signup({ email, fullname, username, password });
-        if (responseSignup.status === 'success') {
-          localStorage.setItem('token', responseSignup.data.token);
-          dispatch(setMessage({ type: 'success', message: 'Register success' }));
-          setIsLoading(false);
-          router.replace('/');
-        }
-      } catch (error) {
-        dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
-        setIsLoading(false);
-      }
+    handleSubmit((values) => {
+      signup(values);
     })();
   };
 
@@ -155,15 +149,12 @@ export default function SignUp() {
                   onKeyPress={(e) => e.key === 'Enter' && handleClickSignUp()}
                   InputProps={{
                     endAdornment: hidePassword ? (
-                      <VisibilityOffOutlinedIcon
+                      <VisibilityOffOutlined
                         onClick={handleShowPassword}
                         className="cursor-pointer"
                       />
                     ) : (
-                      <VisibilityOutlinedIcon
-                        onClick={handleShowPassword}
-                        className="cursor-pointer"
-                      />
+                      <VisibilityOutlined onClick={handleShowPassword} className="cursor-pointer" />
                     ),
                   }}
                   required

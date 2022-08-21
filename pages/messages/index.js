@@ -231,7 +231,9 @@ export default function Messages({ chatsData }) {
       setChats((prev) => prev.filter((chat) => chat.messagesWith !== messagesWith));
       router.push('/messages');
     } catch (error) {
-      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+      dispatch(
+        setMessage({ type: 'error', message: error.response?.data.message || error.message })
+      );
     }
   };
 

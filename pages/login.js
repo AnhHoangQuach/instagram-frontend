@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux';
 import { Controller, useForm } from 'react-hook-form';
 import { VisibilityOutlined, VisibilityOffOutlined } from '@mui/icons-material';
 import clsx from 'clsx';
+import { useMutation } from 'react-query';
 
 const screenshots = [1, 2, 3, 4];
 
@@ -20,29 +21,23 @@ export default function Login() {
   const router = useRouter();
   const dispatch = useDispatch();
 
+  const { mutate: login, isLoading } = useMutation(authService.login, {
+    onSuccess: (data) => {
+      localStorage.setItem('token', data.data.token);
+      dispatch(setMessage({ type: 'success', message: 'Login success' }));
+      router.replace('/');
+    },
+  });
+
   //formData
   const { control, handleSubmit } = useForm({ mode: 'onChange' });
   const handleClickLogin = () => {
     handleSubmit(async ({ email, password }) => {
-      setIsLoading(true);
-      try {
-        const responseLogin = await authService.login({ email, password });
-        if (responseLogin.status === 'success') {
-          localStorage.setItem('token', responseLogin.data.token);
-          dispatch(setMessage({ type: 'success', message: 'Login success' }));
-          setIsLoading(false);
-          router.replace('/');
-        }
-      } catch (error) {
-        const message = error.response?.data.message;
-        dispatch(setMessage({ type: 'error', message: message }));
-        setIsLoading(false);
-      }
+      login({ email, password });
     })();
   };
 
   //state
-  const [isLoading, setIsLoading] = useState(false);
   const [hidePassword, setHidePassword] = useState(true);
 
   const handleShowPassword = () => {

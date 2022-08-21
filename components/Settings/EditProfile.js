@@ -77,7 +77,9 @@ export default function EditProfile() {
         setIsLoading(false);
       } catch (error) {
         setIsLoading(false);
-        dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+        dispatch(
+          setMessage({ type: 'error', message: error.response?.data.message || error.message })
+        );
       }
     })();
   };

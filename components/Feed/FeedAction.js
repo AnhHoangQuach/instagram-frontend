@@ -48,7 +48,9 @@ export function LikeButton({ postId, isVotedPost, likes, parentCallback, isOnly 
         setLiked(!liked);
       }
     } catch (error) {
-      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+      dispatch(
+        setMessage({ type: 'error', message: error.response?.data.message || error.message })
+      );
     }
   }
 
@@ -76,7 +78,9 @@ export function SaveButton({ postId, isBookmarked }) {
         setSaved(!saved);
       }
     } catch (error) {
-      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+      dispatch(
+        setMessage({ type: 'error', message: error.response?.data.message || error.message })
+      );
     }
   }
 

@@ -31,7 +31,9 @@ export default function FeedComment({ postId, parentCallback }) {
         setCommentLoading(false);
       } catch (error) {
         setCommentLoading(false);
-        dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+        dispatch(
+          setMessage({ type: 'error', message: error.response?.data.message || error.message })
+        );
       }
       reset({ content: '' });
     })(e);

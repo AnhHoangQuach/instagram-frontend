@@ -80,7 +80,9 @@ export default function Feed() {
         return postRes.data.posts;
       }
     } catch (error) {
-      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+      dispatch(
+        setMessage({ type: 'error', message: error.response?.data.message || error.message })
+      );
     }
   };
 
@@ -103,7 +105,9 @@ export default function Feed() {
         fetchPosts();
       }
     } catch (error) {
-      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+      dispatch(
+        setMessage({ type: 'error', message: error.response?.data.message || error.message })
+      );
       setOptionsDialog(false);
     }
   };
@@ -118,7 +122,9 @@ export default function Feed() {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+      dispatch(
+        setMessage({ type: 'error', message: error.response?.data.message || error.message })
+      );
     }
   };
 
@@ -165,7 +171,9 @@ export default function Feed() {
         setLoading(false);
       } catch (error) {
         setLoading(false);
-        dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+        dispatch(
+          setMessage({ type: 'error', message: error.response?.data.message || error.message })
+        );
       }
     }, 1000);
   }, []);

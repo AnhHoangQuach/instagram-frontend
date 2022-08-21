@@ -7,6 +7,8 @@ import { Provider } from 'react-redux';
 import Message from '../components/Message';
 import RouteGuard from '../components/RouteGuard';
 import theme from '../configs/theme';
+import { QueryClientProvider } from 'react-query';
+import queryClient from '../services/client';
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
@@ -21,13 +23,15 @@ class MyApp extends App {
     const { Component, pageProps } = this.props;
     return (
       <Provider store={store}>
-        <MuiThemeProvider theme={theme}>
-          <RouteGuard>
-            <Component {...pageProps} />
-          </RouteGuard>
-          <div id="_overlay"></div>
-          <Message />
-        </MuiThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <MuiThemeProvider theme={theme}>
+            <RouteGuard>
+              <Component {...pageProps} />
+            </RouteGuard>
+            <div id="_overlay"></div>
+            <Message />
+          </MuiThemeProvider>
+        </QueryClientProvider>
       </Provider>
     );
   }

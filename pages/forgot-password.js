@@ -9,8 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import { VisibilityOutlined, VisibilityOffOutlined } from '@mui/icons-material';
 import { Controller, useForm } from 'react-hook-form';
 import { makeStyles } from '@mui/styles';
 import { validateEmail, validatePassword } from '../utils/validation';
@@ -18,6 +17,7 @@ import { authService } from '../services/auth';
 import { useDispatch } from 'react-redux';
 import { setMessage } from '../store/messageSlice';
 import { useRouter } from 'next/router';
+import { useMutation } from 'react-query';
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -34,47 +34,39 @@ export default function ForgotPassword() {
   const handleShowPassword = () => {
     setHidePassword(!hidePassword);
   };
-  const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
 
   //formData
   const { control, handleSubmit, getValues } = useForm({ mode: 'onChange' });
 
+  const { mutate: getVerifyCode, isLoading: isLoadingGetVerifyCode } = useMutation(
+    authService.getVerifyCode,
+    {
+      onSuccess: (data) => {
+        dispatch(setMessage({ type: 'success', message: data.message }));
+      },
+    }
+  );
+
+  const { mutate: resetPassword, isLoading: isLoadingResetPassword } = useMutation(
+    authService.resetPassword,
+    {
+      onSuccess: (data) => {
+        dispatch(setMessage({ type: 'success', message: data.message }));
+        router.replace('/login');
+      },
+    }
+  );
+
   const handleSendCode = async () => {
     const email = getValues('email');
-    setIsLoading(true);
-    try {
-      const responseSendCode = await authService.getVerifyCode({ email });
-      if (responseSendCode.status === 'success') {
-        dispatch(setMessage({ type: 'success', message: responseSendCode.message }));
-        setIsLoading(false);
-      }
-    } catch (error) {
-      const message = error.response?.data.message;
-      dispatch(setMessage({ type: 'error', message: message }));
-      setIsLoading(false);
-    }
+    getVerifyCode({ email });
   };
 
   const handleResetPassword = () => {
     handleSubmit(async ({ email, verifyCode, newPassword }) => {
-      setIsLoading(true);
-      try {
-        const responseResetPassword = await authService.resetPassword({
-          email,
-          verifyCode,
-          password: newPassword,
-        });
-        if (responseResetPassword.status === 'success') {
-          dispatch(setMessage({ type: 'success', message: responseResetPassword.message }));
-          router.replace('/login');
-        }
-        setIsLoading(false);
-      } catch (error) {
-        const message = error.response?.data.message;
-        dispatch(setMessage({ type: 'error', message: message }));
-        setIsLoading(false);
-      }
+      resetPassword({ email, verifyCode, newPassword });
     })();
   };
   return (
@@ -159,15 +151,12 @@ export default function ForgotPassword() {
                 type={hidePassword ? 'password' : 'text'}
                 InputProps={{
                   endAdornment: hidePassword ? (
-                    <VisibilityOffOutlinedIcon
+                    <VisibilityOffOutlined
                       onClick={handleShowPassword}
                       className="cursor-pointer"
                     />
                   ) : (
-                    <VisibilityOutlinedIcon
-                      onClick={handleShowPassword}
-                      className="cursor-pointer"
-                    />
+                    <VisibilityOutlined onClick={handleShowPassword} className="cursor-pointer" />
                   ),
                 }}
                 onKeyPress={(e) => e.key === 'Enter' && handleResetPassword()}
@@ -179,8 +168,12 @@ export default function ForgotPassword() {
           />
           <Button
             variant="contained"
-            disabled={isLoading}
-            startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : null}
+            disabled={isLoadingGetVerifyCode || isLoadingResetPassword}
+            startIcon={
+              isLoadingGetVerifyCode || isLoadingResetPassword ? (
+                <CircularProgress size={20} color="inherit" />
+              ) : null
+            }
             size="large"
             fullWidth
             className="mb-4"

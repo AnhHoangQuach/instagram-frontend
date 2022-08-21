@@ -28,7 +28,9 @@ export default function ProfileNameSection({
         );
       }
     } catch (error) {
-      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+      dispatch(
+        setMessage({ type: 'error', message: error.response?.data.message || error.message })
+      );
     }
   };
 
@@ -41,7 +43,9 @@ export default function ProfileNameSection({
         );
       }
     } catch (error) {
-      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+      dispatch(
+        setMessage({ type: 'error', message: error.response?.data.message || error.message })
+      );
     }
     setUnfollowDialog(false);
   };

@@ -198,13 +198,17 @@ export default function PostDetail() {
               setPostComments(postRes.data.comment);
             }
           } catch (error) {
-            dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+            dispatch(
+              setMessage({ type: 'error', message: error.response?.data.message || error.message })
+            );
           }
         }
         setCommentLoading(false);
       } catch (error) {
         setCommentLoading(false);
-        dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+        dispatch(
+          setMessage({ type: 'error', message: error.response?.data.message || error.message })
+        );
       }
       reset({ content: '' });
       commentRef.current.focus();
@@ -223,11 +227,15 @@ export default function PostDetail() {
             setPostComments(postRes.data.comment);
           }
         } catch (error) {
-          dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+          dispatch(
+            setMessage({ type: 'error', message: error.response?.data.message || error.message })
+          );
         }
       }
     } catch (error) {
-      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+      dispatch(
+        setMessage({ type: 'error', message: error.response?.data.message || error.message })
+      );
     }
   };
 
@@ -252,7 +260,9 @@ export default function PostDetail() {
         router.replace('/');
       }
     } catch (error) {
-      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+      dispatch(
+        setMessage({ type: 'error', message: error.response?.data.message || error.message })
+      );
       setOptionsDialog(false);
     }
   };
@@ -264,7 +274,9 @@ export default function PostDetail() {
         dispatch(setMessage({ type: 'success', message: res.message }));
       }
     } catch (error) {
-      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+      dispatch(
+        setMessage({ type: 'error', message: error.response?.data.message || error.message })
+      );
     }
   };
 
@@ -284,7 +296,9 @@ export default function PostDetail() {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      dispatch(setMessage({ type: 'error', message: error.response?.data.message }));
+      dispatch(
+        setMessage({ type: 'error', message: error.response?.data.message || error.message })
+      );
     }
   };
 
