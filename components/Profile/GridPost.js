@@ -75,7 +75,7 @@ export default function GridPost({ post }) {
             <div className={classes.gridPostInfo}>
               <CommentIcon fill="#fff" />
               <Typography variant="subtitle2" className="font-semibold">
-                {post?.comments.length || post?.comments}
+                {post?.comments?.length || post?.comments}
               </Typography>
             </div>
           </div>

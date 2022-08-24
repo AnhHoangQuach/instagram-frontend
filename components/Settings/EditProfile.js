@@ -22,6 +22,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Controller, useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { getMe } from '../../store/userSlice';
+import { useMutation } from 'react-query';
 
 const Input = styled('input')({
   display: 'none',
@@ -38,10 +39,8 @@ const useStyles = makeStyles(() => ({
 export default function EditProfile() {
   const { currentUser } = useSelector((state) => state.user);
   const classes = useStyles();
-  const [isLoading, setIsLoading] = useState(false);
   const [isOpenAvatar, setIsOpenAvatar] = useState(false);
   const dispatch = useDispatch();
-  const router = useRouter();
   const { control, handleSubmit } = useForm({ mode: 'onChange' });
   const [file, setFile] = useState();
 
@@ -60,27 +59,16 @@ export default function EditProfile() {
     setIsOpenAvatar(false);
   };
 
+  const { mutate: editProfile, isLoading } = useMutation(userService.editProfile, {
+    onSuccess: (data) => {
+      dispatch(setMessage({ type: 'success', message: data.message }));
+      dispatch(getMe());
+    },
+  });
+
   const handleEditProfile = () => {
     handleSubmit(async ({ fullname, username, website, bio }) => {
-      try {
-        setIsLoading(true);
-        const resEditProfile = await userService.editProfile({
-          fullname,
-          username,
-          website,
-          bio,
-        });
-        if (resEditProfile.status === 'success') {
-          dispatch(setMessage({ type: 'success', message: resEditProfile.message }));
-          router.replace('/');
-        }
-        setIsLoading(false);
-      } catch (error) {
-        setIsLoading(false);
-        dispatch(
-          setMessage({ type: 'error', message: error.response?.data.message || error.message })
-        );
-      }
+      editProfile({ fullname, username, website, bio });
     })();
   };
 

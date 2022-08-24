@@ -9,8 +9,7 @@ import {
   Button,
   Box,
 } from '@mui/material';
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import { VisibilityOutlined, VisibilityOffOutlined } from '@mui/icons-material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { validatePassword } from '../../utils/validation';
 import { userService } from '../../services/user';
@@ -18,37 +17,29 @@ import { setMessage } from '../../store/messageSlice';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { Controller, useForm } from 'react-hook-form';
+import { useMutation } from 'react-query';
 
 export default function ChangePassword() {
-  const { currentUser } = useSelector((state) => state.user);
-  const largeScreen = useMediaQuery((theme) => theme.breakpoints.up('md'));
-  //state
-  const [isLoading, setIsLoading] = useState(false);
-  const [hidePassword, setHidePassword] = useState(true);
   const dispatch = useDispatch();
   const router = useRouter();
+  const { currentUser } = useSelector((state) => state.user);
+  const largeScreen = useMediaQuery((theme) => theme.breakpoints.up('md'));
+
+  const [hidePassword, setHidePassword] = useState(true);
 
   //formData
   const { control, handleSubmit } = useForm({ mode: 'onChange' });
-  const handleClickSignUp = () => {
+
+  const { mutate: changePassword, isLoading } = useMutation(userService.changePassword, {
+    onSuccess: (data) => {
+      dispatch(setMessage({ type: 'success', message: data.message }));
+      router.replace('/');
+    },
+  });
+
+  const handleChangePassword = () => {
     handleSubmit(async ({ oldPassword, newPassword }) => {
-      try {
-        setIsLoading(true);
-        const resChangePassword = await userService.changePassword({
-          oldPassword,
-          newPassword,
-        });
-        if (resChangePassword.status === 'success') {
-          dispatch(setMessage({ type: 'success', message: resChangePassword.message }));
-          router.replace('/');
-        }
-        setIsLoading(false);
-      } catch (error) {
-        setIsLoading(false);
-        dispatch(
-          setMessage({ type: 'error', message: error.response?.data.message || error.message })
-        );
-      }
+      changePassword({ oldPassword, newPassword });
     })();
   };
   const handleShowPassword = () => {
@@ -93,12 +84,9 @@ export default function ChangePassword() {
               type={hidePassword ? 'password' : 'text'}
               InputProps={{
                 endAdornment: hidePassword ? (
-                  <VisibilityOffOutlinedIcon
-                    onClick={handleShowPassword}
-                    className="cursor-pointer"
-                  />
+                  <VisibilityOffOutlined onClick={handleShowPassword} className="cursor-pointer" />
                 ) : (
-                  <VisibilityOutlinedIcon onClick={handleShowPassword} className="cursor-pointer" />
+                  <VisibilityOutlined onClick={handleShowPassword} className="cursor-pointer" />
                 ),
               }}
               required
@@ -124,12 +112,9 @@ export default function ChangePassword() {
               type={hidePassword ? 'password' : 'text'}
               InputProps={{
                 endAdornment: hidePassword ? (
-                  <VisibilityOffOutlinedIcon
-                    onClick={handleShowPassword}
-                    className="cursor-pointer"
-                  />
+                  <VisibilityOffOutlined onClick={handleShowPassword} className="cursor-pointer" />
                 ) : (
-                  <VisibilityOutlinedIcon onClick={handleShowPassword} className="cursor-pointer" />
+                  <VisibilityOutlined onClick={handleShowPassword} className="cursor-pointer" />
                 ),
               }}
               required
@@ -145,8 +130,8 @@ export default function ChangePassword() {
           size="large"
           fullWidth
           className="mb-4"
-          onClick={handleClickSignUp}
-          onKeyPress={(e) => e.key === 'Enter' && handleClickSignUp()}
+          onClick={handleChangePassword}
+          onKeyPress={(e) => e.key === 'Enter' && handleChangePassword()}
         >
           Change Password
         </Button>
