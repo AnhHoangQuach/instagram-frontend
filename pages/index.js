@@ -27,7 +27,7 @@ export default function Home() {
         socket.current.off();
       }
     };
-  }, []);
+  }, [currentUser?._id]);
   return (
     <Box>
       <Seo title="Home" description="Home Page" />
