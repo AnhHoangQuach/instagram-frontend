@@ -15,7 +15,10 @@ export default function Stories() {
 
   const { data: stories, isLoading } = useQuery(
     ['userService.getStories', { userId: currentUser?._id }],
-    () => userService.getStories({ userId: currentUser?._id })
+    () => userService.getStories({ userId: currentUser?._id }),
+    {
+      enabled: !!currentUser?._id,
+    }
   );
 
   const handleShowStories = (posts) => {
