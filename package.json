@@ -23,7 +23,7 @@
     "clsx": "^1.2.1",
     "darkreader": "^4.9.52",
     "moment": "^2.29.4",
-    "next": "12.1.0",
+    "next": "13.4.12",
     "nprogress": "^0.2.0",
     "qrcode.react": "^1.0.1",
     "query-string": "^7.0.1",
